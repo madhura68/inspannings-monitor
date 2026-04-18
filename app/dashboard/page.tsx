@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/auth-actions";
+import { CheckInCard } from "@/components/check-in/check-in-card";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { isTestWizardEnabled } from "@/lib/config/feature-flags";
 import { getDashboardStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
@@ -51,6 +53,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   const { profile, settings } = profileBundle;
+  const checkInStatus = await getTodayCheckInForCurrentUser();
   const statusToast = getDashboardStatusToast(getParamValue(resolvedSearchParams, "status"));
 
   if (!profile.onboardingSeen) {
@@ -173,6 +176,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               </CardDescription>
             </CardContent>
           </Card>
+
+          <CheckInCard todayCheckIn={checkInStatus?.todayCheckIn ?? null} />
 
           {isTestWizardEnabled() ? (
             <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">

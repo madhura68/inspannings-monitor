@@ -1,5 +1,6 @@
 const TIME_VALUE_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 const EMAIL_VALUE_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const INTEGER_VALUE_PATTERN = /^-?\d+$/;
 
 export class FormDataValidationError extends Error {
   code: string;
@@ -114,4 +115,29 @@ export function assertMinLength(
   }
 
   return value;
+}
+
+export function getIntegerValue(
+  formData: FormData,
+  key: string,
+  range: { min: number; max: number },
+  errorCode: string,
+): number {
+  const value = getRequiredString(formData, key, errorCode);
+
+  if (!INTEGER_VALUE_PATTERN.test(value)) {
+    fail(errorCode);
+  }
+
+  const parsedValue = Number.parseInt(value, 10);
+
+  if (
+    Number.isNaN(parsedValue) ||
+    parsedValue < range.min ||
+    parsedValue > range.max
+  ) {
+    fail(errorCode);
+  }
+
+  return parsedValue;
 }

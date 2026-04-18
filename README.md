@@ -17,6 +17,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 
 - e-mail/wachtwoord-auth via Supabase
 - protected dashboard met server-side sessiecontrole
+- ochtendcheck-in voor energiescore en slaapkwaliteit van vandaag
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
 - `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen
@@ -101,7 +102,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-201` Ochtendcheck-in UI bouwen
-2. `ST-203` Budgetlogica implementeren
-3. `ST-301` Activiteitenmodel en planning opzetten
+1. `ST-203` Budgetlogica implementeren
+2. `ST-301` Activiteitenmodel en planning opzetten
+3. `ST-401` Evaluatie- en dagoverzichtslus bouwen
 4. `ST-105` RLS-policy tests en hardening afronden

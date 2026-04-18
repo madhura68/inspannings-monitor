@@ -1,0 +1,146 @@
+import { getAuthenticatedUser } from "@/lib/auth/session";
+import { ensureProfileBundleForCurrentUser } from "@/lib/profile/service";
+import { createClient } from "@/lib/supabase/server";
+import type {
+  MorningCheckInRecord,
+  MorningCheckInStatus,
+  MorningCheckInSubmission,
+  SleepQuality,
+} from "@/lib/check-in/types";
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+type MorningCheckInRow = {
+  id: string;
+  user_id: string;
+  check_in_date: string;
+  energy_score: number;
+  sleep_quality: SleepQuality;
+  created_at: string;
+  updated_at: string;
+};
+
+type MorningCheckInInsert = {
+  user_id: string;
+  check_in_date: string;
+  energy_score: number;
+  sleep_quality: SleepQuality;
+};
+
+const MORNING_CHECK_IN_COLUMNS =
+  "id, user_id, check_in_date, energy_score, sleep_quality, created_at, updated_at";
+
+function mapMorningCheckInRow(row: MorningCheckInRow): MorningCheckInRecord {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    checkInDate: row.check_in_date,
+    energyScore: row.energy_score,
+    sleepQuality: row.sleep_quality,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function getLocalDateForTimezone(timezone: string, date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+
+  if (!year || !month || !day) {
+    throw new Error("Lokale datum voor timezone kon niet worden bepaald.");
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
+async function readMorningCheckInByDate(
+  supabase: SupabaseServerClient,
+  userId: string,
+  checkInDate: string,
+): Promise<MorningCheckInRow | null> {
+  const { data, error } = await supabase
+    .from("morning_check_ins")
+    .select(MORNING_CHECK_IN_COLUMNS)
+    .eq("user_id", userId)
+    .eq("check_in_date", checkInDate)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Ochtendcheck-in kon niet worden geladen: ${error.message}`);
+  }
+
+  return data;
+}
+
+export async function getTodayCheckInForCurrentUser(): Promise<MorningCheckInStatus | null> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    return null;
+  }
+
+  const timezone = profileBundle.profile.timezone;
+  const todayDate = getLocalDateForTimezone(timezone);
+  const supabase = await createClient();
+  const morningCheckInRow = await readMorningCheckInByDate(supabase, user.id, todayDate);
+
+  return {
+    timezone,
+    todayDate,
+    todayCheckIn: morningCheckInRow ? mapMorningCheckInRow(morningCheckInRow) : null,
+  };
+}
+
+export async function upsertTodayCheckInForCurrentUser(
+  submission: MorningCheckInSubmission,
+): Promise<MorningCheckInRecord> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    throw new Error("Profielbundle ontbreekt voor de huidige gebruiker.");
+  }
+
+  const checkInDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const payload: MorningCheckInInsert = {
+    user_id: user.id,
+    check_in_date: checkInDate,
+    energy_score: submission.energyScore,
+    sleep_quality: submission.sleepQuality,
+  };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("morning_check_ins")
+    .upsert(payload, {
+      onConflict: "user_id,check_in_date",
+    })
+    .select(MORNING_CHECK_IN_COLUMNS)
+    .single();
+
+  if (error) {
+    throw new Error(`Ochtendcheck-in kon niet worden opgeslagen: ${error.message}`);
+  }
+
+  return mapMorningCheckInRow(data);
+}

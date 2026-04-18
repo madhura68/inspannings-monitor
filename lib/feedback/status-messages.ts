@@ -24,6 +24,11 @@ const dashboardStatusToasts: Record<string, StatusToast> = {
     title: "Test wizard afgerond",
     message: "De generieke wizard-flow werkt nu vanaf het dashboard.",
   },
+  "check-in-saved": {
+    variant: "success",
+    title: "Ochtendcheck-in opgeslagen",
+    message: "Je energiestart van vandaag staat nu klaar op je dashboard.",
+  },
 };
 
 const settingsStatusToasts: Record<string, StatusToast> = {
@@ -47,6 +52,14 @@ const onboardingErrorToasts: Record<string, StatusToast> = {
     variant: "error",
     title: "Onboarding niet opgeslagen",
     message: "Controleer je ingevoerde voorkeuren en probeer het opnieuw.",
+  },
+};
+
+const checkInErrorToasts: Record<string, StatusToast> = {
+  "invalid-check-in-input": {
+    variant: "error",
+    title: "Check-in niet opgeslagen",
+    message: "Kies een energiescore tussen 1 en 10 en een geldige slaapkwaliteit.",
   },
 };
 
@@ -79,6 +92,21 @@ export function getOnboardingStatusToast(
 ): StatusToast | null {
   if (error && onboardingErrorToasts[error]) {
     return onboardingErrorToasts[error];
+  }
+
+  if (!status) {
+    return null;
+  }
+
+  return null;
+}
+
+export function getCheckInStatusToast(
+  error: string | null,
+  status: string | null,
+): StatusToast | null {
+  if (error && checkInErrorToasts[error]) {
+    return checkInErrorToasts[error];
   }
 
   if (!status) {
