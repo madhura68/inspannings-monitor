@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { formatEnergyLevelLabel } from "@/lib/check-in/budget";
 import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { getCheckInStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
@@ -108,10 +109,17 @@ export default async function CheckInPage({ searchParams }: CheckInPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-6">
-                <CardDescription className="text-sm leading-7 text-muted-foreground">
-                  Lokale datum: {checkInStatus?.todayDate ?? "Onbekend"} in timezone{" "}
+              <CardDescription className="text-sm leading-7 text-muted-foreground">
+                Lokale datum: {checkInStatus?.todayDate ?? "Onbekend"} in timezone{" "}
                   `{profileBundle.profile.timezone}`.
                 </CardDescription>
+                {checkInStatus?.todayCheckIn ? (
+                  <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
+                    Laatste resultaat: niveau{" "}
+                    {formatEnergyLevelLabel(checkInStatus.todayCheckIn.energyLevel).toLowerCase()} met een budget van{" "}
+                    {checkInStatus.todayCheckIn.dailyBudget} punten.
+                  </CardDescription>
+                ) : null}
               </CardContent>
             </Card>
 
@@ -124,7 +132,7 @@ export default async function CheckInPage({ searchParams }: CheckInPageProps) {
               <CardContent className="space-y-3 pb-6 text-sm leading-7 text-primary-foreground/90">
                 <p>Deze check-in geeft geen diagnose of medische interpretatie.</p>
                 <p>Je legt alleen een rustige momentopname van vandaag vast.</p>
-                <p>De budgetlogica volgt pas in de volgende story.</p>
+                <p>Budget v1 blijft bewust eenvoudig: het dagbudget volgt direct uit je energiescore.</p>
               </CardContent>
             </Card>
           </aside>

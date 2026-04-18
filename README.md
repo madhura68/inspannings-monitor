@@ -18,6 +18,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - e-mail/wachtwoord-auth via Supabase
 - protected dashboard met server-side sessiecontrole
 - ochtendcheck-in voor energiescore en slaapkwaliteit van vandaag
+- eenvoudig dagbudget en energieniveau op basis van de ochtendscore
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
 - `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen

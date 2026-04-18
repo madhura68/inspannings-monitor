@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import {
+  deriveBudgetSnapshot,
+  formatEnergyLevelLabel,
+} from "@/lib/check-in/budget";
 import { ENERGY_SCORE_VALUES, SLEEP_QUALITY_OPTIONS } from "@/lib/check-in/options";
 import type {
   MorningCheckInRecord,
@@ -47,6 +51,7 @@ export function CheckInForm({ todayCheckIn }: CheckInFormProps) {
   const [sleepQuality, setSleepQuality] = useState<SleepQuality | null>(
     todayCheckIn?.sleepQuality ?? null,
   );
+  const predictedBudget = energyScore === null ? null : deriveBudgetSnapshot(energyScore);
 
   return (
     <form action={formAction} className="space-y-6" aria-busy={isPending}>
@@ -75,6 +80,12 @@ export function CheckInForm({ todayCheckIn }: CheckInFormProps) {
               <p className="text-sm leading-7 text-muted-foreground">
                 {getEnergyScorePrompt(energyScore)}
               </p>
+              {predictedBudget ? (
+                <p className="text-sm leading-7 text-slate-700">
+                  Voor vandaag geeft dit niveau <strong>{formatEnergyLevelLabel(predictedBudget.energyLevel).toLowerCase()}</strong> en een startbudget van{" "}
+                  <strong>{predictedBudget.dailyBudget} punten</strong>.
+                </p>
+              ) : null}
             </div>
 
             <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
@@ -156,7 +167,7 @@ export function CheckInForm({ todayCheckIn }: CheckInFormProps) {
           {isPending
             ? "Je ochtendcheck-in wordt opgeslagen..."
             : todayCheckIn
-              ? "Je kunt de check-in van vandaag nog aanpassen."
+              ? "Je kunt de check-in van vandaag nog aanpassen. Budget en niveau worden dan opnieuw afgeleid."
               : "Je vult voor vandaag één check-in in, die je later nog kunt aanpassen."}
         </p>
 

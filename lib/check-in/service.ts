@@ -1,7 +1,9 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
+import { deriveBudgetSnapshot } from "@/lib/check-in/budget";
 import { ensureProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { createClient } from "@/lib/supabase/server";
 import type {
+  EnergyLevel,
   MorningCheckInRecord,
   MorningCheckInStatus,
   MorningCheckInSubmission,
@@ -16,6 +18,9 @@ type MorningCheckInRow = {
   check_in_date: string;
   energy_score: number;
   sleep_quality: SleepQuality;
+  energy_level: EnergyLevel;
+  daily_budget: number;
+  budget_formula_version: number;
   created_at: string;
   updated_at: string;
 };
@@ -25,10 +30,13 @@ type MorningCheckInInsert = {
   check_in_date: string;
   energy_score: number;
   sleep_quality: SleepQuality;
+  energy_level: EnergyLevel;
+  daily_budget: number;
+  budget_formula_version: number;
 };
 
 const MORNING_CHECK_IN_COLUMNS =
-  "id, user_id, check_in_date, energy_score, sleep_quality, created_at, updated_at";
+  "id, user_id, check_in_date, energy_score, sleep_quality, energy_level, daily_budget, budget_formula_version, created_at, updated_at";
 
 function mapMorningCheckInRow(row: MorningCheckInRow): MorningCheckInRecord {
   return {
@@ -37,6 +45,9 @@ function mapMorningCheckInRow(row: MorningCheckInRow): MorningCheckInRecord {
     checkInDate: row.check_in_date,
     energyScore: row.energy_score,
     sleepQuality: row.sleep_quality,
+    energyLevel: row.energy_level,
+    dailyBudget: row.daily_budget,
+    budgetFormulaVersion: row.budget_formula_version,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -122,11 +133,15 @@ export async function upsertTodayCheckInForCurrentUser(
   }
 
   const checkInDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const budgetSnapshot = deriveBudgetSnapshot(submission.energyScore);
   const payload: MorningCheckInInsert = {
     user_id: user.id,
     check_in_date: checkInDate,
     energy_score: submission.energyScore,
     sleep_quality: submission.sleepQuality,
+    energy_level: budgetSnapshot.energyLevel,
+    daily_budget: budgetSnapshot.dailyBudget,
+    budget_formula_version: budgetSnapshot.budgetFormulaVersion,
   };
 
   const supabase = await createClient();

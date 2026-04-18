@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatEnergyLevelLabel } from "@/lib/check-in/budget";
 import type { MorningCheckInRecord } from "@/lib/check-in/types";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +30,7 @@ function formatSleepQualityLabel(value: MorningCheckInRecord["sleepQuality"]) {
 export function CheckInCard({ todayCheckIn }: CheckInCardProps) {
   const title = todayCheckIn ? "Vandaag ingevuld" : "Nog niet ingevuld";
   const description = todayCheckIn
-    ? `Energie ${todayCheckIn.energyScore}/10, slaap ${formatSleepQualityLabel(todayCheckIn.sleepQuality).toLowerCase()}.`
+    ? `Energie ${todayCheckIn.energyScore}/10, slaap ${formatSleepQualityLabel(todayCheckIn.sleepQuality).toLowerCase()}, niveau ${formatEnergyLevelLabel(todayCheckIn.energyLevel).toLowerCase()}, budget ${todayCheckIn.dailyBudget} punten.`
     : "Leg je energiestart en slaapkwaliteit van vandaag vast.";
 
   return (
