@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { saveSettingsAction } from "@/app/settings/actions";
+import { PreferenceHiddenFields } from "@/components/preferences/preference-hidden-fields";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
+import { usePreferenceDraft } from "@/lib/preferences/use-preferences-draft";
 import type { ProfileBundle } from "@/lib/profile/types";
 
 type SettingsFormProps = {
@@ -37,41 +39,14 @@ const LOCALE_OPTIONS = [
 ] as const;
 
 export function SettingsForm({ profileBundle }: SettingsFormProps) {
+  const [, formAction, isPending] = useActionState(saveSettingsAction, null);
   const [locale, setLocale] = useState(profileBundle.profile.locale);
-  const [timezone, setTimezone] = useState(profileBundle.profile.timezone);
-  const [showEnergyPoints, setShowEnergyPoints] = useState(
-    profileBundle.settings.showEnergyPoints,
-  );
-  const [morningReminderEnabled, setMorningReminderEnabled] = useState(
-    profileBundle.settings.morningReminderEnabled,
-  );
-  const [morningReminderTime, setMorningReminderTime] = useState(
-    profileBundle.settings.morningReminderTime ?? "08:30",
-  );
-  const [reflectionReminderEnabled, setReflectionReminderEnabled] = useState(
-    profileBundle.settings.reflectionReminderEnabled,
-  );
+  const { draft, updateDraft } = usePreferenceDraft(profileBundle);
 
   return (
-    <form action={saveSettingsAction} className="space-y-6">
+    <form action={formAction} className="space-y-6" aria-busy={isPending}>
       <input type="hidden" name="locale" value={locale} />
-      <input type="hidden" name="timezone" value={timezone} />
-      <input
-        type="hidden"
-        name="showEnergyPoints"
-        value={showEnergyPoints ? "true" : "false"}
-      />
-      <input
-        type="hidden"
-        name="morningReminderEnabled"
-        value={morningReminderEnabled ? "true" : "false"}
-      />
-      <input type="hidden" name="morningReminderTime" value={morningReminderTime} />
-      <input
-        type="hidden"
-        name="reflectionReminderEnabled"
-        value={reflectionReminderEnabled ? "true" : "false"}
-      />
+      <PreferenceHiddenFields draft={draft} />
 
       <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.1)]">
         <CardHeader className="pb-0">
@@ -107,6 +82,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
             <div className="space-y-2">
               <Label className="text-slate-800">Taal</Label>
               <Select
+                disabled={isPending}
                 value={locale}
                 onValueChange={(value) => setLocale(value ?? profileBundle.profile.locale)}
               >
@@ -126,9 +102,12 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
             <div className="space-y-2">
               <Label className="text-slate-800">Timezone</Label>
               <Select
-                value={timezone}
+                disabled={isPending}
+                value={draft.timezone}
                 onValueChange={(value) =>
-                  setTimezone(value ?? profileBundle.profile.timezone)
+                  updateDraft({
+                    timezone: value ?? profileBundle.profile.timezone,
+                  })
                 }
               >
                 <SelectTrigger className="h-12 w-full rounded-[1.25rem] bg-background/80 px-4 text-base">
@@ -165,8 +144,11 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
                 </div>
                 <Switch
                   id="show-energy-points"
-                  checked={showEnergyPoints}
-                  onCheckedChange={setShowEnergyPoints}
+                  disabled={isPending}
+                  checked={draft.showEnergyPoints}
+                  onCheckedChange={(showEnergyPoints) =>
+                    updateDraft({ showEnergyPoints })
+                  }
                 />
               </CardContent>
             </Card>
@@ -193,14 +175,17 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
                       Zet een lichte reminder aan voor een rustige start van je check-in.
                     </p>
                   </div>
-                  <Switch
-                    id="morning-reminder-enabled"
-                    checked={morningReminderEnabled}
-                    onCheckedChange={setMorningReminderEnabled}
-                  />
+                    <Switch
+                      id="morning-reminder-enabled"
+                      disabled={isPending}
+                      checked={draft.morningReminderEnabled}
+                      onCheckedChange={(morningReminderEnabled) =>
+                        updateDraft({ morningReminderEnabled })
+                      }
+                    />
                 </div>
 
-                {morningReminderEnabled ? (
+                {draft.morningReminderEnabled ? (
                   <>
                     <Separator />
                     <div className="space-y-2">
@@ -210,9 +195,12 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
                       <Input
                         id="morning-reminder-time"
                         className="h-12 rounded-[1.25rem] bg-white px-4 text-base md:text-base"
+                        disabled={isPending}
                         type="time"
-                        value={morningReminderTime}
-                        onChange={(event) => setMorningReminderTime(event.target.value)}
+                        value={draft.morningReminderTime}
+                        onChange={(event) =>
+                          updateDraft({ morningReminderTime: event.target.value })
+                        }
                       />
                     </div>
                   </>
@@ -232,8 +220,11 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
                 </div>
                 <Switch
                   id="reflection-reminder-enabled"
-                  checked={reflectionReminderEnabled}
-                  onCheckedChange={setReflectionReminderEnabled}
+                  disabled={isPending}
+                  checked={draft.reflectionReminderEnabled}
+                  onCheckedChange={(reflectionReminderEnabled) =>
+                    updateDraft({ reflectionReminderEnabled })
+                  }
                 />
               </CardContent>
             </Card>
@@ -258,11 +249,13 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm leading-7 text-muted-foreground">
-          Wijzigingen zijn direct van toepassing op jouw account en volgende sessies.
+          {isPending
+            ? "Instellingen worden opgeslagen..."
+            : "Wijzigingen zijn direct van toepassing op jouw account en volgende sessies."}
         </p>
 
-        <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-          Instellingen opslaan
+        <Button type="submit" size="lg" disabled={isPending} className="h-11 rounded-full px-5">
+          {isPending ? "Instellingen opslaan..." : "Instellingen opslaan"}
         </Button>
       </div>
     </form>

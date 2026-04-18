@@ -7,26 +7,74 @@ import {
   getRequestOrigin,
   sanitizeNextPath,
 } from "@/lib/auth/navigation";
+import {
+  assertEmail,
+  assertMinLength,
+  FormDataValidationError,
+  getOptionalString,
+  getRequiredString,
+} from "@/lib/forms/parse";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
-function getString(formData: FormData, key: string) {
-  const value = formData.get(key);
-  return typeof value === "string" ? value.trim() : "";
+function parseSignInFormData(formData: FormData) {
+  const next = sanitizeNextPath(getOptionalString(formData, "next"));
+  const email = assertEmail(
+    getRequiredString(formData, "email", "missing-fields"),
+    "invalid-email",
+  );
+  const password = assertMinLength(
+    getRequiredString(formData, "password", "missing-fields"),
+    8,
+    "password-too-short",
+  );
+
+  return {
+    next,
+    email,
+    password,
+  };
+}
+
+function parseSignUpFormData(formData: FormData) {
+  const next = sanitizeNextPath(getOptionalString(formData, "next"));
+  const email = assertEmail(
+    getRequiredString(formData, "email", "missing-fields"),
+    "invalid-email",
+  );
+  const password = assertMinLength(
+    getRequiredString(formData, "password", "missing-fields"),
+    8,
+    "password-too-short",
+  );
+
+  return {
+    next,
+    email,
+    password,
+  };
 }
 
 export async function signInAction(formData: FormData) {
-  const next = sanitizeNextPath(getString(formData, "next"));
+  let next = sanitizeNextPath(getOptionalString(formData, "next"));
+  let email = "";
+  let password = "";
+
+  try {
+    const parsedFormData = parseSignInFormData(formData);
+    next = parsedFormData.next;
+    email = parsedFormData.email;
+    password = parsedFormData.password;
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      redirect(buildPathWithQuery("/login", { error: error.code, next }));
+    }
+
+    throw error;
+  }
 
   if (!hasSupabaseEnv()) {
     redirect(buildPathWithQuery("/login", { error: "auth-not-configured", next }));
-  }
-
-  const email = getString(formData, "email");
-  const password = getString(formData, "password");
-
-  if (!email || !password) {
-    redirect(buildPathWithQuery("/login", { error: "missing-fields", next }));
   }
 
   const supabase = await createClient();
@@ -50,19 +98,27 @@ export async function signInAction(formData: FormData) {
 }
 
 export async function signUpAction(formData: FormData) {
-  const next = sanitizeNextPath(getString(formData, "next"));
+  let next = sanitizeNextPath(getOptionalString(formData, "next"));
+  let email = "";
+  let password = "";
+
+  try {
+    const parsedFormData = parseSignUpFormData(formData);
+    next = parsedFormData.next;
+    email = parsedFormData.email;
+    password = parsedFormData.password;
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      redirect(buildPathWithQuery("/sign-up", { error: error.code, next }));
+    }
+
+    throw error;
+  }
 
   if (!hasSupabaseEnv()) {
     redirect(
       buildPathWithQuery("/sign-up", { error: "auth-not-configured", next }),
     );
-  }
-
-  const email = getString(formData, "email");
-  const password = getString(formData, "password");
-
-  if (!email || !password) {
-    redirect(buildPathWithQuery("/sign-up", { error: "missing-fields", next }));
   }
 
   const supabase = await createClient();

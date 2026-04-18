@@ -44,6 +44,12 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 
 - [inspannings-monitor-cicd-en-deploy.md](./inspannings-monitor-cicd-en-deploy.md)
   Beschrijft de gekozen CI/CD-opzet met GitHub Actions voor verificatie en Vercel voor automatische preview- en production-deploys.
+- [inspannings-monitor-dagelijkse-deploy-checklist.md](./inspannings-monitor-dagelijkse-deploy-checklist.md)
+  Korte operationele checklist voor de normale flow van feature branch naar productie.
+- [inspannings-monitor-ops-security-notitie.md](./inspannings-monitor-ops-security-notitie.md)
+  Legt de actuele operationele en security-keuzes vast rond repositorybescherming, Vercel-deploys en secretbeheer.
+- [gpt-instructies.md](./gpt-instructies.md)
+  Bundelt de inhoudelijke instructies en expliciete keuzes die in deze context zijn gegeven als compacte bron voor vervolgwerk.
 
 ## Backlog en Linear
 

@@ -1,29 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AuthNotice } from "@/components/auth/auth-notice";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { AuthPanel } from "@/components/auth/auth-panel";
 import { signInAction } from "@/app/auth-actions";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getAuthNotice } from "@/lib/auth/messages";
 import { buildPathWithQuery, sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getAuthStatusToast } from "@/lib/feedback/status-messages";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
 
 type LoginPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const authState = await getAuthState();
@@ -34,7 +27,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     redirect(next);
   }
 
-  const notice = getAuthNotice(
+  const statusToast = getAuthStatusToast(
     getParamValue(resolvedSearchParams, "error"),
     getParamValue(resolvedSearchParams, "status"),
   );
@@ -54,7 +47,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </p>
       }
     >
-      <AuthNotice notice={notice} />
+      <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
       {!authState.isConfigured ? (
         <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">

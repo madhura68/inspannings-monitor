@@ -37,6 +37,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 2. Vul in:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - optioneel: `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` voor de interne wizard-testpagina
 3. Installeer dependencies met `npm install`
 4. Start lokaal met `npm run dev`
 
@@ -77,6 +78,14 @@ de profile/settings-laag lokaal test.
 De app gebruikt `shadcn/ui` bovenop `Tailwind CSS` als herbruikbare basis voor
 knoppen, formulieren, kaarten en meldingen. De theme tokens staan centraal in
 `app/globals.css`, zodat kleur, focus-states en componentgedrag consistenter blijven.
+Voor feedback na redirects of server actions krijgt de app nu standaard de voorkeur
+voor `sonner`-toasts boven losse inline statusmeldingen.
+
+## Interne wizard-test
+
+Er is een interne testwizard beschikbaar op `/wizard-test` om een toekomstige
+generieke wizard-core te valideren. Deze route en de dashboardknop worden alleen
+zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## CI/CD
 

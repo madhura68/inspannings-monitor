@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/auth-actions";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { SettingsForm } from "@/components/settings/settings-form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -13,30 +13,16 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getSettingsStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 type SettingsPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
-
-function getSettingsNotice(status: string | null) {
-  if (status === "saved") {
-    return "Je instellingen zijn opgeslagen.";
-  }
-
-  return null;
-}
 
 export default async function SettingsPage({ searchParams }: SettingsPageProps) {
   const authState = await getAuthState();
@@ -60,7 +46,10 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     redirect("/onboarding");
   }
 
-  const notice = getSettingsNotice(getParamValue(resolvedSearchParams, "status"));
+  const statusToast = getSettingsStatusToast(
+    getParamValue(resolvedSearchParams, "error"),
+    getParamValue(resolvedSearchParams, "status"),
+  );
   const profileTitle =
     profileBundle.profile.displayName ??
     profileBundle.profile.email ??
@@ -70,6 +59,8 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
+        <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
+
         <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
           <div>
             <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
@@ -105,14 +96,6 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </form>
           </div>
         </header>
-
-        {notice ? (
-          <Alert className="rounded-[1.5rem] border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700">
-            <AlertDescription className="leading-7 text-current">
-              {notice}
-            </AlertDescription>
-          </Alert>
-        ) : null}
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <SettingsForm profileBundle={profileBundle} />

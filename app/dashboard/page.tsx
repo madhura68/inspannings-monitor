@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/auth-actions";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -12,22 +12,17 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { isTestWizardEnabled } from "@/lib/config/feature-flags";
+import { getDashboardStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 type DashboardPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
 
 function formatToggleState(value: boolean, enabledLabel = "Aan", disabledLabel = "Uit") {
   return value ? enabledLabel : disabledLabel;
@@ -35,18 +30,6 @@ function formatToggleState(value: boolean, enabledLabel = "Aan", disabledLabel =
 
 function formatReminderTime(value: string | null) {
   return value ? value.slice(0, 5) : "Nog niet ingesteld";
-}
-
-function getDashboardNotice(status: string | null) {
-  if (status === "onboarding-completed") {
-    return "Je onboarding is opgeslagen. Je basisinstellingen staan nu klaar.";
-  }
-
-  if (status === "onboarding-skipped") {
-    return "Je hebt de onboarding nu overgeslagen. Je kunt hem later alsnog afronden.";
-  }
-
-  return null;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
@@ -68,7 +51,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   const { profile, settings } = profileBundle;
-  const notice = getDashboardNotice(getParamValue(resolvedSearchParams, "status"));
+  const statusToast = getDashboardStatusToast(getParamValue(resolvedSearchParams, "status"));
 
   if (!profile.onboardingSeen) {
     redirect("/onboarding");
@@ -83,13 +66,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        {notice ? (
-          <Alert className="rounded-[1.5rem] border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700">
-            <AlertDescription className="leading-7 text-current">
-              {notice}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+        <StatusToastBridge toast={statusToast} />
 
         <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
           <div>
@@ -117,6 +94,17 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               >
                 Instellingen
               </Link>
+              {isTestWizardEnabled() ? (
+                <Link
+                  href="/wizard-test"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "lg" }),
+                    "h-11 rounded-full px-5",
+                  )}
+                >
+                  Test wizard
+                </Link>
+              ) : null}
               <Button type="submit" size="lg" className="h-11 rounded-full px-5">
                 Uitloggen
               </Button>
@@ -185,6 +173,22 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               </CardDescription>
             </CardContent>
           </Card>
+
+          {isTestWizardEnabled() ? (
+            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+              <CardHeader className="pb-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                  Wizard core
+                </p>
+                <CardTitle className="text-lg text-slate-900">Interne testwizard actief</CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6">
+                <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  Gebruik deze alleen in development of preview om nieuwe multi-step flows te controleren.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ) : null}
         </section>
 
         {!profile.onboardingCompleted ? (

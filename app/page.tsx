@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signOutAction } from "@/app/auth-actions";
-import { AuthNotice } from "@/components/auth/auth-notice";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getAuthNotice } from "@/lib/auth/messages";
 import { getAuthState } from "@/lib/auth/session";
+import { getAuthStatusToast } from "@/lib/feedback/status-messages";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -38,21 +39,13 @@ const releaseFocus = [
 ];
 
 type HomePageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
 
 export default async function Home({ searchParams }: HomePageProps) {
   const authState = await getAuthState();
   const resolvedSearchParams = await searchParams;
-  const notice = getAuthNotice(
+  const statusToast = getAuthStatusToast(
     getParamValue(resolvedSearchParams, "error"),
     getParamValue(resolvedSearchParams, "status"),
   );
@@ -118,7 +111,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           </div>
         </header>
 
-        <AuthNotice notice={notice} />
+        <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
           <Card className="rounded-[2rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur">
