@@ -32,11 +32,13 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 - Hosting: `Vercel`
 - Database: `Supabase PostgreSQL`
 - Authenticatie: `Supabase Auth`
+- UI foundation in de app: `Tailwind CSS + shadcn/ui`
 
 ## Generator
 
 - [generate_inspannings_monitor_docs.py](./generate_inspannings_monitor_docs.py)
   Genereert de actuele `.docx`-documenten opnieuw vanuit de bevestigde uitgangspunten.
+  Vereist een Python-omgeving met `python-docx`.
 
 ## Backlog en Linear
 

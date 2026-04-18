@@ -755,7 +755,7 @@ def build_technische_architectuur() -> None:
         [
             ["Framework", "Next.js met App Router", "Past goed bij Vercel, server components en server-side datatoegang."],
             ["UI", "React + TypeScript", "Sterke typeveiligheid en goede componentstructuur."],
-            ["Styling", "Tailwind CSS + componentbibliotheek", "Snel consistente, toegankelijke UI voor mobile-first flows."],
+            ["Styling", "Tailwind CSS + shadcn/ui", "Semantische componenten en centrale theme tokens houden de UI consistenter en beter onderhoudbaar."],
             ["Validatie", "Zod of vergelijkbare runtime-validatie", "Nodig voor strikte server-side inputcontrole."],
             ["Database access", "Supabase client en/of Prisma", "Prisma kan nog steeds zinvol zijn, maar is een bewuste keuze en geen verplichting."],
             ["Charts", "Lichte grafiekbibliotheek", "Alleen voor eenvoudige dag- en weekinzichten; geen heavy analytics platform nodig."],
@@ -1037,7 +1037,7 @@ def build_implementatieplan_backlog() -> None:
         [
             ["ST-001", "Next.js projectbasis opzetten met TypeScript en gekozen stylingaanpak.", "Build", "Project start lokaal en in previewomgeving zonder handmatige workarounds."],
             ["ST-002", "Omgevingen definiëren voor development, preview en production.", "Ops", "Environment strategy is vastgelegd en werkt technisch."],
-            ["ST-003", "Component foundation voor formulieren, kaarten, knoppen en meldingen neerzetten.", "UI", "Kerncomponenten zijn herbruikbaar en mobiel bruikbaar."],
+            ["ST-003", "shadcn/ui foundation voor formulieren, kaarten, knoppen en meldingen neerzetten.", "UI", "Kerncomponenten zijn herbruikbaar, thematisch consistent en mobiel bruikbaar."],
             ["ST-004", "Basale foutafhandeling en lege staten ontwerpen.", "UX", "Gebruiker ziet bruikbare feedback bij lege of foutieve situaties."],
         ],
     )

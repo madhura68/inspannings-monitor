@@ -2,6 +2,26 @@
 
 import { useState } from "react";
 import { saveSettingsAction } from "@/app/settings/actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
 import type { ProfileBundle } from "@/lib/profile/types";
 
@@ -53,164 +73,197 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
         value={reflectionReminderEnabled ? "true" : "false"}
       />
 
-      <section className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-          Account
-        </p>
-        <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl text-slate-900">
-          Basisinstellingen voor jouw account
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-700">
-          Je past hier alleen je wellness-first voorkeuren aan. Er zijn in release 1
-          geen medische velden, deelinstellingen of zorgverlenerrollen.
-        </p>
-      </section>
+      <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.1)]">
+        <CardHeader className="pb-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+            Account
+          </p>
+          <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
+            Basisinstellingen voor jouw account
+          </CardTitle>
+          <CardDescription className="max-w-2xl text-sm leading-7 text-muted-foreground">
+            Je past hier alleen wellness-first voorkeuren aan. Er zijn in release 1
+            geen medische velden, deelinstellingen of zorgverlenerrollen.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-1 pb-6">
+          <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+            <AlertDescription className="leading-7 text-current">
+              Release 1 draait bewust volledig in het <strong>Nederlands</strong>.
+              De taalinstelling blijft wel al aanwezig in het accountmodel.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <article className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-            Taal en tijd
-          </p>
-
-          <div className="mt-5 space-y-5">
-            <label className="block text-sm font-medium text-slate-800">
-              Taal
-              <select
-                className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Taal en tijd
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-5 pb-6">
+            <div className="space-y-2">
+              <Label className="text-slate-800">Taal</Label>
+              <Select
                 value={locale}
-                onChange={(event) => setLocale(event.target.value)}
+                onValueChange={(value) => setLocale(value ?? profileBundle.profile.locale)}
               >
-                {LOCALE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <div className="rounded-[1.5rem] border border-sky-200 bg-sky-50 px-4 py-4 text-sm leading-7 text-sky-900">
-              Release 1 draait bewust volledig in het Nederlands. De taalinstelling
-              blijft al wel aanwezig in het accountmodel.
+                <SelectTrigger className="h-12 w-full rounded-[1.25rem] bg-background/80 px-4 text-base">
+                  <SelectValue placeholder="Kies een taal" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LOCALE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <label className="block text-sm font-medium text-slate-800">
-              Timezone
-              <select
-                className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+            <div className="space-y-2">
+              <Label className="text-slate-800">Timezone</Label>
+              <Select
                 value={timezone}
-                onChange={(event) => setTimezone(event.target.value)}
+                onValueChange={(value) =>
+                  setTimezone(value ?? profileBundle.profile.timezone)
+                }
               >
-                {ONBOARDING_TIMEZONE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </article>
+                <SelectTrigger className="h-12 w-full rounded-[1.25rem] bg-background/80 px-4 text-base">
+                  <SelectValue placeholder="Kies een timezone" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ONBOARDING_TIMEZONE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
 
-        <article className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-            Interface
-          </p>
-
-          <div className="mt-5 space-y-4">
-            <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-              <input
-                className="mt-1 h-4 w-4 accent-emerald-900"
-                type="checkbox"
-                checked={showEnergyPoints}
-                onChange={(event) => setShowEnergyPoints(event.target.checked)}
-              />
-              <span>
-                <span className="block text-sm font-semibold text-slate-900">
-                  Toon energiebudgetpunten
-                </span>
-                <span className="mt-1 block text-sm leading-7 text-slate-700">
-                  Laat budgetpunten zichtbaar zien in het dashboard en latere dagflows.
-                </span>
-              </span>
-            </label>
-          </div>
-        </article>
+        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Interface
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4 pb-6">
+            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+              <CardContent className="flex items-start justify-between gap-4 py-5">
+                <div className="space-y-1">
+                  <Label htmlFor="show-energy-points" className="text-sm font-semibold text-slate-900">
+                    Toon energiebudgetpunten
+                  </Label>
+                  <p className="text-sm leading-7 text-muted-foreground">
+                    Laat budgetpunten zichtbaar zien in het dashboard en latere dagflows.
+                  </p>
+                </div>
+                <Switch
+                  id="show-energy-points"
+                  checked={showEnergyPoints}
+                  onCheckedChange={setShowEnergyPoints}
+                />
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
       </section>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <article className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-            Reminders
-          </p>
-
-          <div className="mt-5 space-y-4">
-            <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-              <input
-                className="mt-1 h-4 w-4 accent-emerald-900"
-                type="checkbox"
-                checked={morningReminderEnabled}
-                onChange={(event) => setMorningReminderEnabled(event.target.checked)}
-              />
-              <span className="flex-1">
-                <span className="block text-sm font-semibold text-slate-900">
-                  Ochtendreminder
-                </span>
-                <span className="mt-1 block text-sm leading-7 text-slate-700">
-                  Zet een lichte reminder aan voor een rustige start van je check-in.
-                </span>
+        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Reminders
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4 pb-6">
+            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+              <CardContent className="space-y-4 py-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="morning-reminder-enabled" className="text-sm font-semibold text-slate-900">
+                      Ochtendreminder
+                    </Label>
+                    <p className="text-sm leading-7 text-muted-foreground">
+                      Zet een lichte reminder aan voor een rustige start van je check-in.
+                    </p>
+                  </div>
+                  <Switch
+                    id="morning-reminder-enabled"
+                    checked={morningReminderEnabled}
+                    onCheckedChange={setMorningReminderEnabled}
+                  />
+                </div>
 
                 {morningReminderEnabled ? (
-                  <input
-                    className="mt-3 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600"
-                    type="time"
-                    value={morningReminderTime}
-                    onChange={(event) => setMorningReminderTime(event.target.value)}
-                  />
+                  <>
+                    <Separator />
+                    <div className="space-y-2">
+                      <Label htmlFor="morning-reminder-time" className="text-slate-800">
+                        Tijdstip voor de ochtendreminder
+                      </Label>
+                      <Input
+                        id="morning-reminder-time"
+                        className="h-12 rounded-[1.25rem] bg-white px-4 text-base md:text-base"
+                        type="time"
+                        value={morningReminderTime}
+                        onChange={(event) => setMorningReminderTime(event.target.value)}
+                      />
+                    </div>
+                  </>
                 ) : null}
-              </span>
-            </label>
+              </CardContent>
+            </Card>
 
-            <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-              <input
-                className="mt-1 h-4 w-4 accent-emerald-900"
-                type="checkbox"
-                checked={reflectionReminderEnabled}
-                onChange={(event) => setReflectionReminderEnabled(event.target.checked)}
-              />
-              <span>
-                <span className="block text-sm font-semibold text-slate-900">
-                  Reflectieprompts toestaan
-                </span>
-                <span className="mt-1 block text-sm leading-7 text-slate-700">
-                  Maak alvast de opt-in klaar voor lichte terugblikprompts in een latere story.
-                </span>
-              </span>
-            </label>
-          </div>
-        </article>
+            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+              <CardContent className="flex items-start justify-between gap-4 py-5">
+                <div className="space-y-1">
+                  <Label htmlFor="reflection-reminder-enabled" className="text-sm font-semibold text-slate-900">
+                    Reflectieprompts toestaan
+                  </Label>
+                  <p className="text-sm leading-7 text-muted-foreground">
+                    Maak alvast de opt-in klaar voor lichte terugblikprompts in een latere story.
+                  </p>
+                </div>
+                <Switch
+                  id="reflection-reminder-enabled"
+                  checked={reflectionReminderEnabled}
+                  onCheckedChange={setReflectionReminderEnabled}
+                />
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
 
-        <article className="rounded-[1.75rem] border border-emerald-950/10 bg-emerald-950 p-6 text-emerald-50 shadow-[0_12px_40px_rgba(6,78,59,0.18)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-200/80">
-            Bewuste grenzen
-          </p>
-          <ul className="mt-4 space-y-3 text-sm leading-7 text-emerald-50/90">
-            <li>Geen medische drempels, diagnoses of behandelinstellingen.</li>
-            <li>Geen delen met zorgverleners of naasten in release 1.</li>
-            <li>Alle instellingen blijven gekoppeld aan alleen jouw account.</li>
-          </ul>
-        </article>
+        <Card className="rounded-[1.75rem] border border-primary/15 bg-primary py-0 text-primary-foreground shadow-[0_12px_40px_rgba(22,58,43,0.18)]">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
+              Bewuste grenzen
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3 pb-6 text-sm leading-7 text-primary-foreground/90">
+            <p>Geen medische drempels, diagnoses of behandelinstellingen.</p>
+            <p>Geen delen met zorgverleners of naasten in release 1.</p>
+            <p>Alle instellingen blijven gekoppeld aan alleen jouw account.</p>
+          </CardContent>
+        </Card>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-6">
-        <p className="text-sm leading-7 text-slate-600">
+      <Separator />
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm leading-7 text-muted-foreground">
           Wijzigingen zijn direct van toepassing op jouw account en volgende sessies.
         </p>
 
-        <button
-          type="submit"
-          className="rounded-full bg-emerald-950 px-5 py-3 text-sm font-semibold text-emerald-50 transition hover:-translate-y-0.5 hover:bg-emerald-900"
-        >
+        <Button type="submit" size="lg" className="h-11 rounded-full px-5">
           Instellingen opslaan
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -1,5 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 type AuthPanelProps = {
   eyebrow: string;
@@ -43,20 +47,24 @@ export function AuthPanel({
         </section>
 
         <section className="flex items-center">
-          <div className="w-full rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:p-8">
-            <div className="mb-6 flex items-center justify-between gap-3">
+          <Card className="w-full rounded-[2rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur">
+            <CardContent className="p-6 sm:p-8">
+              <div className="mb-6 flex items-center justify-between gap-3">
               <Link
                 href="/"
-                className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 transition hover:text-slate-900"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "h-auto p-0 text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground hover:bg-transparent hover:text-foreground",
+                )}
               >
                 Terug naar landing
               </Link>
-            </div>
-            {children}
-            <div className="mt-6 border-t border-black/10 pt-5 text-sm text-slate-600">
-              {footer}
-            </div>
-          </div>
+              </div>
+              {children}
+              <Separator className="mt-6" />
+              <div className="pt-5 text-sm text-muted-foreground">{footer}</div>
+            </CardContent>
+          </Card>
         </section>
       </div>
     </main>

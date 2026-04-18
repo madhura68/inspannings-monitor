@@ -8,6 +8,7 @@ Wellness-first webapp voor individuele gebruikers die hun energie willen plannen
 - React 19
 - TypeScript
 - Tailwind CSS
+- shadcn/ui component foundation
 - Vercel als hostingdoel
 - Supabase voor database en authenticatie
 
@@ -41,6 +42,12 @@ Voor `ST-102` staat de eerste databasefundering in:
 
 Voer deze SQL uit in de Supabase SQL Editor of via de Supabase CLI voordat je
 de profile/settings-laag lokaal test.
+
+## UI foundation
+
+De app gebruikt nu `shadcn/ui` bovenop `Tailwind CSS` als herbruikbare basis voor
+knoppen, formulieren, kaarten en meldingen. De theme tokens staan centraal in
+`app/globals.css`, zodat kleur, focus-states en componentgedrag consistenter blijven.
 
 ## Eerstvolgende bouwstappen
 

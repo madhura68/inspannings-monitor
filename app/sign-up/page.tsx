@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import { AuthNotice } from "@/components/auth/auth-notice";
 import { AuthPanel } from "@/components/auth/auth-panel";
 import { signUpAction } from "@/app/auth-actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getAuthNotice } from "@/lib/auth/messages";
 import { buildPathWithQuery, sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
@@ -53,42 +57,51 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
       <AuthNotice notice={notice} />
 
       {!authState.isConfigured ? (
-        <div className="rounded-2xl border border-sky-200 bg-sky-50 px-4 py-4 text-sm leading-7 text-sky-900">
-          Voeg eerst je Supabase-gegevens toe in `.env.local` op basis van `.env.example`.
-        </div>
+        <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+          <AlertDescription className="leading-7 text-current">
+            Voeg eerst je Supabase-gegevens toe in `.env.local` op basis van `.env.example`.
+          </AlertDescription>
+        </Alert>
       ) : (
-        <form action={signUpAction} className="space-y-4">
+        <form action={signUpAction} className="space-y-5">
           <input type="hidden" name="next" value={next} />
 
-          <label className="block text-sm font-medium text-slate-800">
-            E-mailadres
-            <input
-              className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-slate-800">
+              E-mailadres
+            </Label>
+            <Input
+              id="email"
+              className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
               type="email"
               name="email"
               autoComplete="email"
               required
             />
-          </label>
+          </div>
 
-          <label className="block text-sm font-medium text-slate-800">
-            Wachtwoord
-            <input
-              className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-slate-800">
+              Wachtwoord
+            </Label>
+            <Input
+              id="password"
+              className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
               type="password"
               name="password"
               autoComplete="new-password"
               minLength={8}
               required
             />
-          </label>
+          </div>
 
-          <button
+          <Button
             type="submit"
-            className="inline-flex w-full items-center justify-center rounded-2xl bg-emerald-950 px-5 py-3 text-sm font-semibold text-emerald-50 transition hover:-translate-y-0.5 hover:bg-emerald-900"
+            size="lg"
+            className="w-full rounded-[1.25rem]"
           >
             Account aanmaken
-          </button>
+          </Button>
         </form>
       )}
     </AuthPanel>

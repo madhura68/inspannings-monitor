@@ -3,6 +3,26 @@
 import type { MouseEvent } from "react";
 import { useState } from "react";
 import { completeOnboardingAction, skipOnboardingAction } from "@/app/onboarding/actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
 import type { ProfileBundle } from "@/lib/profile/types";
 
@@ -57,59 +77,59 @@ export function OnboardingFlow({ profileBundle }: OnboardingFlowProps) {
   }
 
   function goToNextStep(event: MouseEvent<HTMLButtonElement>) {
-    // This button lives inside the onboarding form. By preventing the default
-    // click action and rendering a keyed replacement, we avoid an accidental
-    // form submit when the final step button appears after the state update.
     event.preventDefault();
     setCurrentStep((stepIndex) => Math.min(steps.length - 1, stepIndex + 1));
   }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-      <section className="rounded-[2rem] border border-black/10 bg-emerald-950 p-7 text-emerald-50 shadow-[0_18px_60px_rgba(6,78,59,0.18)] sm:p-9">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-200/80">
+      <section className="rounded-[2rem] border border-primary/15 bg-primary p-7 text-primary-foreground shadow-[0_18px_60px_rgba(22,58,43,0.18)] sm:p-9">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
           {step.eyebrow}
         </p>
         <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-tight sm:text-5xl">
           {step.title}
         </h1>
-        <p className="mt-5 max-w-xl text-base leading-8 text-emerald-50/85">
+        <p className="mt-5 max-w-xl text-base leading-8 text-primary-foreground/85">
           {step.description}
         </p>
 
-        <div className="mt-10 rounded-[1.5rem] border border-white/10 bg-white/8 p-5 text-sm leading-7 text-emerald-50/90">
-          <p className="font-semibold">Release 1 blijft bewust wellness-first.</p>
-          <ul className="mt-3 space-y-2">
-            <li>Alleen voor individuele gebruikers, zonder delen of zorgverlenerstoegang.</li>
-            <li>De app geeft geen diagnose, behandeling of medisch advies.</li>
-            <li>Bij acute of snel verslechterende klachten hoort directe hulp via arts, huisartsenpost of 112 buiten deze app.</li>
-          </ul>
-        </div>
+        <Alert className="mt-10 rounded-[1.5rem] border-white/10 bg-white/8 text-primary-foreground [&_svg]:text-primary-foreground/80">
+          <AlertDescription className="leading-7 text-current">
+            <span className="block font-semibold">Release 1 blijft bewust wellness-first.</span>
+            <span className="mt-2 block">
+              Alleen voor individuele gebruikers, zonder delen of zorgverlenerstoegang.
+            </span>
+            <span className="block">
+              De app geeft geen diagnose, behandeling of medisch advies.
+            </span>
+            <span className="block">
+              Bij acute of snel verslechterende klachten hoort directe hulp via arts, huisartsenpost of 112 buiten deze app.
+            </span>
+          </AlertDescription>
+        </Alert>
 
         <ol className="mt-8 flex gap-3">
           {steps.map((item, index) => (
             <li
               key={item.title}
               className={`h-2 flex-1 rounded-full ${
-                index <= currentStep ? "bg-emerald-200" : "bg-white/15"
+                index <= currentStep ? "bg-primary-foreground/85" : "bg-white/15"
               }`}
             />
           ))}
         </ol>
       </section>
 
-      <section className="rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:p-8">
+      <section className="rounded-[2rem] border border-border/60 bg-card/90 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:p-8">
         <div className="mb-6 flex items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Korte onboarding
           </p>
           <form action={skipOnboardingAction}>
-            <button
-              type="submit"
-              className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:-translate-y-0.5 hover:text-slate-950"
-            >
+            <Button type="submit" variant="outline" className="rounded-full">
               Nu overslaan
-            </button>
+            </Button>
           </form>
         </div>
 
@@ -135,154 +155,184 @@ export function OnboardingFlow({ profileBundle }: OnboardingFlowProps) {
 
           {currentStep === 0 ? (
             <div className="space-y-4">
-              <article className="rounded-[1.5rem] border border-black/10 bg-stone-50 p-5">
-                <h2 className="font-[family-name:var(--font-display)] text-2xl text-slate-900">
-                  Wat je hier wél krijgt
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-slate-700">
-                  Een rustige plan-doe-evalueer flow met energiebudgetten, zonder
-                  druk, score-oordeel of medische terminologie.
-                </p>
-              </article>
+              <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+                <CardHeader className="pb-0">
+                  <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
+                    Wat je hier wél krijgt
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                    Een rustige plan-doe-evalueer flow met energiebudgetten, zonder
+                    druk, score-oordeel of medische terminologie.
+                  </CardDescription>
+                </CardContent>
+              </Card>
 
-              <article className="rounded-[1.5rem] border border-black/10 bg-stone-50 p-5">
-                <h2 className="font-[family-name:var(--font-display)] text-2xl text-slate-900">
-                  Wat deze app niet doet
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-slate-700">
-                  Geen diagnose, geen behandeling, geen medische triage en geen
-                  automatisch delen met derden.
-                </p>
-              </article>
+              <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+                <CardHeader className="pb-0">
+                  <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
+                    Wat deze app niet doet
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                    Geen diagnose, geen behandeling, geen medische triage en geen
+                    automatisch delen met derden.
+                  </CardDescription>
+                </CardContent>
+              </Card>
             </div>
           ) : null}
 
           {currentStep === 1 ? (
             <div className="space-y-5">
-              <label className="block text-sm font-medium text-slate-800">
-                Schermnaam
-                <input
-                  className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+              <div className="space-y-2">
+                <Label htmlFor="display-name" className="text-slate-800">
+                  Schermnaam
+                </Label>
+                <Input
+                  id="display-name"
+                  className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
                   type="text"
                   value={displayName}
                   onChange={(event) => setDisplayName(event.target.value)}
                   placeholder="Optioneel, bijvoorbeeld Jan"
                   maxLength={40}
                 />
-              </label>
-
-              <div className="rounded-[1.5rem] border border-sky-200 bg-sky-50 px-4 py-4 text-sm leading-7 text-sky-900">
-                Voertaal voor release 1 staat vast op <strong>Nederlands</strong>.
               </div>
 
-              <label className="block text-sm font-medium text-slate-800">
-                Timezone
-                <select
-                  className="mt-2 w-full rounded-2xl border border-black/10 bg-stone-50 px-4 py-3 text-base outline-none transition focus:border-emerald-600 focus:bg-white"
+              <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+                <AlertDescription className="leading-7 text-current">
+                  Voertaal voor release 1 staat vast op <strong>Nederlands</strong>.
+                </AlertDescription>
+              </Alert>
+
+              <div className="space-y-2">
+                <Label className="text-slate-800">Timezone</Label>
+                <Select
                   value={timezone}
-                  onChange={(event) => setTimezone(event.target.value)}
+                  onValueChange={(value) =>
+                    setTimezone(value ?? profileBundle.profile.timezone)
+                  }
                 >
-                  {ONBOARDING_TIMEZONE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <SelectTrigger className="h-12 w-full rounded-[1.25rem] bg-background/80 px-4 text-base">
+                    <SelectValue placeholder="Kies een timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ONBOARDING_TIMEZONE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           ) : null}
 
           {currentStep === 2 ? (
             <div className="space-y-4">
-              <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-                <input
-                  className="mt-1 h-4 w-4 accent-emerald-900"
-                  type="checkbox"
-                  checked={showEnergyPoints}
-                  onChange={(event) => setShowEnergyPoints(event.target.checked)}
-                />
-                <span>
-                  <span className="block text-sm font-semibold text-slate-900">
-                    Toon energiebudgetpunten
-                  </span>
-                  <span className="mt-1 block text-sm leading-7 text-slate-700">
-                    Laat geplande en resterende punten zichtbaar zien in de interface.
-                  </span>
-                </span>
-              </label>
+              <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+                <CardContent className="flex items-start justify-between gap-4 py-5">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-semibold text-slate-900">
+                      Toon energiebudgetpunten
+                    </Label>
+                    <p className="text-sm leading-7 text-muted-foreground">
+                      Laat geplande en resterende punten zichtbaar zien in de interface.
+                    </p>
+                  </div>
+                  <Switch checked={showEnergyPoints} onCheckedChange={setShowEnergyPoints} />
+                </CardContent>
+              </Card>
 
-              <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-                <input
-                  className="mt-1 h-4 w-4 accent-emerald-900"
-                  type="checkbox"
-                  checked={morningReminderEnabled}
-                  onChange={(event) => setMorningReminderEnabled(event.target.checked)}
-                />
-                <span className="flex-1">
-                  <span className="block text-sm font-semibold text-slate-900">
-                    Zet een lichte ochtendreminder aan
-                  </span>
-                  <span className="mt-1 block text-sm leading-7 text-slate-700">
-                    Handig als je later een korte check-in wilt doen zonder extra druk.
-                  </span>
+              <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+                <CardContent className="space-y-4 py-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-sm font-semibold text-slate-900">
+                        Zet een lichte ochtendreminder aan
+                      </Label>
+                      <p className="text-sm leading-7 text-muted-foreground">
+                        Handig als je later een korte check-in wilt doen zonder extra druk.
+                      </p>
+                    </div>
+                    <Switch
+                      checked={morningReminderEnabled}
+                      onCheckedChange={setMorningReminderEnabled}
+                    />
+                  </div>
 
                   {morningReminderEnabled ? (
-                    <input
-                      className="mt-3 w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-base outline-none transition focus:border-emerald-600"
-                      type="time"
-                      value={morningReminderTime}
-                      onChange={(event) => setMorningReminderTime(event.target.value)}
-                    />
+                    <>
+                      <Separator />
+                      <div className="space-y-2">
+                        <Label htmlFor="morning-reminder-time" className="text-slate-800">
+                          Tijdstip voor de ochtendreminder
+                        </Label>
+                        <Input
+                          id="morning-reminder-time"
+                          className="h-12 rounded-[1.25rem] bg-white px-4 text-base md:text-base"
+                          type="time"
+                          value={morningReminderTime}
+                          onChange={(event) => setMorningReminderTime(event.target.value)}
+                        />
+                      </div>
+                    </>
                   ) : null}
-                </span>
-              </label>
+                </CardContent>
+              </Card>
 
-              <label className="flex items-start gap-3 rounded-[1.5rem] border border-black/10 bg-stone-50 px-4 py-4">
-                <input
-                  className="mt-1 h-4 w-4 accent-emerald-900"
-                  type="checkbox"
-                  checked={reflectionReminderEnabled}
-                  onChange={(event) => setReflectionReminderEnabled(event.target.checked)}
-                />
-                <span>
-                  <span className="block text-sm font-semibold text-slate-900">
-                    Sta lichte reflectieprompts toe
-                  </span>
-                  <span className="mt-1 block text-sm leading-7 text-slate-700">
-                    Optionele terugblikprompts kunnen later helpen om rustiger patronen te zien.
-                  </span>
-                </span>
-              </label>
+              <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+                <CardContent className="flex items-start justify-between gap-4 py-5">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-semibold text-slate-900">
+                      Sta lichte reflectieprompts toe
+                    </Label>
+                    <p className="text-sm leading-7 text-muted-foreground">
+                      Optionele terugblikprompts kunnen later helpen om rustiger patronen te zien.
+                    </p>
+                  </div>
+                  <Switch
+                    checked={reflectionReminderEnabled}
+                    onCheckedChange={setReflectionReminderEnabled}
+                  />
+                </CardContent>
+              </Card>
             </div>
           ) : null}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-6">
-            <button
+          <Separator />
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Button
               type="button"
+              variant="outline"
               onClick={goToPreviousStep}
               disabled={isFirstStep}
-              className="rounded-full border border-black/10 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:-translate-y-0.5 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-45"
+              className="rounded-full"
             >
               Vorige
-            </button>
+            </Button>
 
             {isLastStep ? (
-              <button
+              <Button
                 key="complete-onboarding"
                 type="submit"
-                className="rounded-full bg-emerald-950 px-5 py-3 text-sm font-semibold text-emerald-50 transition hover:-translate-y-0.5 hover:bg-emerald-900"
+                className="rounded-full"
               >
                 Rond onboarding af
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 key={`next-step-${currentStep}`}
                 type="button"
                 onClick={goToNextStep}
-                className="rounded-full bg-emerald-950 px-5 py-3 text-sm font-semibold text-emerald-50 transition hover:-translate-y-0.5 hover:bg-emerald-900"
+                className="rounded-full"
               >
                 Ga verder
-              </button>
+              </Button>
             )}
           </div>
         </form>

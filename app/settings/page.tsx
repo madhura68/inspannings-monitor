@@ -2,9 +2,19 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/auth-actions";
 import { SettingsForm } from "@/components/settings/settings-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -81,55 +91,63 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/dashboard"
-              className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:-translate-y-0.5 hover:text-slate-950"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "h-11 rounded-full px-5",
+              )}
             >
               Terug naar dashboard
             </Link>
             <form action={signOutAction}>
-              <button
-                type="submit"
-                className="rounded-full bg-emerald-950 px-5 py-3 text-sm font-semibold text-emerald-50 transition hover:-translate-y-0.5 hover:bg-emerald-900"
-              >
+              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
                 Uitloggen
-              </button>
+              </Button>
             </form>
           </div>
         </header>
 
         {notice ? (
-          <div className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-7 text-emerald-900">
-            {notice}
-          </div>
+          <Alert className="rounded-[1.5rem] border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700">
+            <AlertDescription className="leading-7 text-current">
+              {notice}
+            </AlertDescription>
+          </Alert>
         ) : null}
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <SettingsForm profileBundle={profileBundle} />
 
           <aside className="space-y-5">
-            <article className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                Account
-              </p>
-              <p className="mt-3 text-lg font-semibold text-slate-900">
-                {profileTitle}
-              </p>
-              <p className="mt-3 text-sm leading-7 text-slate-700">
-                E-mailadres: {profileBundle.profile.email ?? authState.email ?? "Onbekend"}
-              </p>
-            </article>
+            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+              <CardHeader className="pb-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                  Account
+                </p>
+                <CardTitle className="text-lg text-slate-900">{profileTitle}</CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6">
+                <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  E-mailadres: {profileBundle.profile.email ?? authState.email ?? "Onbekend"}
+                </CardDescription>
+              </CardContent>
+            </Card>
 
-            <article className="rounded-[1.75rem] border border-black/10 bg-white/75 p-6 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                Huidige status
-              </p>
-              <p className="mt-3 text-lg font-semibold text-slate-900">
-                Onboarding {profileBundle.profile.onboardingCompleted ? "afgerond" : "later afronden"}
-              </p>
-              <p className="mt-3 text-sm leading-7 text-slate-700">
-                Je kunt later altijd terug naar onboarding of direct verder bouwen op
-                deze voorkeuren in de dagflow.
-              </p>
-            </article>
+            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+              <CardHeader className="pb-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                  Huidige status
+                </p>
+                <CardTitle className="text-lg text-slate-900">
+                  Onboarding {profileBundle.profile.onboardingCompleted ? "afgerond" : "later afronden"}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6">
+                <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  Je kunt later altijd terug naar onboarding of direct verder bouwen op
+                  deze voorkeuren in de dagflow.
+                </CardDescription>
+              </CardContent>
+            </Card>
           </aside>
         </section>
       </div>
