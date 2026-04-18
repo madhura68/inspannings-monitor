@@ -19,6 +19,8 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - protected dashboard met server-side sessiecontrole
 - ochtendcheck-in voor energiescore en slaapkwaliteit van vandaag
 - eenvoudig dagbudget en energieniveau op basis van de ochtendscore
+- dashboardweergave van check-instatus, energieniveau en dagbudget
+- eerste unit tests voor budgetmapping via `Vitest`
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
 - `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen
@@ -49,6 +51,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - `npm run build`
 - `npm run start`
 - `npm run lint`
+- `npm run test`
 
 ## Supabase Auth configuratie
 
@@ -68,12 +71,15 @@ Gebruik alleen `.env.example` als template. Lokale bestanden zoals `.env` en
 
 ## Supabase database migraties
 
-Voor `ST-102` staat de eerste databasefundering in:
+De huidige app gebruikt onder meer deze migraties:
 
 - `supabase/migrations/20260418_create_profiles_and_user_settings.sql`
+- `supabase/migrations/20260418_add_onboarding_seen_to_profiles.sql`
+- `supabase/migrations/20260418_create_morning_check_ins.sql`
+- `supabase/migrations/20260418_add_budget_fields_to_morning_check_ins.sql`
 
 Voer deze SQL uit in de Supabase SQL Editor of via de Supabase CLI voordat je
-de profile/settings-laag lokaal test.
+de profile-, check-in- en budgetlagen lokaal test.
 
 ## UI foundation
 
@@ -103,7 +109,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-203` Budgetlogica implementeren
-2. `ST-301` Activiteitenmodel en planning opzetten
+1. `ST-301` Activiteitenmodel en planning opzetten
+2. `ST-304` EnergyMeter en lopend totaal implementeren
 3. `ST-401` Evaluatie- en dagoverzichtslus bouwen
 4. `ST-105` RLS-policy tests en hardening afronden

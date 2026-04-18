@@ -34,6 +34,14 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 - Authenticatie: `Supabase Auth`
 - UI foundation in de app: `Tailwind CSS + shadcn/ui`
 
+## Actuele app-status
+
+- `ST-201` t/m `ST-203` zijn in de code gerealiseerd
+- Ochtendcheck-in slaat nu energiescore en slaapkwaliteit per dag op
+- Dagbudget v1 is bewust eenvoudig: `daily_budget = energy_score`
+- Energieniveau en budget worden al direct getoond in check-in en dashboard
+- Eerste unit tests voor budgetmapping draaien via `Vitest`
+
 ## Generator
 
 - [generate_inspannings_monitor_docs.py](./generate_inspannings_monitor_docs.py)

@@ -64,13 +64,15 @@ Doel: iedere gebruiker kan veilig een eigen account en basisinstellingen beheren
 
 Doel: de gebruiker kan met minimale inspanning de dag starten en een budget krijgen.
 
+Status: `ST-201`, `ST-202`, `ST-203`, `ST-204` en `ST-205` zijn inmiddels gerealiseerd in de app. De volgende logische stap ligt nu in `EPIC-04 Dagplanning`.
+
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
-| ST-201 | EnergySlider en SleepQualityInput bouwen | UI | Check-in kan mobiel comfortabel worden ingevuld |
-| ST-202 | Server action voor createMorningCheckIn | Build | Check-in wordt opgeslagen met juiste validatie |
-| ST-203 | Budgetlogica implementeren | Logic | Score mapping en budgetberekening zijn consistent en testbaar |
-| ST-204 | Check-instatus op dashboard tonen | UI | Gebruiker ziet direct score, niveau en budget |
-| ST-205 | Unit tests voor score- en budgetmapping | QA | Belangrijkste grenswaarden zijn afgedekt |
+| ST-201 | EnergySlider en SleepQualityInput bouwen | UI | Afgerond: check-in kan mobiel comfortabel worden ingevuld |
+| ST-202 | Server action voor createMorningCheckIn | Build | Afgerond: check-in wordt opgeslagen met juiste validatie |
+| ST-203 | Budgetlogica implementeren | Logic | Afgerond: score mapping en budgetberekening zijn consistent en testbaar |
+| ST-204 | Check-instatus op dashboard tonen | UI | Afgerond: gebruiker ziet direct score, niveau en budget |
+| ST-205 | Unit tests voor score- en budgetmapping | QA | Afgerond: belangrijkste grenswaarden zijn afgedekt |
 
 ## EPIC-04 Dagplanning
 
