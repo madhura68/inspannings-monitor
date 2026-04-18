@@ -1,6 +1,25 @@
 # Inspannings Monitor
 
-Wellness-first webapp voor individuele gebruikers die hun energie willen plannen, uitvoeren en evalueren.
+Wellness-first webapp voor volwassen individuele gebruikers die hun energie
+willen plannen, uitvoeren en evalueren.
+
+## Productrichting
+
+`Inspannings Monitor` wordt bewust gebouwd als `wellness/self-management`
+product, niet als medisch hulpmiddel. Release 1 blijft smal:
+
+- alleen individuele gebruikers
+- alleen Nederlands
+- geen delen met zorgverleners of naasten
+- geen AI of medische workflows in de MVP
+
+## Huidige scope
+
+- e-mail/wachtwoord-auth via Supabase
+- protected dashboard met server-side sessiecontrole
+- korte onboardingflow voor eerste voorkeuren
+- instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
+- `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen
 
 ## Stack
 
@@ -12,6 +31,15 @@ Wellness-first webapp voor individuele gebruikers die hun energie willen plannen
 - Vercel als hostingdoel
 - Supabase voor database en authenticatie
 
+## Snel lokaal starten
+
+1. Kopieer `.env.example` naar `.env.local`
+2. Vul in:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+3. Installeer dependencies met `npm install`
+4. Start lokaal met `npm run dev`
+
 ## Scripts
 
 - `npm run dev`
@@ -21,18 +49,19 @@ Wellness-first webapp voor individuele gebruikers die hun energie willen plannen
 
 ## Supabase Auth configuratie
 
-1. Kopieer `.env.example` naar `.env.local`
-2. Vul in:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-3. Zet in Supabase Dashboard aan:
+1. Zet in Supabase Dashboard aan:
    - Email/password auth
    - Self-signup
    - Email confirmation verplicht
-4. Voeg redirect URLs toe voor:
+2. Voeg redirect URLs toe voor:
    - `http://localhost:3000/auth/confirm`
    - je Vercel productie-URL
    - eventuele preview-URL's die je wilt testen
+
+## Omgevingsbestanden
+
+Gebruik alleen `.env.example` als template. Lokale bestanden zoals `.env` en
+`.env.local` horen niet in git thuis.
 
 ## Supabase database migraties
 
@@ -45,9 +74,15 @@ de profile/settings-laag lokaal test.
 
 ## UI foundation
 
-De app gebruikt nu `shadcn/ui` bovenop `Tailwind CSS` als herbruikbare basis voor
+De app gebruikt `shadcn/ui` bovenop `Tailwind CSS` als herbruikbare basis voor
 knoppen, formulieren, kaarten en meldingen. De theme tokens staan centraal in
 `app/globals.css`, zodat kleur, focus-states en componentgedrag consistenter blijven.
+
+## Documentatie
+
+- Hoofdset specificaties en plannen: [docs/README.md](/Users/janpetervisser/Development/third/docs/README.md)
+- Technische architectuur: [inspannings-monitor-05-technische-architectuur-en-implementatie-v01.docx](/Users/janpetervisser/Development/third/docs/inspannings-monitor-05-technische-architectuur-en-implementatie-v01.docx)
+- Implementatieplan en backlog: [inspannings-monitor-06-implementatieplan-en-backlog-v01.docx](/Users/janpetervisser/Development/third/docs/inspannings-monitor-06-implementatieplan-en-backlog-v01.docx)
 
 ## Eerstvolgende bouwstappen
 
