@@ -1,0 +1,385 @@
+import { getAuthenticatedUser } from "@/lib/auth/session";
+import { isSupportedOnboardingTimezone } from "@/lib/onboarding/options";
+import { createClient } from "@/lib/supabase/server";
+import type {
+  OnboardingSubmission,
+  ProfileBundle,
+  ProfileRecord,
+  SettingsSubmission,
+  UserSettingsRecord,
+} from "@/lib/profile/types";
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+type ProfileRow = {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  locale: string;
+  timezone: string;
+  onboarding_seen: boolean;
+  onboarding_completed: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+type UserSettingsRow = {
+  profile_id: string;
+  morning_reminder_enabled: boolean;
+  morning_reminder_time: string | null;
+  reflection_reminder_enabled: boolean;
+  show_energy_points: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+type ProfileInsert = {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  locale: string;
+  timezone: string;
+  onboarding_seen: boolean;
+  onboarding_completed: boolean;
+};
+
+type UserSettingsInsert = {
+  profile_id: string;
+  morning_reminder_enabled: boolean;
+  morning_reminder_time: string | null;
+  reflection_reminder_enabled: boolean;
+  show_energy_points: boolean;
+};
+
+const PROFILE_COLUMNS =
+  "id, email, display_name, locale, timezone, onboarding_seen, onboarding_completed, created_at, updated_at";
+const USER_SETTINGS_COLUMNS =
+  "profile_id, morning_reminder_enabled, morning_reminder_time, reflection_reminder_enabled, show_energy_points, created_at, updated_at";
+
+const DEFAULT_LOCALE = "nl-NL";
+const DEFAULT_TIMEZONE = "Europe/Amsterdam";
+const SUPPORTED_LOCALES = new Set([DEFAULT_LOCALE]);
+
+function mapProfileRow(row: ProfileRow): ProfileRecord {
+  return {
+    id: row.id,
+    email: row.email,
+    displayName: row.display_name,
+    locale: row.locale,
+    timezone: row.timezone,
+    onboardingSeen: row.onboarding_seen,
+    onboardingCompleted: row.onboarding_completed,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapUserSettingsRow(row: UserSettingsRow): UserSettingsRecord {
+  return {
+    profileId: row.profile_id,
+    morningReminderEnabled: row.morning_reminder_enabled,
+    morningReminderTime: row.morning_reminder_time,
+    reflectionReminderEnabled: row.reflection_reminder_enabled,
+    showEnergyPoints: row.show_energy_points,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export function buildDefaultProfileFromClaims(user: {
+  id: string;
+  email: string | null;
+}): ProfileInsert {
+  return {
+    id: user.id,
+    email: user.email,
+    display_name: null,
+    locale: DEFAULT_LOCALE,
+    timezone: DEFAULT_TIMEZONE,
+    onboarding_seen: false,
+    onboarding_completed: false,
+  };
+}
+
+export function buildDefaultSettings(profileId: string): UserSettingsInsert {
+  return {
+    profile_id: profileId,
+    morning_reminder_enabled: false,
+    morning_reminder_time: null,
+    reflection_reminder_enabled: false,
+    show_energy_points: true,
+  };
+}
+
+function normalizeDisplayName(value: string | null) {
+  const trimmedValue = value?.trim() ?? "";
+  return trimmedValue ? trimmedValue : null;
+}
+
+function normalizeReminderTime(value: string | null, enabled: boolean) {
+  if (!enabled) {
+    return null;
+  }
+
+  const trimmedValue = value?.trim() ?? "";
+  return trimmedValue || "08:30";
+}
+
+function normalizeLocale(value: string) {
+  return SUPPORTED_LOCALES.has(value) ? value : DEFAULT_LOCALE;
+}
+
+function resolveTimezone(value: string) {
+  return isSupportedOnboardingTimezone(value) ? value : DEFAULT_TIMEZONE;
+}
+
+async function readProfileRow(
+  supabase: SupabaseServerClient,
+  userId: string,
+): Promise<ProfileRow | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(PROFILE_COLUMNS)
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Profiel kon niet worden geladen: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function readUserSettingsRow(
+  supabase: SupabaseServerClient,
+  userId: string,
+): Promise<UserSettingsRow | null> {
+  const { data, error } = await supabase
+    .from("user_settings")
+    .select(USER_SETTINGS_COLUMNS)
+    .eq("profile_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Instellingen konden niet worden geladen: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function insertMissingProfile(
+  supabase: SupabaseServerClient,
+  user: { id: string; email: string | null },
+) {
+  const { error } = await supabase.from("profiles").upsert(
+    buildDefaultProfileFromClaims(user),
+    {
+      onConflict: "id",
+      ignoreDuplicates: true,
+    },
+  );
+
+  if (error) {
+    throw new Error(`Profiel kon niet worden aangemaakt: ${error.message}`);
+  }
+}
+
+async function syncProfileEmailIfNeeded(
+  supabase: SupabaseServerClient,
+  profile: ProfileRow,
+  email: string | null,
+): Promise<ProfileRow> {
+  if (!email || profile.email === email) {
+    return profile;
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ email })
+    .eq("id", profile.id)
+    .select(PROFILE_COLUMNS)
+    .single();
+
+  if (error) {
+    throw new Error(`Profiel-e-mailadres kon niet worden bijgewerkt: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function insertMissingUserSettings(
+  supabase: SupabaseServerClient,
+  userId: string,
+) {
+  const { error } = await supabase.from("user_settings").upsert(
+    buildDefaultSettings(userId),
+    {
+      onConflict: "profile_id",
+      ignoreDuplicates: true,
+    },
+  );
+
+  if (error) {
+    throw new Error(`Instellingen konden niet worden aangemaakt: ${error.message}`);
+  }
+}
+
+export async function markOnboardingSeenForCurrentUser() {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ onboarding_seen: true, onboarding_completed: false })
+    .eq("id", user.id);
+
+  if (error) {
+    throw new Error(`Onboardingstatus kon niet worden bijgewerkt: ${error.message}`);
+  }
+}
+
+export async function completeOnboardingForCurrentUser(
+  submission: OnboardingSubmission,
+) {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const timezone = resolveTimezone(submission.timezone);
+
+  const supabase = await createClient();
+  const displayName = normalizeDisplayName(submission.displayName);
+  const morningReminderTime = normalizeReminderTime(
+    submission.morningReminderTime,
+    submission.morningReminderEnabled,
+  );
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      display_name: displayName,
+      timezone,
+      onboarding_seen: true,
+      onboarding_completed: true,
+    })
+    .eq("id", user.id);
+
+  if (profileError) {
+    throw new Error(`Profiel kon niet worden bijgewerkt: ${profileError.message}`);
+  }
+
+  const { error: settingsError } = await supabase
+    .from("user_settings")
+    .update({
+      morning_reminder_enabled: submission.morningReminderEnabled,
+      morning_reminder_time: morningReminderTime,
+      reflection_reminder_enabled: submission.reflectionReminderEnabled,
+      show_energy_points: submission.showEnergyPoints,
+    })
+    .eq("profile_id", user.id);
+
+  if (settingsError) {
+    throw new Error(`Instellingen konden niet worden bijgewerkt: ${settingsError.message}`);
+  }
+
+  return ensureProfileBundleForCurrentUser();
+}
+
+export async function saveSettingsForCurrentUser(
+  submission: SettingsSubmission,
+) {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  await ensureProfileBundleForCurrentUser();
+
+  const supabase = await createClient();
+  const locale = normalizeLocale(submission.locale);
+  const timezone = resolveTimezone(submission.timezone);
+  const morningReminderTime = normalizeReminderTime(
+    submission.morningReminderTime,
+    submission.morningReminderEnabled,
+  );
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      locale,
+      timezone,
+    })
+    .eq("id", user.id);
+
+  if (profileError) {
+    throw new Error(`Profielinstellingen konden niet worden bijgewerkt: ${profileError.message}`);
+  }
+
+  const { error: settingsError } = await supabase
+    .from("user_settings")
+    .update({
+      morning_reminder_enabled: submission.morningReminderEnabled,
+      morning_reminder_time: morningReminderTime,
+      reflection_reminder_enabled: submission.reflectionReminderEnabled,
+      show_energy_points: submission.showEnergyPoints,
+    })
+    .eq("profile_id", user.id);
+
+  if (settingsError) {
+    throw new Error(`Gebruikersinstellingen konden niet worden bijgewerkt: ${settingsError.message}`);
+  }
+
+  return ensureProfileBundleForCurrentUser();
+}
+
+export async function ensureProfileBundleForCurrentUser(): Promise<ProfileBundle | null> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const supabase = await createClient();
+
+  // We bootstrap records app-side so the first protected page load is enough
+  // to give every authenticated user a minimal profile and settings basis.
+  let profileRow = await readProfileRow(supabase, user.id);
+
+  if (!profileRow) {
+    await insertMissingProfile(supabase, user);
+    profileRow = await readProfileRow(supabase, user.id);
+  }
+
+  if (!profileRow) {
+    throw new Error("Profielrecord ontbreekt na bootstrap.");
+  }
+
+  profileRow = await syncProfileEmailIfNeeded(supabase, profileRow, user.email);
+
+  let userSettingsRow = await readUserSettingsRow(supabase, user.id);
+
+  if (!userSettingsRow) {
+    await insertMissingUserSettings(supabase, user.id);
+    userSettingsRow = await readUserSettingsRow(supabase, user.id);
+  }
+
+  if (!userSettingsRow) {
+    throw new Error("Settingsrecord ontbreekt na bootstrap.");
+  }
+
+  return {
+    profile: mapProfileRow(profileRow),
+    settings: mapUserSettingsRow(userSettingsRow),
+  };
+}
+
+export async function getProfileBundleForCurrentUser(): Promise<ProfileBundle | null> {
+  return ensureProfileBundleForCurrentUser();
+}

@@ -1,0 +1,431 @@
+ID,Team,Title,Description,Status,Estimate,Priority,Project ID,Project,Creator,Assignee,Labels,Cycle Number,Cycle Name,Cycle Start,Cycle End,Created,Updated,Started,Triaged,Completed,Canceled,Archived,Due Date,Parent issue,Initiatives,Project Milestone ID,Project Milestone,SLA Status
+,Inspannings Monitor,Next.js projectbasis opzetten,"Zet de projectbasis op met TypeScript en de gekozen stylingaanpak.
+
+## Context
+- Bron backlog-ID: `ST-001`
+- Epic / project: `Fundament`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-01`
+
+## Definition of done
+Project start lokaal en in preview zonder handmatige workarounds.",Backlog,,high,,Fundament,,,"release:r1, epic:fundament, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Omgevingen definiëren,"Richt development, preview en production technisch in.
+
+## Context
+- Bron backlog-ID: `ST-002`
+- Epic / project: `Fundament`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-001`
+
+## Definition of done
+Development, preview en production zijn technisch ingericht.",Backlog,,high,,Fundament,,,"release:r1, epic:fundament, type:ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Component foundation neerzetten,"Bouw herbruikbare basiscomponenten voor formulieren, kaarten, knoppen en meldingen.
+
+## Context
+- Bron backlog-ID: `ST-003`
+- Epic / project: `Fundament`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-001`
+
+## Definition of done
+Herbruikbare basiscomponenten zijn mobiel bruikbaar.",Backlog,,high,,Fundament,,,"release:r1, epic:fundament, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Foutafhandeling en lege staten ontwerpen,"Ontwerp en implementeer lege staten en bruikbare foutfeedback.
+
+## Context
+- Bron backlog-ID: `ST-004`
+- Epic / project: `Fundament`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-001`
+
+## Definition of done
+Gebruiker krijgt bruikbare feedback bij lege of foutieve situaties.",Backlog,,high,,Fundament,,,"release:r1, epic:fundament, type:ux",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Supabase Auth integreren,"Integreer Supabase Auth en de sessieflow in de app.
+
+## Context
+- Bron backlog-ID: `ST-101`
+- Epic / project: `Auth en profiel`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-01`
+
+## Definition of done
+Gebruiker kan inloggen en beveiligde routes gebruiken.",Backlog,,high,,Auth en profiel,,,"release:r1, epic:auth-profiel, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Profile- en UserSettings-model implementeren,"Implementeer profiel- en settingsmodellen per gebruiker.
+
+## Context
+- Bron backlog-ID: `ST-102`
+- Epic / project: `Auth en profiel`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-101`
+
+## Definition of done
+Profiel en instellingen zijn per gebruiker beschikbaar.",Backlog,,high,,Auth en profiel,,,"release:r1, epic:auth-profiel, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Onboardingflow bouwen,"Bouw een onboarding van maximaal drie schermen.
+
+## Context
+- Bron backlog-ID: `ST-103`
+- Epic / project: `Auth en profiel`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-101`
+
+## Definition of done
+Nieuwe gebruiker begrijpt schaal, positionering en basisinstellingen.",Backlog,,high,,Auth en profiel,,,"release:r1, epic:auth-profiel, type:ux",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Settingsscherm bouwen,"Bouw instellingen voor taal, timezone, reminders en zichtbaarheid van punten.
+
+## Context
+- Bron backlog-ID: `ST-104`
+- Epic / project: `Auth en profiel`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-102`
+
+## Definition of done
+Taal, timezone, reminders en zichtbaarheid van punten zijn persistent.",Backlog,,high,,Auth en profiel,,,"release:r1, epic:auth-profiel, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,RLS-basispolicies inrichten,"Richt owner-only RLS-policies in voor profiel en instellingen.
+
+## Context
+- Bron backlog-ID: `ST-105`
+- Epic / project: `Auth en profiel`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-101`
+
+## Definition of done
+Gebruiker kan uitsluitend eigen profiel en settings lezen of wijzigen.",Backlog,,high,,Auth en profiel,,,"release:r1, epic:auth-profiel, type:security",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,EnergySlider en SleepQualityInput bouwen,"Bouw de invoercomponenten voor energiescore en slaapkwaliteit.
+
+## Context
+- Bron backlog-ID: `ST-201`
+- Epic / project: `Ochtendcheck-in`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-02`
+
+## Definition of done
+Check-in kan mobiel comfortabel worden ingevuld.",Backlog,,high,,Ochtendcheck-in,,,"release:r1, epic:ochtendcheckin, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Server action voor createMorningCheckIn,"Implementeer de server action voor het opslaan van de ochtendcheck-in.
+
+## Context
+- Bron backlog-ID: `ST-202`
+- Epic / project: `Ochtendcheck-in`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-201`
+
+## Definition of done
+Check-in wordt opgeslagen met juiste validatie.",Backlog,,high,,Ochtendcheck-in,,,"release:r1, epic:ochtendcheckin, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Budgetlogica implementeren,"Bouw mapping van score naar energy level en dagbudget.
+
+## Context
+- Bron backlog-ID: `ST-203`
+- Epic / project: `Ochtendcheck-in`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-202`
+
+## Definition of done
+Score mapping en budgetberekening zijn consistent en testbaar.",Backlog,,high,,Ochtendcheck-in,,,"release:r1, epic:ochtendcheckin, type:logic",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Check-instatus op dashboard tonen,"Toon direct score, niveau en budget op het dashboard.
+
+## Context
+- Bron backlog-ID: `ST-204`
+- Epic / project: `Ochtendcheck-in`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-202`
+
+## Definition of done
+Gebruiker ziet direct score, niveau en budget.",Backlog,,high,,Ochtendcheck-in,,,"release:r1, epic:ochtendcheckin, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Unit tests voor score- en budgetmapping,"Voeg tests toe voor grenswaarden en budgetberekening.
+
+## Context
+- Bron backlog-ID: `ST-205`
+- Epic / project: `Ochtendcheck-in`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-203`
+
+## Definition of done
+Belangrijkste grenswaarden zijn afgedekt.",Backlog,,high,,Ochtendcheck-in,,,"release:r1, epic:ochtendcheckin, type:qa",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Datamodel voor activiteiten implementeren,"Implementeer tabellen en seed-data voor activiteiten, categorieen en skip-redenen.
+
+## Context
+- Bron backlog-ID: `ST-301`
+- Epic / project: `Dagplanning`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-03`
+
+## Definition of done
+Migraties en seed-data voor categorieen en skip-redenen zijn aanwezig.",Backlog,,high,,Dagplanning,,,"release:r1, epic:dagplanning, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Planningformulier bouwen,"Bouw het formulier voor naam, categorie, duur, impact en prioriteit.
+
+## Context
+- Bron backlog-ID: `ST-302`
+- Epic / project: `Dagplanning`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-301`
+
+## Definition of done
+Activiteit kan met naam, categorie, duur, impact en prioriteit worden aangemaakt.",Backlog,,high,,Dagplanning,,,"release:r1, epic:dagplanning, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Autocomplete op eerdere activiteiten toevoegen,"Maak snelle herselectie van eerder gebruikte activiteiten mogelijk.
+
+## Context
+- Bron backlog-ID: `ST-303`
+- Epic / project: `Dagplanning`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-302`
+
+## Definition of done
+Veelgebruikte activiteiten zijn snel opnieuw te kiezen.",Backlog,,high,,Dagplanning,,,"release:r1, epic:dagplanning, type:ux",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,EnergyMeter en lopend totaal implementeren,"Toon het lopende totaal ten opzichte van het dagbudget.
+
+## Context
+- Bron backlog-ID: `ST-304`
+- Epic / project: `Dagplanning`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-302`
+
+## Definition of done
+Totaal update direct na elke wijziging.",Backlog,,high,,Dagplanning,,,"release:r1, epic:dagplanning, type:logic-ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Overschrijdingswaarschuwing toevoegen,"Toon een niet-blokkerende waarschuwing bij budgetoverschrijding.
+
+## Context
+- Bron backlog-ID: `ST-305`
+- Epic / project: `Dagplanning`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-304`
+
+## Definition of done
+Gebruiker krijgt feedback maar behoudt regie.",Backlog,,high,,Dagplanning,,,"release:r1, epic:dagplanning, type:ux",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,"Statusflows voor uitgevoerd, geskipt en aangepast bouwen","Implementeer de drie kernstatussen voor activiteiten.
+
+## Context
+- Bron backlog-ID: `ST-401`
+- Epic / project: `Evaluatie en dagoverzicht`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-04`
+
+## Definition of done
+Alle drie de statussen worden correct opgeslagen.",Backlog,,high,,Evaluatie en dagoverzicht,,,"release:r1, epic:evaluatie, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Evaluatievelden toevoegen,"Voeg contextuele velden toe voor werkelijke duur, fatigue en skip-reden.
+
+## Context
+- Bron backlog-ID: `ST-402`
+- Epic / project: `Evaluatie en dagoverzicht`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-401`
+
+## Definition of done
+Contextuele velden verschijnen passend per status.",Backlog,,high,,Evaluatie en dagoverzicht,,,"release:r1, epic:evaluatie, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Ongeplande activiteiten ondersteunen,"Maak het mogelijk een ongeplande activiteit toe te voegen en mee te tellen.
+
+## Context
+- Bron backlog-ID: `ST-403`
+- Epic / project: `Evaluatie en dagoverzicht`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-401`
+
+## Definition of done
+Ongeplande activiteit telt mee in werkelijke totalen.",Backlog,,high,,Evaluatie en dagoverzicht,,,"release:r1, epic:evaluatie, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Dagoverzicht bouwen,"Bouw het overzicht met gepland versus uitgevoerd en statusverdeling.
+
+## Context
+- Bron backlog-ID: `ST-404`
+- Epic / project: `Evaluatie en dagoverzicht`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-401`
+
+## Definition of done
+Gepland versus uitgevoerd en statusverdeling zijn zichtbaar.",Backlog,,high,,Evaluatie en dagoverzicht,,,"release:r1, epic:evaluatie, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Dagaggregaties server-side implementeren,"Bereken dagtotalen en samenvatting server-side.
+
+## Context
+- Bron backlog-ID: `ST-405`
+- Epic / project: `Evaluatie en dagoverzicht`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-404`
+
+## Definition of done
+Dagtotalen blijven consistent met individuele records.",Backlog,,high,,Evaluatie en dagoverzicht,,,"release:r1, epic:evaluatie, type:logic",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Weekoverzichtspagina bouwen,"Bouw de pagina voor weekterugblik.
+
+## Context
+- Bron backlog-ID: `ST-501`
+- Epic / project: `Weekoverzicht en inzichten`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-05`
+
+## Definition of done
+Gebruiker kan per week terugkijken.",Backlog,,medium,,Weekoverzicht en inzichten,,,"release:r1, epic:weekoverzicht, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Weekaggregaties bouwen,"Bereken gemiddelde energie en budget-adherence per week.
+
+## Context
+- Bron backlog-ID: `ST-502`
+- Epic / project: `Weekoverzicht en inzichten`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-501`
+
+## Definition of done
+Gemiddelde energie en budget-adherence zijn herleidbaar en testbaar.",Backlog,,medium,,Weekoverzicht en inzichten,,,"release:r1, epic:weekoverzicht, type:logic",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Skip-patronen zichtbaar maken,"Toon patronen rond skip-redenen en terugkerende activiteiten.
+
+## Context
+- Bron backlog-ID: `ST-503`
+- Epic / project: `Weekoverzicht en inzichten`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-502`
+
+## Definition of done
+Patronen worden alleen bij voldoende data getoond.",Backlog,,medium,,Weekoverzicht en inzichten,,,"release:r1, epic:weekoverzicht, type:logic-ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Insightregels met datadrempels definiëren,"Leg guardrails vast voor het tonen van patronen.
+
+## Context
+- Bron backlog-ID: `ST-504`
+- Epic / project: `Weekoverzicht en inzichten`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-502`
+
+## Definition of done
+Geen patroonclaim zonder guardrails.",Backlog,,medium,,Weekoverzicht en inzichten,,,"release:r1, epic:weekoverzicht, type:safety-logic",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Insightcopy toetsen op niet-medische formulering,"Controleer alle inzichtteksten op wellness-positionering.
+
+## Context
+- Bron backlog-ID: `ST-505`
+- Epic / project: `Weekoverzicht en inzichten`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-504`
+
+## Definition of done
+Alle teksten blijven binnen wellness-positionering.",Backlog,,medium,,Weekoverzicht en inzichten,,,"release:r1, epic:weekoverzicht, type:content",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,ReflectionCheckIn-model en flow implementeren,"Implementeer model en basisflow voor reflectie na een zwaardere dag.
+
+## Context
+- Bron backlog-ID: `ST-601`
+- Epic / project: `Reflectie en reminders`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-05`
+
+## Definition of done
+Reflecties kunnen aan eerdere dagen gekoppeld worden.",Backlog,,medium,,Reflectie en reminders,,,"release:r1, epic:reflectie, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Joblogica voor T+1/T+2 prompts bouwen,"Bepaal server-side welke gebruikers een reflectieprompt moeten zien.
+
+## Context
+- Bron backlog-ID: `ST-602`
+- Epic / project: `Reflectie en reminders`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-601`
+
+## Definition of done
+Prompts worden niet dubbel of willekeurig aangemaakt.",Backlog,,medium,,Reflectie en reminders,,,"release:r1, epic:reflectie, type:logic-ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Instellingsoptie voor reflectieprompts toevoegen,"Maak opt-in beheerbaar vanuit instellingen.
+
+## Context
+- Bron backlog-ID: `ST-603`
+- Epic / project: `Reflectie en reminders`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-104`
+
+## Definition of done
+Gebruiker beheert opt-in zelfstandig.",Backlog,,medium,,Reflectie en reminders,,,"release:r1, epic:reflectie, type:build",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Korte reflectie-UI bouwen,"Bouw een lichte, niet-medische reflectieprompt.
+
+## Context
+- Bron backlog-ID: `ST-604`
+- Epic / project: `Reflectie en reminders`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-602`
+
+## Definition of done
+Prompt voelt licht en niet medisch.",Backlog,,medium,,Reflectie en reminders,,,"release:r1, epic:reflectie, type:ui",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Rate limiting toevoegen,"Bescherm kritieke auth- en mutatieroutes tegen misbruik.
+
+## Context
+- Bron backlog-ID: `ST-701`
+- Epic / project: `Security en operations`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-02`
+
+## Definition of done
+Kritieke auth- en mutatieroutes zijn beschermd.",Backlog,,high,,Security en operations,,,"release:r1, epic:security-ops, type:security",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Logging voor fouten en kernmutaties inrichten,"Log fouten, loginproblemen en belangrijke mutaties centraal.
+
+## Context
+- Bron backlog-ID: `ST-702`
+- Epic / project: `Security en operations`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-03,EPIC-04,EPIC-05`
+
+## Definition of done
+Kerngebeurtenissen zijn herleidbaar.",Backlog,,high,,Security en operations,,,"release:r1, epic:security-ops, type:ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Back-up en herstelstrategie documenteren en testen,"Werk het restore-pad uit en valideer het.
+
+## Context
+- Bron backlog-ID: `ST-703`
+- Epic / project: `Security en operations`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-01`
+
+## Definition of done
+Restore-pad is aantoonbaar gevalideerd.",Backlog,,high,,Security en operations,,,"release:r1, epic:security-ops, type:ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Secrets- en environmentbeheer formaliseren,"Leg veilig beheer van secrets en omgevingen vast voor Vercel en Supabase.
+
+## Context
+- Bron backlog-ID: `ST-704`
+- Epic / project: `Security en operations`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-01`
+
+## Definition of done
+Geen secrets in code of onveilige configuratie.",Backlog,,high,,Security en operations,,,"release:r1, epic:security-ops, type:security-ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,RLS-policy tests toevoegen,"Test aantoonbaar dat owner-only toegang technisch afgedwongen is.
+
+## Context
+- Bron backlog-ID: `ST-705`
+- Epic / project: `Security en operations`
+- Fase: `Release 1`
+- Afhankelijk van: `ST-105`
+
+## Definition of done
+Owner-only model is aantoonbaar afgedwongen.",Backlog,,high,,Security en operations,,,"release:r1, epic:security-ops, type:qa-security",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Kernflows handmatig testen,"Voer end-to-end handmatige tests uit op mobiel en desktop.
+
+## Context
+- Bron backlog-ID: `ST-801`
+- Epic / project: `Launch-readiness`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-05,EPIC-06,EPIC-07`
+
+## Definition of done
+Belangrijkste user journeys zijn geverifieerd.",Backlog,,high,,Launch-readiness,,,"release:r1, epic:launch, type:qa",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Accessibility check uitvoeren,"Controleer touch targets, contrast en reduced motion.
+
+## Context
+- Bron backlog-ID: `ST-802`
+- Epic / project: `Launch-readiness`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-05`
+
+## Definition of done
+Touch targets, contrast en reduced motion zijn gecontroleerd.",Backlog,,high,,Launch-readiness,,,"release:r1, epic:launch, type:qa-ux",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Copy review doen,"Controleer onboarding, dashboardteksten en inzichten op wellness-copy.
+
+## Context
+- Bron backlog-ID: `ST-803`
+- Epic / project: `Launch-readiness`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-06`
+
+## Definition of done
+Geen medische of zorgdossier-taal in release 1.",Backlog,,high,,Launch-readiness,,,"release:r1, epic:launch, type:content-safety",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,DPIA-input en datacatalogus afronden,"Rond privacyartefacten af op basis van de werkelijke MVP-scope.
+
+## Context
+- Bron backlog-ID: `ST-804`
+- Epic / project: `Launch-readiness`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-08`
+
+## Definition of done
+Pre-launch privacyartefacten zijn gereed.",Backlog,,high,,Launch-readiness,,,"release:r1, epic:launch, type:privacy",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,
+,Inspannings Monitor,Go-live checklist opstellen,"Maak een checklist voor launch, rollback, monitoring en incidentrespons.
+
+## Context
+- Bron backlog-ID: `ST-805`
+- Epic / project: `Launch-readiness`
+- Fase: `Release 1`
+- Afhankelijk van: `EPIC-08`
+
+## Definition of done
+Team weet hoe launch en eerste incidentrespons verloopt.",Backlog,,high,,Launch-readiness,,,"release:r1, epic:launch, type:ops",,,,,2026-04-17T00:00:00Z,,,,,,,,,Release 1 MVP,,,

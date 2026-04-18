@@ -1,0 +1,10 @@
+Name,Summary,Status,Milestones,Creator,Lead,Members,Created At,Started At,Target Date,Completed At,Canceled At,Teams,Initiatives
+Fundament,"Leg de technische basis voor release 1 met projectsetup, omgevingen, UI-basis en foutafhandeling.",Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Auth en profiel,"Implementeer accounttoegang, profieldata, onboarding en basisinstellingen per gebruiker.",Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Ochtendcheck-in,"Bouw de ochtendcheck-in met energiescore, slaapkwaliteit en automatische budgetafleiding.",Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Dagplanning,"Maak plannen van activiteiten mogelijk met budgetfeedback, energie-impact en prioriteit.",Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Evaluatie en dagoverzicht,Maak evaluatie van activiteiten en een dagelijks overzicht van gepland versus uitgevoerd mogelijk.,Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Weekoverzicht en inzichten,"Voeg weekterugblik, eenvoudige aggregaties en veilige patroonweergave toe zonder medische claims.",Backlog,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Reflectie en reminders,Voeg optionele T+1/T+2 reflectieprompts en lichte reminderlogica toe voor zwaardere dagen.,Backlog,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Security en operations,"Borg logging, rate limiting, secrets, back-up en owner-only toegangscontrole voor echte gebruikersintroductie.",Planned,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
+Launch-readiness,"Rond QA, copy review, accessibility checks, DPIA-input en go-live checks voor release 1 af.",Backlog,,,,,2026-04-17T00:00:00Z,,,,,Inspannings Monitor,Release 1 MVP
