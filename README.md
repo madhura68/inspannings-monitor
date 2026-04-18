@@ -78,6 +78,12 @@ De app gebruikt `shadcn/ui` bovenop `Tailwind CSS` als herbruikbare basis voor
 knoppen, formulieren, kaarten en meldingen. De theme tokens staan centraal in
 `app/globals.css`, zodat kleur, focus-states en componentgedrag consistenter blijven.
 
+## CI/CD
+
+- `CI`: GitHub Actions draait automatisch `lint` en `build` op pull requests en op `main`
+- `CD`: Vercel deployt automatisch previews voor branches/PR's en productie vanaf `main`
+- Uitwerking: [docs/inspannings-monitor-cicd-en-deploy.md](/Users/janpetervisser/Development/third/docs/inspannings-monitor-cicd-en-deploy.md)
+
 ## Documentatie
 
 - Hoofdset specificaties en plannen: [docs/README.md](/Users/janpetervisser/Development/third/docs/README.md)

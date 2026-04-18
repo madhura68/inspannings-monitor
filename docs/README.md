@@ -40,6 +40,11 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
   Genereert de actuele `.docx`-documenten opnieuw vanuit de bevestigde uitgangspunten.
   Vereist een Python-omgeving met `python-docx`.
 
+## Deploy en CI/CD
+
+- [inspannings-monitor-cicd-en-deploy.md](./inspannings-monitor-cicd-en-deploy.md)
+  Beschrijft de gekozen CI/CD-opzet met GitHub Actions voor verificatie en Vercel voor automatische preview- en production-deploys.
+
 ## Backlog en Linear
 
 - [backlog/inspannings-monitor-backlog.md](./backlog/inspannings-monitor-backlog.md)
