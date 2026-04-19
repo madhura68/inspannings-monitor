@@ -61,6 +61,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - `npm run start`
 - `npm run lint`
 - `npm run test`
+- `npm run seed:demo-users`
 
 ## Supabase Auth configuratie
 
@@ -91,6 +92,29 @@ De huidige app gebruikt onder meer deze migraties:
 
 Voer deze SQL uit in de Supabase SQL Editor of via de Supabase CLI voordat je
 de profile-, check-in- en budgetlagen lokaal test.
+
+## Demo-gebruikers seeden
+
+Er staat nu een seedscript klaar voor fictieve demo-gebruikers op basis van de
+persona-set in [inspannings-monitor-08-gebruikerspersonas-v01.docx](/Users/janpetervisser/Development/third/docs/inspannings-monitor-08-gebruikerspersonas-v01.docx).
+
+Benodigd:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `DEMO_USER_PASSWORD`
+
+Uitvoeren:
+
+1. zorg dat de profiel- en storage-migraties al in Supabase zijn uitgevoerd
+2. zet de drie env-vars lokaal
+3. run `npm run seed:demo-users`
+
+De seeddata zelf staat in:
+- [demo-personas.mjs](/Users/janpetervisser/Development/third/scripts/seed/demo-personas.mjs)
+
+Een dry run kan ook:
+- `npm run seed:demo-users -- --dry-run`
 
 ## UI foundation
 
