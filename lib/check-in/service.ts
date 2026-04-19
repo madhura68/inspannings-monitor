@@ -1,5 +1,6 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import { deriveBudgetSnapshot } from "@/lib/check-in/budget";
+import { getLocalDateForTimezone } from "@/lib/dates";
 import { ensureProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { createClient } from "@/lib/supabase/server";
 import type {
@@ -51,26 +52,6 @@ function mapMorningCheckInRow(row: MorningCheckInRow): MorningCheckInRecord {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
-}
-
-function getLocalDateForTimezone(timezone: string, date = new Date()) {
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const parts = formatter.formatToParts(date);
-  const year = parts.find((part) => part.type === "year")?.value;
-  const month = parts.find((part) => part.type === "month")?.value;
-  const day = parts.find((part) => part.type === "day")?.value;
-
-  if (!year || !month || !day) {
-    throw new Error("Lokale datum voor timezone kon niet worden bepaald.");
-  }
-
-  return `${year}-${month}-${day}`;
 }
 
 async function readMorningCheckInByDate(
