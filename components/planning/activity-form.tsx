@@ -2,6 +2,7 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { createActivityAction } from "@/app/planning/actions";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -198,6 +199,16 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
                   Dat is {previewMeter.dailyBudget} punten budget, met daarna nog{" "}
                   <strong>{previewMeter.remainingBudget} punten ruimte</strong>.
                 </p>
+              ) : null}
+              {previewMeter?.isOverBudget ? (
+                <Alert className="rounded-[1.25rem] border-amber-300 bg-amber-50 text-amber-950 [&_svg]:text-amber-700">
+                  <AlertTitle className="text-sm">Niet-blokkerende waarschuwing</AlertTitle>
+                  <AlertDescription className="leading-7 text-amber-900">
+                    Met deze activiteit kom je ongeveer{" "}
+                    <strong>{Math.abs(previewMeter.remainingBudget ?? 0)} punten</strong> boven je dagbudget uit.
+                    Je kunt nog steeds opslaan, maar dit is een goed moment om bewust te heroverwegen of te versimpelen.
+                  </AlertDescription>
+                </Alert>
               ) : null}
             </CardContent>
           </Card>

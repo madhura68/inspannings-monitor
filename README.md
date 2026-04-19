@@ -23,6 +23,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - planningsfundering met activiteitenmodel, categorieën en skip-redenen in Supabase
 - planningpagina voor vandaag met activiteit toevoegen en directe lijstweergave
 - energiemeter met lopend totaal ten opzichte van het dagbudget
+- niet-blokkerende waarschuwing bij budgetoverschrijding in planning en dashboard
 - eerste unit tests voor budget- en meterlogica via `Vitest`
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
@@ -114,6 +115,6 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 ## Eerstvolgende bouwstappen
 
 1. `ST-303` Autocomplete op eerdere activiteiten toevoegen
-2. `ST-305` Overschrijdingswaarschuwing toevoegen
-3. `ST-401` Evaluatie- en dagoverzichtslus bouwen
+2. `ST-401` Evaluatie- en dagoverzichtslus bouwen
+3. `ST-404` Dagoverzicht bouwen
 4. `ST-105` RLS-policy tests en hardening afronden

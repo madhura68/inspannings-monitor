@@ -1,4 +1,9 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -25,6 +30,18 @@ function formatRemainingLabel(remainingBudget: number) {
   return `${Math.abs(remainingBudget)} punten erboven`;
 }
 
+function getMeterDescription(meter: PlanningMeterSnapshot) {
+  if (meter.dailyBudget === null) {
+    return "Er is nog geen dagbudget beschikbaar. De meter wordt actief zodra je ochtendcheck-in van vandaag er staat.";
+  }
+
+  if (meter.isOverBudget) {
+    return "Je planning zit boven je dagbudget. Dat is een signaal om eventueel iets te verschuiven of lichter te maken, niet om te blokkeren.";
+  }
+
+  return "De meter blijft bewust eenvoudig: punten volgen uit duur en impact van je activiteiten.";
+}
+
 export function EnergyMeterCard({
   meter,
   tone = "default",
@@ -48,15 +65,16 @@ export function EnergyMeterCard({
       </CardHeader>
       <CardContent className="space-y-4 pb-6">
         <CardDescription className="text-sm leading-7 text-muted-foreground">
-          {meter.dailyBudget === null
-            ? "Er is nog geen dagbudget beschikbaar. De meter wordt actief zodra je ochtendcheck-in van vandaag er staat."
-            : "De meter blijft bewust eenvoudig: punten volgen uit duur en impact van je activiteiten."}
+          {getMeterDescription(meter)}
         </CardDescription>
 
         <div className="space-y-2">
           <div className="h-3 overflow-hidden rounded-full bg-secondary">
             <div
-              className="h-full rounded-full bg-primary transition-[width]"
+              className={cn(
+                "h-full rounded-full transition-[width]",
+                meter.isOverBudget ? "bg-amber-500" : "bg-primary",
+              )}
               style={{ width: `${meter.progressPercent ?? 0}%` }}
             />
           </div>
@@ -72,6 +90,16 @@ export function EnergyMeterCard({
             ) : null}
           </div>
         </div>
+
+        {meter.dailyBudget !== null && meter.isOverBudget ? (
+          <Alert className="rounded-[1.25rem] border-amber-300 bg-amber-50 text-amber-950 [&_svg]:text-amber-700">
+            <AlertTitle className="text-sm">Je zit boven je dagbudget</AlertTitle>
+            <AlertDescription className="leading-7 text-amber-900">
+              Je planning komt nu <strong>{Math.abs(meter.remainingBudget ?? 0)} punten</strong> boven het dagbudget uit.
+              Je kunt nog steeds doorgaan, maar dit is een goed moment om iets te schrappen, te verkorten of later te doen.
+            </AlertDescription>
+          </Alert>
+        ) : null}
       </CardContent>
     </Card>
   );
