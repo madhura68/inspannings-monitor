@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PageIntro } from "@/components/navigation/page-intro";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import { SettingsForm } from "@/components/settings/settings-form";
 import {
   Card,
@@ -83,12 +84,30 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Account
                 </p>
-                <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
               </CardHeader>
-              <CardContent className="pb-6">
+              <CardContent className="space-y-4 pb-6">
+                <div className="flex items-center gap-4">
+                  <ProfileAvatar
+                    avatarUrl={profileBundle.profile.avatarUrl}
+                    displayName={profileBundle.profile.displayName}
+                    email={profileBundle.profile.email}
+                    size="md"
+                  />
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
+                    <CardDescription className="text-sm leading-7 text-muted-foreground">
+                      {profileBundle.profile.tagline ?? "Nog geen 1-regelige profielregel."}
+                    </CardDescription>
+                  </div>
+                </div>
                 <CardDescription className="text-sm leading-7 text-muted-foreground">
                   E-mailadres: {profileBundle.profile.email ?? authState.email ?? "Onbekend"}
                 </CardDescription>
+                {profileBundle.profile.bio ? (
+                  <CardDescription className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                    {profileBundle.profile.bio}
+                  </CardDescription>
+                ) : null}
               </CardContent>
             </Card>
 

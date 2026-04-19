@@ -5,6 +5,7 @@ import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PageIntro } from "@/components/navigation/page-intro";
 import { EnergyMeterCard } from "@/components/planning/energy-meter-card";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import {
   Card,
   CardContent,
@@ -116,13 +117,31 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Profiel
               </p>
-              <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
             </CardHeader>
-            <CardContent className="pb-6">
+            <CardContent className="space-y-4 pb-6">
+              <div className="flex items-center gap-4">
+                <ProfileAvatar
+                  avatarUrl={profile.avatarUrl}
+                  displayName={profile.displayName}
+                  email={profile.email}
+                  size="md"
+                />
+                <div className="space-y-1">
+                  <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
+                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                    {profile.tagline ?? "Nog geen korte profielregel toegevoegd."}
+                  </CardDescription>
+                </div>
+              </div>
               <CardDescription className="text-sm leading-7 text-muted-foreground">
                 Taal `{profile.locale}` en timezone `{profile.timezone}` staan nu per
                 gebruiker opgeslagen.
               </CardDescription>
+              {profile.bio ? (
+                <CardDescription className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                  {profile.bio}
+                </CardDescription>
+              ) : null}
             </CardContent>
           </Card>
 

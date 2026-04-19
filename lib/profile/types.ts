@@ -2,6 +2,10 @@ export type ProfileRecord = {
   id: string;
   email: string | null;
   displayName: string | null;
+  tagline: string | null;
+  bio: string | null;
+  avatarPath: string | null;
+  avatarUrl: string | null;
   locale: string;
   timezone: string;
   onboardingSeen: boolean;
@@ -35,6 +39,10 @@ export type OnboardingSubmission = {
 };
 
 export type SettingsSubmission = {
+  displayName: string | null;
+  tagline: string | null;
+  bio: string | null;
+  avatarFile: File | null;
   locale: string;
   timezone: string;
   morningReminderEnabled: boolean;

@@ -45,6 +45,11 @@ const settingsErrorToasts: Record<string, StatusToast> = {
     title: "Instellingen niet opgeslagen",
     message: "Controleer je tijd, timezone en voorkeurvelden en probeer het opnieuw.",
   },
+  "invalid-avatar-file": {
+    variant: "error",
+    title: "Profielfoto niet opgeslagen",
+    message: "Gebruik een JPG, PNG of WebP-bestand tot 2 MB en probeer het opnieuw.",
+  },
 };
 
 const onboardingErrorToasts: Record<string, StatusToast> = {

@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { saveSettingsAction } from "@/app/settings/actions";
 import { PreferenceHiddenFields } from "@/components/preferences/preference-hidden-fields";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +24,9 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
+import { PROFILE_AVATAR_MAX_BYTES } from "@/lib/profile/avatar";
 import { usePreferenceDraft } from "@/lib/preferences/use-preferences-draft";
 import type { ProfileBundle } from "@/lib/profile/types";
 
@@ -42,9 +45,19 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
   const [, formAction, isPending] = useActionState(saveSettingsAction, null);
   const [locale, setLocale] = useState(profileBundle.profile.locale);
   const { draft, updateDraft } = usePreferenceDraft(profileBundle);
+  const avatarLimitInMb = PROFILE_AVATAR_MAX_BYTES / (1024 * 1024);
+  const profileTitle =
+    profileBundle.profile.displayName ??
+    profileBundle.profile.email ??
+    "Ingelogde gebruiker";
 
   return (
-    <form action={formAction} className="space-y-6" aria-busy={isPending}>
+    <form
+      action={formAction}
+      className="space-y-6"
+      aria-busy={isPending}
+      encType="multipart/form-data"
+    >
       <input type="hidden" name="locale" value={locale} />
       <PreferenceHiddenFields draft={draft} />
 
@@ -68,6 +81,104 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
               De taalinstelling blijft wel al aanwezig in het accountmodel.
             </AlertDescription>
           </Alert>
+        </CardContent>
+      </Card>
+
+      <Card className="py-0">
+        <CardHeader className="pb-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+            Profiel
+          </p>
+          <CardTitle className="text-2xl text-foreground">
+            Laat in een paar regels zien wie je bent
+          </CardTitle>
+          <CardDescription className="max-w-2xl text-sm leading-7 text-muted-foreground">
+            Voeg een naam, korte profielregel, langere beschrijving en een profielfoto toe.
+            Dit helpt straks ook bij demo-accounts en voorbeeldgebruik.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6 pb-6 lg:grid-cols-[16rem_1fr]">
+          <Card tone="subtle" className="py-0 shadow-none">
+            <CardContent className="flex h-full flex-col items-center gap-4 px-5 py-5 text-center">
+              <ProfileAvatar
+                avatarUrl={profileBundle.profile.avatarUrl}
+                displayName={profileBundle.profile.displayName}
+                email={profileBundle.profile.email}
+                size="lg"
+              />
+              <div className="space-y-1">
+                <p className="font-semibold text-foreground">{profileTitle}</p>
+                <p className="text-sm leading-7 text-muted-foreground">
+                  {profileBundle.profile.tagline ?? "Nog geen 1-regelige introductie toegevoegd."}
+                </p>
+              </div>
+
+              <div className="w-full space-y-2 text-left">
+                <Label htmlFor="avatar" className="text-foreground">
+                  Profielfoto
+                </Label>
+                <Input
+                  id="avatar"
+                  name="avatar"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  disabled={isPending}
+                  className="h-auto rounded-[1.25rem] bg-background/80 px-4 py-3 file:mr-3 file:rounded-full file:bg-secondary file:px-3 file:py-1.5 file:text-secondary-foreground"
+                />
+                <p className="text-xs leading-6 text-muted-foreground">
+                  JPG, PNG of WebP tot {avatarLimitInMb} MB. Een nieuw bestand vervangt je
+                  huidige foto.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="display-name" className="text-foreground">
+                Weergavenaam
+              </Label>
+              <Input
+                id="display-name"
+                name="displayName"
+                defaultValue={profileBundle.profile.displayName ?? ""}
+                disabled={isPending}
+                maxLength={80}
+                className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
+                placeholder="Bijvoorbeeld Jan Peter"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tagline" className="text-foreground">
+                Wie ben je in 1 regel?
+              </Label>
+              <Input
+                id="tagline"
+                name="tagline"
+                defaultValue={profileBundle.profile.tagline ?? ""}
+                disabled={isPending}
+                maxLength={160}
+                className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
+                placeholder="Bijvoorbeeld: rustige planner die energie slim wil verdelen"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio" className="text-foreground">
+                Korte omschrijving
+              </Label>
+              <Textarea
+                id="bio"
+                name="bio"
+                defaultValue={profileBundle.profile.bio ?? ""}
+                disabled={isPending}
+                maxLength={2000}
+                className="min-h-36 rounded-[1.5rem] bg-background/80 px-4 py-3 text-base md:text-base"
+                placeholder="Vertel in een paar zinnen wat belangrijk is in je dagstructuur, energie of ritme."
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
 

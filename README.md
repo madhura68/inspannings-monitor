@@ -30,7 +30,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - niet-blokkerende waarschuwing bij budgetoverschrijding in planning en dashboard
 - eerste unit tests voor budget- en meterlogica via `Vitest`
 - korte onboardingflow voor eerste voorkeuren
-- instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
+- instellingen voor profieltekst, avatar, taal, timezone, reminders en zichtbaarheid van energiepunten
 - `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen
 - `Dusk`-theme met dark-mode prioriteit, semantische oppervlakken en verbeterde focus-/toegankelijkheidsstijlen
 
@@ -87,6 +87,7 @@ De huidige app gebruikt onder meer deze migraties:
 - `supabase/migrations/20260418_create_morning_check_ins.sql`
 - `supabase/migrations/20260418_add_budget_fields_to_morning_check_ins.sql`
 - `supabase/migrations/20260419_create_activities_and_reference_data.sql`
+- `supabase/migrations/20260419_add_profile_details_and_avatar_storage.sql`
 
 Voer deze SQL uit in de Supabase SQL Editor of via de Supabase CLI voordat je
 de profile-, check-in- en budgetlagen lokaal test.
@@ -122,7 +123,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## CI/CD
 
-- `CI`: GitHub Actions draait automatisch `lint` en `build` op pull requests en op `main`
+- `CI`: GitHub Actions draait automatisch `lint`, `test` en `build` op pull requests en op `main`
 - `CD`: Vercel deployt automatisch previews voor branches/PR's en productie vanaf `main`
 - Uitwerking: [docs/inspannings-monitor-cicd-en-deploy.md](/Users/janpetervisser/Development/third/docs/inspannings-monitor-cicd-en-deploy.md)
 
