@@ -3,6 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { createAdHocActivityAction } from "@/app/planning/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ActivitySuggestionList } from "@/components/planning/activity-suggestion-list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -28,18 +29,20 @@ import {
   calculatePlanningMeterSnapshot,
   deriveActivityEnergyPoints,
 } from "@/lib/planning/meter";
-import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
+import type { ActivityCategory, ActivityRecord, ActivitySuggestion } from "@/lib/planning/types";
 import { cn } from "@/lib/utils";
 
 type AdHocActivityFormProps = {
   categories: ActivityCategory[];
   activities: ActivityRecord[];
+  suggestions: ActivitySuggestion[];
   dailyBudget: number | null;
 };
 
 export function AdHocActivityForm({
   categories,
   activities,
+  suggestions,
   dailyBudget,
 }: AdHocActivityFormProps) {
   const [, formAction, isPending] = useActionState(createAdHocActivityAction, null);
@@ -87,6 +90,13 @@ export function AdHocActivityForm({
     );
   }, [activities, dailyBudget, durationMinutes, impactLevel, previewPoints]);
 
+  function applySuggestion(suggestion: ActivitySuggestion) {
+    setName(suggestion.name);
+    setCategoryId(suggestion.categoryId);
+    setDurationMinutes(String(suggestion.durationMinutes));
+    setImpactLevel(suggestion.impactLevel);
+  }
+
   return (
     <form action={formAction} className="space-y-6" aria-busy={isPending}>
       <input type="hidden" name="categoryId" value={categoryId} />
@@ -120,6 +130,14 @@ export function AdHocActivityForm({
               placeholder="Bijvoorbeeld: onverwacht telefoontje of extra boodschap"
               value={name}
               onChange={(event) => setName(event.target.value)}
+            />
+            <ActivitySuggestionList
+              categories={categories}
+              suggestions={suggestions}
+              query={name}
+              disabled={isPending}
+              showPriority={false}
+              onSelect={applySuggestion}
             />
           </div>
 

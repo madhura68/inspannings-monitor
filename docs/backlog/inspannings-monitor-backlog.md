@@ -78,13 +78,13 @@ Status: `ST-201`, `ST-202`, `ST-203`, `ST-204` en `ST-205` zijn inmiddels gereal
 
 Doel: de gebruiker kan activiteiten voor de dag plannen binnen een eenvoudig energiemodel.
 
-Status: `ST-301`, `ST-302`, `ST-304` en `ST-305` zijn inmiddels gerealiseerd in de app. De volgende logische stap ligt nu in `ST-303` en `EPIC-05`.
+Status: `ST-301`, `ST-302`, `ST-303`, `ST-304` en `ST-305` zijn inmiddels gerealiseerd in de app. De dagplanningloop voor release 1 is daarmee functioneel rond.
 
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
 | ST-301 | Datamodel voor activiteiten implementeren | Build | Afgerond: migraties en seed-data voor categorieën en skip-redenen zijn aanwezig |
 | ST-302 | Planningformulier bouwen | UI | Afgerond: activiteit kan met naam, categorie, duur, impact en prioriteit worden aangemaakt |
-| ST-303 | Autocomplete op eerdere activiteiten toevoegen | UX | Veelgebruikte activiteiten zijn snel opnieuw te kiezen |
+| ST-303 | Autocomplete op eerdere activiteiten toevoegen | UX | Afgerond: planning en ad-hocformulier bieden nu snelle hergebruiksuggesties uit eigen historie |
 | ST-304 | EnergyMeter en lopend totaal implementeren | Logic/UI | Afgerond: totaal update direct na elke wijziging |
 | ST-305 | Overschrijdingswaarschuwing toevoegen | UX | Afgerond: gebruiker krijgt feedback maar behoudt regie |
 

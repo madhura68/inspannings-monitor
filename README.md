@@ -25,6 +25,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - statusflows voor activiteiten van vandaag (`gepland`, `uitgevoerd`, `overgeslagen`, `aangepast`)
 - contextuele evaluatievelden voor overgeslagen en aangepaste activiteiten
 - dagoverzicht op planning met gepland versus werkelijk en statusverdeling
+- autocomplete op basis van eerdere eigen activiteiten voor sneller hergebruik in planning
 - energiemeter met lopend totaal ten opzichte van het dagbudget
 - niet-blokkerende waarschuwing bij budgetoverschrijding in planning en dashboard
 - eerste unit tests voor budget- en meterlogica via `Vitest`
@@ -134,6 +135,6 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-303` Autocomplete op eerdere activiteiten toevoegen
-2. `ST-105` RLS-policy tests en hardening afronden
-3. `npm run test` toevoegen aan CI
+1. `ST-105` RLS-policy tests en hardening afronden
+2. logging en monitoring toevoegen
+3. rate limiting op kritieke mutaties

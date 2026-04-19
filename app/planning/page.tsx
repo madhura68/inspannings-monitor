@@ -94,11 +94,13 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
             <ActivityForm
               categories={planningPageData.categories}
               activities={planningPageData.activities}
+              suggestions={planningPageData.suggestions}
               dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
             />
             <AdHocActivityForm
               categories={planningPageData.categories}
               activities={planningPageData.activities}
+              suggestions={planningPageData.suggestions}
               dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
             />
           </div>

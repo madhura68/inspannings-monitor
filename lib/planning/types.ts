@@ -46,6 +46,17 @@ export type ActivityRecord = {
   updatedAt: string;
 };
 
+export type ActivitySuggestion = {
+  id: string;
+  name: string;
+  categoryId: string;
+  durationMinutes: number;
+  impactLevel: ActivityImpactLevel;
+  priorityLevel: ActivityPriorityLevel;
+  lastUsedAt: string;
+  useCount: number;
+};
+
 export type CreateActivitySubmission = {
   name: string;
   categoryId: string;
@@ -84,5 +95,6 @@ export type PlanningPageData = {
   categories: ActivityCategory[];
   skipReasons: SkipReason[];
   activities: ActivityRecord[];
+  suggestions: ActivitySuggestion[];
   dayOverview: DayOverviewSnapshot;
 };

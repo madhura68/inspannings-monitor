@@ -3,6 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { createActivityAction } from "@/app/planning/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ActivitySuggestionList } from "@/components/planning/activity-suggestion-list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -27,16 +28,22 @@ import {
   ACTIVITY_PRIORITY_OPTIONS,
 } from "@/lib/planning/form-options";
 import { calculatePlanningMeterSnapshot, deriveActivityEnergyPoints } from "@/lib/planning/meter";
-import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
+import type { ActivityCategory, ActivityRecord, ActivitySuggestion } from "@/lib/planning/types";
 import { cn } from "@/lib/utils";
 
 type ActivityFormProps = {
   categories: ActivityCategory[];
   activities: ActivityRecord[];
+  suggestions: ActivitySuggestion[];
   dailyBudget: number | null;
 };
 
-export function ActivityForm({ categories, activities, dailyBudget }: ActivityFormProps) {
+export function ActivityForm({
+  categories,
+  activities,
+  suggestions,
+  dailyBudget,
+}: ActivityFormProps) {
   const [, formAction, isPending] = useActionState(createActivityAction, null);
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState<string>(categories[0]?.id ?? "");
@@ -83,6 +90,14 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
     );
   }, [activities, dailyBudget, durationMinutes, impactLevel, previewPoints]);
 
+  function applySuggestion(suggestion: ActivitySuggestion) {
+    setName(suggestion.name);
+    setCategoryId(suggestion.categoryId);
+    setDurationMinutes(String(suggestion.durationMinutes));
+    setImpactLevel(suggestion.impactLevel);
+    setPriorityLevel(suggestion.priorityLevel);
+  }
+
   return (
     <form action={formAction} className="space-y-6" aria-busy={isPending}>
       <input type="hidden" name="categoryId" value={categoryId} />
@@ -116,6 +131,13 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
               placeholder="Bijvoorbeeld: was opvouwen"
               value={name}
               onChange={(event) => setName(event.target.value)}
+            />
+            <ActivitySuggestionList
+              categories={categories}
+              suggestions={suggestions}
+              query={name}
+              disabled={isPending}
+              onSelect={applySuggestion}
             />
           </div>
 

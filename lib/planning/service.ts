@@ -1,6 +1,7 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import { getLocalDateForTimezone } from "@/lib/dates";
 import { calculateDayOverviewSnapshot } from "@/lib/planning/day-overview";
+import { buildActivitySuggestions } from "@/lib/planning/suggestions";
 import type {
   ActivityCategory,
   CreateAdHocActivitySubmission,
@@ -130,6 +131,26 @@ async function readActivitiesByDate(
   return (data ?? []).map(mapActivityRow);
 }
 
+async function readRecentActivitiesForSuggestions(
+  supabase: SupabaseServerClient,
+  userId: string,
+  currentActivityDate: string,
+): Promise<ActivityRecord[]> {
+  const { data, error } = await supabase
+    .from("activities")
+    .select(ACTIVITY_COLUMNS)
+    .eq("user_id", userId)
+    .neq("activity_date", currentActivityDate)
+    .order("updated_at", { ascending: false })
+    .limit(60);
+
+  if (error) {
+    throw new Error(`Activiteitensuggesties konden niet worden geladen: ${error.message}`);
+  }
+
+  return (data ?? []).map(mapActivityRow);
+}
+
 async function assertCategoryExists(
   supabase: SupabaseServerClient,
   categoryId: string,
@@ -250,19 +271,24 @@ export async function getPlanningPageDataForCurrentUser(): Promise<PlanningPageD
     return null;
   }
 
-  const [categories, skipReasons, activitiesStatus] = await Promise.all([
+  const currentActivityDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const supabase = await createClient();
+
+  const [categories, skipReasons, activitiesStatus, recentActivities] = await Promise.all([
     listActivityCategories(),
     listSkipReasons(),
     getTodayActivitiesForCurrentUser(),
+    readRecentActivitiesForSuggestions(supabase, user.id, currentActivityDate),
   ]);
 
   return {
     timezone: profileBundle.profile.timezone,
     activityDate:
-      activitiesStatus?.activityDate ?? getLocalDateForTimezone(profileBundle.profile.timezone),
+      activitiesStatus?.activityDate ?? currentActivityDate,
     categories,
     skipReasons,
     activities: activitiesStatus?.activities ?? [],
+    suggestions: buildActivitySuggestions(recentActivities),
     dayOverview: calculateDayOverviewSnapshot(activitiesStatus?.activities ?? []),
   };
 }
