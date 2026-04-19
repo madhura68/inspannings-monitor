@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOutAction } from "@/app/auth-actions";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
+import { PageIntro } from "@/components/navigation/page-intro";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import { SettingsForm } from "@/components/settings/settings-form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,30 +14,15 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getSettingsStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
-import { cn } from "@/lib/utils";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
 
 type SettingsPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
-
-function getSettingsNotice(status: string | null) {
-  if (status === "saved") {
-    return "Je instellingen zijn opgeslagen.";
-  }
-
-  return null;
-}
 
 export default async function SettingsPage({ searchParams }: SettingsPageProps) {
   const authState = await getAuthState();
@@ -60,7 +46,10 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     redirect("/onboarding");
   }
 
-  const notice = getSettingsNotice(getParamValue(resolvedSearchParams, "status"));
+  const statusToast = getSettingsStatusToast(
+    getParamValue(resolvedSearchParams, "error"),
+    getParamValue(resolvedSearchParams, "status"),
+  );
   const profileTitle =
     profileBundle.profile.displayName ??
     profileBundle.profile.email ??
@@ -68,76 +57,66 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     "Ingelogde gebruiker";
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
-          <div>
-            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              <Link href="/dashboard" className="transition hover:text-slate-900">
-                Dashboard
-              </Link>
-              <span>/</span>
-              <span>Instellingen</span>
-            </div>
-            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
-              Instellingen
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-700">
-              Pas je basisvoorkeuren rustig aan. Alles blijft beperkt tot jouw eigen
-              account en de wellness-first scope van release 1.
-            </p>
-          </div>
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
+        <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
-          <div className="flex flex-wrap items-center gap-3">
+        <PageIntro
+          eyebrow="Instellingen"
+          title="Basisinstellingen voor jouw account"
+          description="Pas je basisvoorkeuren rustig aan. Alles blijft beperkt tot jouw eigen account en de wellness-first scope van release 1."
+          aside={
             <Link
               href="/dashboard"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "h-11 rounded-full px-5",
-              )}
+              className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
             >
               Terug naar dashboard
             </Link>
-            <form action={signOutAction}>
-              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-                Uitloggen
-              </Button>
-            </form>
-          </div>
-        </header>
-
-        {notice ? (
-          <Alert className="rounded-[1.5rem] border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700">
-            <AlertDescription className="leading-7 text-current">
-              {notice}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+          }
+        />
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <SettingsForm profileBundle={profileBundle} />
 
           <aside className="space-y-5">
-            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <Card className="py-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Account
                 </p>
-                <CardTitle className="text-lg text-slate-900">{profileTitle}</CardTitle>
               </CardHeader>
-              <CardContent className="pb-6">
+              <CardContent className="space-y-4 pb-6">
+                <div className="flex items-center gap-4">
+                  <ProfileAvatar
+                    avatarUrl={profileBundle.profile.avatarUrl}
+                    displayName={profileBundle.profile.displayName}
+                    email={profileBundle.profile.email}
+                    size="md"
+                  />
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
+                    <CardDescription className="text-sm leading-7 text-muted-foreground">
+                      {profileBundle.profile.tagline ?? "Nog geen 1-regelige profielregel."}
+                    </CardDescription>
+                  </div>
+                </div>
                 <CardDescription className="text-sm leading-7 text-muted-foreground">
                   E-mailadres: {profileBundle.profile.email ?? authState.email ?? "Onbekend"}
                 </CardDescription>
+                {profileBundle.profile.bio ? (
+                  <CardDescription className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                    {profileBundle.profile.bio}
+                  </CardDescription>
+                ) : null}
               </CardContent>
             </Card>
 
-            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <Card className="py-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Huidige status
                 </p>
-                <CardTitle className="text-lg text-slate-900">
+                <CardTitle className="text-lg text-foreground">
                   Onboarding {profileBundle.profile.onboardingCompleted ? "afgerond" : "later afronden"}
                 </CardTitle>
               </CardHeader>
@@ -151,6 +130,6 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           </aside>
         </section>
       </div>
-    </main>
+    </AppShell>
   );
 }

@@ -33,6 +33,16 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 - Database: `Supabase PostgreSQL`
 - Authenticatie: `Supabase Auth`
 - UI foundation in de app: `Tailwind CSS + shadcn/ui`
+- Visueel thema in de app: `Dusk` met dark-mode prioriteit en semantische statuskleuren
+
+## Actuele app-status
+
+- `ST-201` t/m `ST-203` zijn in de code gerealiseerd
+- Ochtendcheck-in slaat nu energiescore en slaapkwaliteit per dag op
+- Dagbudget v1 is bewust eenvoudig: `daily_budget = energy_score`
+- Energieniveau en budget worden al direct getoond in check-in en dashboard
+- `ST-301`, `ST-302`, `ST-304` en `ST-305` leggen nu ook het activiteitenmodel en de eerste dagplanningflow vast
+- Eerste unit tests voor budget- en meterlogica draaien via `Vitest`
 
 ## Generator
 
@@ -44,6 +54,14 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 
 - [inspannings-monitor-cicd-en-deploy.md](./inspannings-monitor-cicd-en-deploy.md)
   Beschrijft de gekozen CI/CD-opzet met GitHub Actions voor verificatie en Vercel voor automatische preview- en production-deploys.
+- [inspannings-monitor-dagelijkse-deploy-checklist.md](./inspannings-monitor-dagelijkse-deploy-checklist.md)
+  Korte operationele checklist voor de normale flow van feature branch naar productie.
+- [inspannings-monitor-ops-security-notitie.md](./inspannings-monitor-ops-security-notitie.md)
+  Legt de actuele operationele en security-keuzes vast rond repositorybescherming, Vercel-deploys en secretbeheer.
+- [gpt-instructies.md](./gpt-instructies.md)
+  Bundelt de inhoudelijke instructies en expliciete keuzes die in deze context zijn gegeven als compacte bron voor vervolgwerk.
+- [inspannings-monitor-09-dusk-theme-specificatie-v01.md](./inspannings-monitor-09-dusk-theme-specificatie-v01.md)
+  Legt het leidende Dusk-thema vast voor kleur, typografie, iconografie, motion en toegankelijkheidsregels in de app.
 
 ## Backlog en Linear
 

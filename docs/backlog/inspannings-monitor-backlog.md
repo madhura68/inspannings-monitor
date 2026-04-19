@@ -64,37 +64,43 @@ Doel: iedere gebruiker kan veilig een eigen account en basisinstellingen beheren
 
 Doel: de gebruiker kan met minimale inspanning de dag starten en een budget krijgen.
 
+Status: `ST-201`, `ST-202`, `ST-203`, `ST-204` en `ST-205` zijn inmiddels gerealiseerd in de app. De volgende logische stap ligt nu in `EPIC-04 Dagplanning`.
+
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
-| ST-201 | EnergySlider en SleepQualityInput bouwen | UI | Check-in kan mobiel comfortabel worden ingevuld |
-| ST-202 | Server action voor createMorningCheckIn | Build | Check-in wordt opgeslagen met juiste validatie |
-| ST-203 | Budgetlogica implementeren | Logic | Score mapping en budgetberekening zijn consistent en testbaar |
-| ST-204 | Check-instatus op dashboard tonen | UI | Gebruiker ziet direct score, niveau en budget |
-| ST-205 | Unit tests voor score- en budgetmapping | QA | Belangrijkste grenswaarden zijn afgedekt |
+| ST-201 | EnergySlider en SleepQualityInput bouwen | UI | Afgerond: check-in kan mobiel comfortabel worden ingevuld |
+| ST-202 | Server action voor createMorningCheckIn | Build | Afgerond: check-in wordt opgeslagen met juiste validatie |
+| ST-203 | Budgetlogica implementeren | Logic | Afgerond: score mapping en budgetberekening zijn consistent en testbaar |
+| ST-204 | Check-instatus op dashboard tonen | UI | Afgerond: gebruiker ziet direct score, niveau en budget |
+| ST-205 | Unit tests voor score- en budgetmapping | QA | Afgerond: belangrijkste grenswaarden zijn afgedekt |
 
 ## EPIC-04 Dagplanning
 
 Doel: de gebruiker kan activiteiten voor de dag plannen binnen een eenvoudig energiemodel.
 
+Status: `ST-301`, `ST-302`, `ST-303`, `ST-304` en `ST-305` zijn inmiddels gerealiseerd in de app. De dagplanningloop voor release 1 is daarmee functioneel rond.
+
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
-| ST-301 | Datamodel voor activiteiten implementeren | Build | Migraties en seed-data voor categorieën en skip-redenen zijn aanwezig |
-| ST-302 | Planningformulier bouwen | UI | Activiteit kan met naam, categorie, duur, impact en prioriteit worden aangemaakt |
-| ST-303 | Autocomplete op eerdere activiteiten toevoegen | UX | Veelgebruikte activiteiten zijn snel opnieuw te kiezen |
-| ST-304 | EnergyMeter en lopend totaal implementeren | Logic/UI | Totaal update direct na elke wijziging |
-| ST-305 | Overschrijdingswaarschuwing toevoegen | UX | Gebruiker krijgt feedback maar behoudt regie |
+| ST-301 | Datamodel voor activiteiten implementeren | Build | Afgerond: migraties en seed-data voor categorieën en skip-redenen zijn aanwezig |
+| ST-302 | Planningformulier bouwen | UI | Afgerond: activiteit kan met naam, categorie, duur, impact en prioriteit worden aangemaakt |
+| ST-303 | Autocomplete op eerdere activiteiten toevoegen | UX | Afgerond: planning en ad-hocformulier bieden nu snelle hergebruiksuggesties uit eigen historie |
+| ST-304 | EnergyMeter en lopend totaal implementeren | Logic/UI | Afgerond: totaal update direct na elke wijziging |
+| ST-305 | Overschrijdingswaarschuwing toevoegen | UX | Afgerond: gebruiker krijgt feedback maar behoudt regie |
 
 ## EPIC-05 Evaluatie en dagoverzicht
 
 Doel: de kernloop afronden door geplande activiteiten te evalueren en terug te zien.
 
+Status: `ST-401`, `ST-402`, `ST-403`, `ST-404` en `ST-405` zijn inmiddels gerealiseerd in de app. De evaluatielus voor release 1 is daarmee functioneel rond; de volgende logische stap ligt nu weer in `ST-303` en `EPIC-06`.
+
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
-| ST-401 | Statusflows voor uitgevoerd, geskipt en aangepast bouwen | Build | Alle drie de statussen worden correct opgeslagen |
-| ST-402 | Evaluatievelden toevoegen | UI | Contextuele velden verschijnen passend per status |
-| ST-403 | Ongeplande activiteiten ondersteunen | Build | Ongeplande activiteit telt mee in werkelijke totalen |
-| ST-404 | Dagoverzicht bouwen | UI | Gepland versus uitgevoerd en statusverdeling zijn zichtbaar |
-| ST-405 | Dagaggregaties server-side implementeren | Logic | Dagtotalen blijven consistent met individuele records |
+| ST-401 | Statusflows voor uitgevoerd, geskipt en aangepast bouwen | Build | Afgerond: activiteiten van vandaag kunnen direct tussen de vier statussen wisselen |
+| ST-402 | Evaluatievelden toevoegen | UI | Afgerond: skip-reden en toelichting verschijnen passend per status en worden opgeslagen |
+| ST-403 | Ongeplande activiteiten ondersteunen | Build | Afgerond: ongeplande activiteit kan als ad-hoc item worden opgeslagen en telt mee in het dagtotaal |
+| ST-404 | Dagoverzicht bouwen | UI | Afgerond: planning toont nu gepland versus werkelijk en een directe statusverdeling van de dag |
+| ST-405 | Dagaggregaties server-side implementeren | Logic | Afgerond: dagoverzichttotalen worden nu server-side voorbereid via de planningservice en blijven consistent met individuele records |
 
 ## EPIC-06 Weekoverzicht en inzichten
 

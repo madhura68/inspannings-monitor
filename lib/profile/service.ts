@@ -1,5 +1,9 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import { isSupportedOnboardingTimezone } from "@/lib/onboarding/options";
+import {
+  getProfileAvatarPath,
+  PROFILE_AVATAR_BUCKET,
+} from "@/lib/profile/avatar";
 import { createClient } from "@/lib/supabase/server";
 import type {
   OnboardingSubmission,
@@ -15,6 +19,9 @@ type ProfileRow = {
   id: string;
   email: string | null;
   display_name: string | null;
+  tagline: string | null;
+  bio: string | null;
+  avatar_path: string | null;
   locale: string;
   timezone: string;
   onboarding_seen: boolean;
@@ -37,6 +44,9 @@ type ProfileInsert = {
   id: string;
   email: string | null;
   display_name: string | null;
+  tagline: string | null;
+  bio: string | null;
+  avatar_path: string | null;
   locale: string;
   timezone: string;
   onboarding_seen: boolean;
@@ -52,7 +62,7 @@ type UserSettingsInsert = {
 };
 
 const PROFILE_COLUMNS =
-  "id, email, display_name, locale, timezone, onboarding_seen, onboarding_completed, created_at, updated_at";
+  "id, email, display_name, tagline, bio, avatar_path, locale, timezone, onboarding_seen, onboarding_completed, created_at, updated_at";
 const USER_SETTINGS_COLUMNS =
   "profile_id, morning_reminder_enabled, morning_reminder_time, reflection_reminder_enabled, show_energy_points, created_at, updated_at";
 
@@ -60,11 +70,18 @@ const DEFAULT_LOCALE = "nl-NL";
 const DEFAULT_TIMEZONE = "Europe/Amsterdam";
 const SUPPORTED_LOCALES = new Set([DEFAULT_LOCALE]);
 
-function mapProfileRow(row: ProfileRow): ProfileRecord {
+async function buildProfileRecord(
+  supabase: SupabaseServerClient,
+  row: ProfileRow,
+): Promise<ProfileRecord> {
   return {
     id: row.id,
     email: row.email,
     displayName: row.display_name,
+    tagline: row.tagline,
+    bio: row.bio,
+    avatarPath: row.avatar_path,
+    avatarUrl: await getProfileAvatarUrl(supabase, row.avatar_path),
     locale: row.locale,
     timezone: row.timezone,
     onboardingSeen: row.onboarding_seen,
@@ -94,6 +111,9 @@ export function buildDefaultProfileFromClaims(user: {
     id: user.id,
     email: user.email,
     display_name: null,
+    tagline: null,
+    bio: null,
+    avatar_path: null,
     locale: DEFAULT_LOCALE,
     timezone: DEFAULT_TIMEZONE,
     onboarding_seen: false,
@@ -113,6 +133,16 @@ export function buildDefaultSettings(profileId: string): UserSettingsInsert {
 
 function normalizeDisplayName(value: string | null) {
   const trimmedValue = value?.trim() ?? "";
+  return trimmedValue ? trimmedValue.replace(/\s+/g, " ") : null;
+}
+
+function normalizeTagline(value: string | null) {
+  const trimmedValue = value?.trim() ?? "";
+  return trimmedValue ? trimmedValue.replace(/\s+/g, " ") : null;
+}
+
+function normalizeBio(value: string | null) {
+  const trimmedValue = value?.trim() ?? "";
   return trimmedValue ? trimmedValue : null;
 }
 
@@ -131,6 +161,48 @@ function normalizeLocale(value: string) {
 
 function resolveTimezone(value: string) {
   return isSupportedOnboardingTimezone(value) ? value : DEFAULT_TIMEZONE;
+}
+
+async function getProfileAvatarUrl(
+  supabase: SupabaseServerClient,
+  avatarPath: string | null,
+) {
+  if (!avatarPath) {
+    return null;
+  }
+
+  const { data, error } = await supabase.storage
+    .from(PROFILE_AVATAR_BUCKET)
+    .createSignedUrl(avatarPath, 60 * 60);
+
+  if (error) {
+    return null;
+  }
+
+  return data.signedUrl;
+}
+
+async function uploadProfileAvatar(
+  supabase: SupabaseServerClient,
+  userId: string,
+  file: File,
+) {
+  const avatarPath = getProfileAvatarPath(userId);
+  const fileBytes = await file.arrayBuffer();
+
+  const { error } = await supabase.storage
+    .from(PROFILE_AVATAR_BUCKET)
+    .upload(avatarPath, fileBytes, {
+      cacheControl: "3600",
+      contentType: file.type,
+      upsert: true,
+    });
+
+  if (error) {
+    throw new Error(`Profielfoto kon niet worden geupload: ${error.message}`);
+  }
+
+  return avatarPath;
 }
 
 async function readProfileRow(
@@ -305,14 +377,24 @@ export async function saveSettingsForCurrentUser(
   const supabase = await createClient();
   const locale = normalizeLocale(submission.locale);
   const timezone = resolveTimezone(submission.timezone);
+  const displayName = normalizeDisplayName(submission.displayName);
+  const tagline = normalizeTagline(submission.tagline);
+  const bio = normalizeBio(submission.bio);
   const morningReminderTime = normalizeReminderTime(
     submission.morningReminderTime,
     submission.morningReminderEnabled,
   );
+  const avatarPath = submission.avatarFile
+    ? await uploadProfileAvatar(supabase, user.id, submission.avatarFile)
+    : null;
 
   const { error: profileError } = await supabase
     .from("profiles")
     .update({
+      display_name: displayName,
+      tagline,
+      bio,
+      ...(avatarPath ? { avatar_path: avatarPath } : {}),
       locale,
       timezone,
     })
@@ -375,7 +457,7 @@ export async function ensureProfileBundleForCurrentUser(): Promise<ProfileBundle
   }
 
   return {
-    profile: mapProfileRow(profileRow),
+    profile: await buildProfileRecord(supabase, profileRow),
     settings: mapUserSettingsRow(userSettingsRow),
   };
 }

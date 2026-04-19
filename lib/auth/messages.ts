@@ -22,6 +22,14 @@ const errorMessages: Record<string, AuthNotice> = {
     tone: "error",
     text: "Vul zowel je e-mailadres als je wachtwoord in.",
   },
+  "invalid-email": {
+    tone: "error",
+    text: "Gebruik een geldig e-mailadres.",
+  },
+  "password-too-short": {
+    tone: "error",
+    text: "Gebruik een wachtwoord van minimaal 8 tekens.",
+  },
   "signup-failed": {
     tone: "error",
     text: "Je account kon niet worden aangemaakt. Probeer het opnieuw.",

@@ -1193,6 +1193,398 @@ def build_implementatieplan_backlog() -> None:
     doc.save(BASE_DIR / "inspannings-monitor-06-implementatieplan-en-backlog-v01.docx")
 
 
+def build_testplan() -> None:
+    doc = init_doc(
+        f"{PRODUCT_NAME} Testplan v0.1",
+        f"Teststrategie, tooling en acceptatiecriteria voor de wellness-first MVP\n{DATE_TEXT}",
+    )
+
+    p(doc, "1. Documentdoel", "Heading 1")
+    p(
+        doc,
+        f"Dit document beschrijft hoe {PRODUCT_NAME} getest wordt: welke lagen worden afgedekt, welke frameworks worden ingezet, "
+        "hoe tests georganiseerd zijn en wat de Definition of Done is per testlaag. "
+        "Het is bedoeld als praktische leidraad voor engineers die nieuwe features bouwen en als reviewdocument voor kwaliteitsborging vóór launch. "
+        "De strategie gaat uit van de huidige technische keuzes: Next.js App Router, Supabase PostgreSQL met RLS, TypeScript en Vercel.",
+    )
+
+    p(doc, "2. Testpiramide en scope", "Heading 1")
+    p(
+        doc,
+        "De teststrategie volgt een klassieke piramide met vier lagen. Elke laag heeft een eigen doel, tooling en uitvoerfrequentie. "
+        "De nadruk ligt op de onderste twee lagen, omdat de domeinlogica van dit product (budgetberekening, insightregels, RLS-afdwinging) "
+        "het meest waardevol is om snel en automatisch te verifiëren.",
+    )
+    table(
+        doc,
+        ["Laag", "Wat wordt getest", "Framework", "Wanneer"],
+        [
+            ["Unit", "Pure functies, berekeningslogica, Zod-schema's, hulpfuncties", "Vitest", "Bij elke commit"],
+            ["Integratie", "Servicelaag, server actions, Supabase-queries, RLS via pgTAP", "Vitest + pgTAP", "Bij elke commit"],
+            ["End-to-end", "Volledige gebruikersflows in echte browser", "Playwright", "Bij PR naar main"],
+            ["Handmatig / QA", "Toegankelijkheid, lage interactielast, foutmeldingen, regressie", "Checklist", "Vóór elke release"],
+        ],
+    )
+
+    p(doc, "3. Tooling en frameworks", "Heading 1")
+    p(doc, "3.1 Vitest — unit en integratietests", "Heading 2")
+    p(
+        doc,
+        "Vitest is de aanbevolen testruner voor Next.js-projecten in 2026. Het start sneller dan Jest, heeft native ESM-ondersteuning "
+        "en werkt goed samen met TypeScript zonder extra transpilatiestap. "
+        "Vitest ondersteunt momenteel geen asynchrone Server Components (React 19); daarvoor wordt Playwright ingezet. "
+        "Synchrone server-side logica in lib/ en app/**/actions.ts kan wel met Vitest worden getest.",
+    )
+    table(
+        doc,
+        ["Pakket", "Doel"],
+        [
+            ["vitest", "Testruner en assertion library"],
+            ["@vitejs/plugin-react", "React JSX-ondersteuning in Vitest"],
+            ["jsdom", "Browser-omgeving voor component-snapshot tests"],
+            ["@testing-library/react", "Renderen en interacteren met React-componenten"],
+            ["@testing-library/dom", "DOM-queries die dicht bij gebruikersgedrag liggen"],
+            ["vite-tsconfig-paths", "Ondersteuning voor @ padalias uit tsconfig.json"],
+        ],
+    )
+    p(doc, "Installatie:", "Normal")
+    p(doc, "npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/dom vite-tsconfig-paths", "Normal")
+    p(doc, "Testcommando's:", "Normal")
+    p(doc, "npx vitest — alle unit- en integratietests uitvoeren", "Normal")
+    p(doc, "npx vitest run --reporter=verbose — eenmalig uitvoeren met gedetailleerde output", "Normal")
+    p(doc, "npx vitest run src/lib/checkin/budget.test.ts — één testbestand uitvoeren", "Normal")
+
+    p(doc, "3.2 Playwright — end-to-end tests", "Heading 2")
+    p(
+        doc,
+        "Playwright test de volledige applicatie in een echte browser. Het is de enige manier om asynchrone Server Components, "
+        "Next.js-redirects en Supabase-authenticatie samen als één systeem te verifiëren. "
+        "Voor Supabase-authenticatie wordt programmatische login via de REST API aanbevolen in plaats van UI-gebaseerde login per test, "
+        "zodat tests sneller zijn en minder foutgevoelig.",
+    )
+    table(
+        doc,
+        ["Pakket", "Doel"],
+        [
+            ["@playwright/test", "Testruner, assertions en browser-automatisering"],
+            ["playwright", "Browseromgevingen (Chromium, Firefox, WebKit)"],
+        ],
+    )
+    p(doc, "Installatie:", "Normal")
+    p(doc, "npm install -D @playwright/test && npx playwright install", "Normal")
+    p(doc, "Testcommando's:", "Normal")
+    p(doc, "npx playwright test — alle E2E-tests uitvoeren", "Normal")
+    p(doc, "npx playwright test auth/ — één map uitvoeren", "Normal")
+    p(doc, "npx playwright test --ui — interactieve testrunner met tijdlijn", "Normal")
+    p(doc, "npx playwright test --workers=1 — bij Supabase connection-limiet in CI", "Normal")
+
+    p(doc, "3.3 Zod — runtime-validatie en testschema's", "Heading 2")
+    p(
+        doc,
+        "Zod wordt ingezet als de enige bron van waarheid voor invoervalidatie. "
+        "Zod-schema's worden gedefinieerd in lib/*/schemas.ts en hergebruikt in server actions (server-side validatie) "
+        "en client-componenten (real-time feedback). "
+        "Dit elimineert dubbele validatielogica en maakt het makkelijker om testdata te genereren.",
+    )
+    table(
+        doc,
+        ["Pakket", "Doel"],
+        [
+            ["zod", "Runtime-validatie met TypeScript-type-inferentie"],
+            ["zod-fixture", "Automatisch genereren van testfixtures vanuit een Zod-schema"],
+        ],
+    )
+    p(doc, "Installatie:", "Normal")
+    p(doc, "npm install zod && npm install -D zod-fixture", "Normal")
+    p(doc, "Voorbeeldschema (lib/checkin/schemas.ts):", "Normal")
+    p(doc, 'import { z } from "zod"', "Normal")
+    p(doc, "export const MorningCheckInSchema = z.object({", "Normal")
+    p(doc, "  energyScore: z.number().int().min(1).max(10),", "Normal")
+    p(doc, '  sleepQuality: z.enum(["good", "fair", "poor"]),', "Normal")
+    p(doc, "  note: z.string().max(500).optional(),", "Normal")
+    p(doc, "})", "Normal")
+    p(doc, "export type MorningCheckIn = z.infer<typeof MorningCheckInSchema>", "Normal")
+
+    p(doc, "3.4 pgTAP — database- en RLS-tests", "Heading 2")
+    p(
+        doc,
+        "pgTAP is een unit-testframework voor PostgreSQL dat direct in de database draait. "
+        "Het is de meest betrouwbare manier om RLS-beleid te testen, omdat het dezelfde uitvoeringslaag gebruikt als de echte applicatie. "
+        "Tests worden uitgevoerd met de Supabase lokale ontwikkelomgeving of een dedicated testdatabase.",
+    )
+    p(doc, "Supabase biedt ingebouwde ondersteuning voor pgTAP via supabase test db.", "Normal")
+    p(doc, "Testcommando:", "Normal")
+    p(doc, "supabase test db", "Normal")
+    p(doc, "Testbestanden staan in supabase/tests/*.sql en volgen de naamgeving test_<tabelnaam>_rls.sql.", "Normal")
+
+    p(doc, "4. Layer 1: Unit tests", "Heading 1")
+    p(
+        doc,
+        "Unit tests dekken pure functies en logica die geen externe afhankelijkheden hebben. "
+        "Dit zijn de snelste en meest stabiele tests. Ze worden co-located met de bronbestanden in __tests__-mappen of als .test.ts-bestanden.",
+    )
+
+    p(doc, "4.1 Budgetberekening (ST-203 — hoogste prioriteit)", "Heading 2")
+    p(
+        doc,
+        "De mapping van energiescore naar energieniveau en dagbudget is de kern van het product. "
+        "Dit is de eerste plek waar tests verplicht zijn. De functie moet puur zijn: geen neveneffecten, geen database-oproepen.",
+    )
+    table(
+        doc,
+        ["Testgeval", "Input", "Verwacht resultaat"],
+        [
+            ["Minimale score", "energyScore = 1", "energyLevel = 'very_low', dailyBudget = minimumwaarde"],
+            ["Maximale score", "energyScore = 10", "energyLevel = 'high', dailyBudget = maximumwaarde"],
+            ["Grenswaarden", "elke overgangswaarde in de schaal", "Correct niveau en bijbehorend budget"],
+            ["Consistentie", "zelfde score twee keer", "Altijd gelijk resultaat (deterministisch)"],
+            ["Ongeldige invoer", "energyScore = 0 of 11", "Zod gooit een ZodError"],
+        ],
+    )
+
+    p(doc, "4.2 Zod-schema's", "Heading 2")
+    p(
+        doc,
+        "Elk domeinobject krijgt een Zod-schema. De schema's worden getest door geldige en ongeldige invoer te parseren "
+        "en het resultaat te verifiëren. Gebruik zod-fixture om realistische testfixtures te genereren.",
+    )
+    table(
+        doc,
+        ["Schema", "Locatie", "Te testen gevallen"],
+        [
+            ["MorningCheckInSchema", "lib/checkin/schemas.ts", "Geldige check-in, score buiten bereik, ontbrekend verplicht veld, te lange notitie"],
+            ["OnboardingSubmissionSchema", "lib/onboarding/schemas.ts", "Geldige onboarding, ongeldige tijdzone, ongeldige schermnaam"],
+            ["SettingsSubmissionSchema", "lib/profile/schemas.ts", "Geldige settings, ongeldige herinneringstijd, onbekende locale"],
+            ["PlannedActivitySchema", "lib/planning/schemas.ts", "Geldige activiteit, negatieve energiepunten, te lange naam"],
+        ],
+    )
+
+    p(doc, "4.3 Hulpfuncties en navigatie-utilities", "Heading 2")
+    table(
+        doc,
+        ["Functie", "Bestand", "Te testen gevallen"],
+        [
+            ["sanitizeNextPath()", "lib/auth/navigation.ts", "Geldig pad, pad zonder leading slash, dubbele slash (open redirect), leeg pad"],
+            ["buildPathWithQuery()", "lib/auth/navigation.ts", "Pad zonder params, één param, meerdere params, speciale tekens in waarde"],
+            ["getAuthNotice()", "lib/auth/messages.ts", "Bekende foutcode, onbekende code, ontbrekende code, bekende statuscode"],
+            ["cn()", "lib/utils.ts", "Lege invoer, conflicterende Tailwind-klassen, conditionals"],
+        ],
+    )
+
+    p(doc, "5. Layer 2: Integratietests", "Heading 1")
+    p(
+        doc,
+        "Integratietests verifiëren dat de servicelaag correct samenwerkt met Supabase. "
+        "Server actions worden niet direct getest — de businesslogica zit in de servicelaag (lib/*/service.ts) "
+        "en wordt daar getest. Server actions worden afgedekt door E2E-tests.",
+    )
+
+    p(doc, "5.1 Servicelaag (lib/profile/service.ts en toekomstige services)", "Heading 2")
+    p(
+        doc,
+        "Gebruik een geïsoleerde testdatabase (Supabase lokaal of een aparte testproject-URL). "
+        "Elke test maakt eigen data aan en ruimt die na afloop op. Gebruik vi.mock() niet voor de database — "
+        "echte Supabase-queries geven meer vertrouwen en voorkomen dat mock-gedrag verschilt van productiegedrag.",
+    )
+    table(
+        doc,
+        ["Test", "Doel"],
+        [
+            ["getProfileBundleForCurrentUser()", "Retourneert gecombineerd profiel en settings voor bestaande gebruiker"],
+            ["ensureProfileBundleForCurrentUser()", "Maakt records aan als ze niet bestaan (bootstrap)"],
+            ["completeOnboardingForCurrentUser()", "Slaat onboarding op en zet onboarding_seen op true"],
+            ["saveSettingsForCurrentUser()", "Wijzigingen worden persistent opgeslagen"],
+            ["getProfileBundleForCurrentUser() — niet ingelogd", "Gooit een fout of retourneert null"],
+        ],
+    )
+
+    p(doc, "5.2 Server actions — mocking aanpak", "Heading 2")
+    p(
+        doc,
+        "Server actions zijn dunne wrappers rond de servicelaag. Ze worden getest via vi.mock() voor next/navigation "
+        "om redirect-gedrag te verifiëren, en via E2E-tests voor de volledige flow. "
+        "De businesslogica (validatie, berekening) wordt in unit- en integratietests afgedekt.",
+    )
+    p(doc, "Aanbevolen patroon voor server action tests:", "Normal")
+    p(doc, "vi.mock('next/navigation', () => ({ redirect: vi.fn() }))", "Normal")
+    p(doc, "vi.mock('@/lib/profile/service') // mock de servicelaag", "Normal")
+    p(doc, "// Test de actie en verifieer dat redirect en service correct worden aangeroepen", "Normal")
+
+    p(doc, "6. Layer 3: RLS en security tests (pgTAP)", "Heading 1")
+    p(
+        doc,
+        "RLS-tests worden uitgevoerd direct in PostgreSQL via pgTAP. "
+        "Elke tabel krijgt een eigen testbestand. De tests verifiëren dat gebruikers uitsluitend hun eigen records kunnen lezen, "
+        "schrijven en verwijderen. Tests worden uitgevoerd als een niet-geprivilegieerde databaserol, "
+        "niet als de SQL Editor-rol (die RLS omzeilt).",
+    )
+    table(
+        doc,
+        ["Testgeval", "Te verifiëren"],
+        [
+            ["SELECT op eigen rij", "Gebruiker A kan zijn eigen profiel opvragen"],
+            ["SELECT op andermans rij", "Gebruiker A kan het profiel van gebruiker B niet zien (0 rijen)"],
+            ["INSERT voor zichzelf", "Gebruiker A mag een check-in aanmaken voor eigen profiel"],
+            ["INSERT voor een ander", "Gebruiker A kan geen check-in aanmaken voor profiel van B (RLS-fout)"],
+            ["UPDATE op eigen rij", "Gebruiker A mag eigen settings aanpassen"],
+            ["UPDATE op andermans rij", "Gebruiker A kan settings van B niet aanpassen (0 updated rows)"],
+            ["DELETE op eigen rij", "Verwijderen van eigen record lukt"],
+            ["DELETE op andermans rij", "Verwijderen van andermans record lukt niet"],
+            ["Unauthenticated access", "Queries zonder geldig JWT retourneren 0 rijen of een fout"],
+        ],
+    )
+    p(doc, "Testbestandsstructuur:", "Normal")
+    p(doc, "supabase/tests/test_profiles_rls.sql", "Normal")
+    p(doc, "supabase/tests/test_user_settings_rls.sql", "Normal")
+    p(doc, "supabase/tests/test_morning_check_ins_rls.sql", "Normal")
+    p(doc, "supabase/tests/test_activities_rls.sql", "Normal")
+
+    p(doc, "7. Layer 4: End-to-end tests (Playwright)", "Heading 1")
+    p(
+        doc,
+        "E2E-tests verifiëren de volledige gebruikersflows in een echte browser. "
+        "Elke testrun gebruikt een authentiek Supabase-testaccount. "
+        "Authenticatie gebeurt programmatisch via de Supabase REST API om tijd te besparen en flakiness te beperken: "
+        "het auth-token wordt eenmalig opgehaald in een setup-stap en hergebruikt als cookie-state voor alle tests.",
+    )
+
+    p(doc, "7.1 Authenticatiepatroon", "Heading 2")
+    p(
+        doc,
+        "Maak een global setup-bestand (playwright/global-setup.ts) dat één keer inlogt via de Supabase Auth REST API "
+        "en de sessiestatus opslaat in playwright/.auth/user.json. "
+        "Testbestanden importeren deze opgeslagen staat en starten al ingelogd.",
+    )
+    p(doc, "Voordeel: authenticatie hoeft maar één keer per testsuite te draaien, niet per test.", "Normal")
+    p(doc, "In CI: gebruik --workers=1 als de Supabase connection pool dat vereist.", "Normal")
+    p(doc, "Gebruik data-testid-attributen op interactieve elementen voor stabiele selectors.", "Normal")
+
+    p(doc, "7.2 Te testen gebruikersflows", "Heading 2")
+    table(
+        doc,
+        ["Flow", "Stappen", "Kritieke assertions"],
+        [
+            ["Registratie en e-mailbevestiging", "Aanmelden, e-mail bevestigen, onboarding afronden", "Dashboard is bereikbaar na bevestiging"],
+            ["Inloggen", "Inlogformulier invullen, submit", "Dashboard zichtbaar, naam of profiel aanwezig"],
+            ["Onboarding", "Drie stappen doorlopen, tijdzone en herinneringen instellen", "Dashboard toont welkomstbericht, onboarding niet opnieuw zichtbaar"],
+            ["Instellingen wijzigen", "Naar instellingen navigeren, tijdzone aanpassen, opslaan", "Succesbericht zichtbaar, nieuwe instelling persistent"],
+            ["Ochtendcheck-in", "Energiescore invoeren, slaapkwaliteit kiezen, opslaan", "Dashboard toont budget en energieniveau"],
+            ["Activiteit plannen", "Activiteit aanmaken met naam, categorie en energiepunten", "Energiemeter update direct, activiteit staat in dagoverzicht"],
+            ["Activiteit als uitgevoerd markeren", "Activiteit afsluiten met werkelijke duur en vermoeidheidsscore", "Status wijzigt naar uitgevoerd in dagoverzicht"],
+            ["Activiteit overslaan", "Skip kiezen met reden", "Status wijzigt naar geskipt, reden opgeslagen"],
+            ["Uitloggen", "Uitlogknop", "Redirect naar login, dashboard niet toegankelijk zonder sessie"],
+            ["Beveiligde route zonder sessie", "Dashboard-URL bezoeken zonder login", "Redirect naar login"],
+        ],
+    )
+
+    p(doc, "8. Testdata-management", "Heading 1")
+    p(
+        doc,
+        "Goede testdata-management voorkomt dat tests elkaar beïnvloeden en maakt tests herhaalbaar. "
+        "De volgende principes gelden:",
+    )
+    bullets(
+        doc,
+        [
+            "Elke E2E-test maakt zijn eigen testgebruiker aan of hergebruikt een dedicated testaccount.",
+            "Unit- en integratietests zijn stateless: ze maken geen gebruik van gedeelde databaserecords.",
+            "Gebruik zod-fixture om valide testfixtures te genereren vanuit Zod-schema's (voorkomt handmatig bijhouden van testobjecten).",
+            "Na integratietests worden aangemaakte records verwijderd (cleanup in afterEach of afterAll).",
+            "Productiedata mag nooit worden gebruikt in tests. Gebruik een aparte Supabase-testomgeving.",
+            "Seed-scripts voor statische referentiedata (activity_categories, skip_reasons) staan in supabase/seed.sql.",
+        ],
+    )
+
+    p(doc, "9. CI/CD-integratie", "Heading 1")
+    p(
+        doc,
+        "Tests worden automatisch uitgevoerd in GitHub Actions. "
+        "De CI-pipeline is opgesplitst in twee jobs zodat de snelle unit- en integratietests niet worden vertraagd door E2E-tests.",
+    )
+    table(
+        doc,
+        ["Job", "Trigger", "Stappen", "Blokkeerend voor merge"],
+        [
+            ["Lint en build", "PR en push naar main", "npm ci, npm run lint, npm run build", "Ja"],
+            ["Unit en integratie", "PR en push naar main", "npm ci, npx vitest run, supabase test db", "Ja"],
+            ["E2E", "PR naar main", "npm ci, npx playwright install, npx playwright test --workers=1", "Ja"],
+        ],
+    )
+    p(
+        doc,
+        "De omgevingsvariabelen NEXT_PUBLIC_SUPABASE_URL en NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY "
+        "worden als GitHub Actions secrets meegegeven aan de testjobs. "
+        "Gebruik een apart Supabase-testproject zodat testdata de productiedatabase niet verontreinigt.",
+    )
+
+    p(doc, "10. Bestandsstructuur", "Heading 1")
+    table(
+        doc,
+        ["Pad", "Inhoud"],
+        [
+            ["lib/checkin/__tests__/budget.test.ts", "Unit tests voor budgetberekening"],
+            ["lib/checkin/schemas.ts", "Zod-schema's voor check-in"],
+            ["lib/auth/__tests__/navigation.test.ts", "Unit tests voor sanitizeNextPath en buildPathWithQuery"],
+            ["lib/auth/__tests__/messages.test.ts", "Unit tests voor getAuthNotice"],
+            ["lib/profile/__tests__/service.test.ts", "Integratietests voor profileservice"],
+            ["supabase/tests/test_profiles_rls.sql", "pgTAP RLS-tests voor de profiles-tabel"],
+            ["supabase/tests/test_user_settings_rls.sql", "pgTAP RLS-tests voor user_settings"],
+            ["e2e/auth.spec.ts", "Playwright-tests voor registratie, login en uitloggen"],
+            ["e2e/onboarding.spec.ts", "Playwright-tests voor onboardingflow"],
+            ["e2e/checkin.spec.ts", "Playwright-tests voor ochtendcheck-in"],
+            ["e2e/planning.spec.ts", "Playwright-tests voor activiteiten plannen en evalueren"],
+            ["playwright/global-setup.ts", "Programmatische Supabase-login, sessiestate opslaan"],
+            ["playwright.config.ts", "Playwright-configuratie inclusief auth-setup en workers"],
+        ],
+    )
+
+    p(doc, "11. Acceptatiecriteria per laag", "Heading 1")
+    table(
+        doc,
+        ["Laag", "Minimale eis voor launch"],
+        [
+            ["Unit", "Budgetberekening volledig gedekt inclusief grenswaarden. Alle Zod-schema's getest op geldige en ongeldige invoer. Navigatie-utilities getest op open-redirect-preventie."],
+            ["Integratie", "Profileservice getest op happy path en bootstrappatroon. Server actions getest op redirect-gedrag bij succes en fout."],
+            ["RLS (pgTAP)", "Alle tabellen met gebruikersdata hebben tests voor SELECT, INSERT, UPDATE en DELETE als owner en als andere gebruiker. Unauthenticated access getest."],
+            ["E2E", "Login, onboarding, check-in en instellingen zijn geautomatiseerd getest. Beveiligde route zonder sessie redirect naar login."],
+            ["Handmatig", "Kernflows geverifieerd op mobiel. Toegankelijkheidscheck op touch targets en contrast. Copy getoetst op niet-medische formulering."],
+        ],
+    )
+
+    p(doc, "12. Bewuste keuzes en afwegingen", "Heading 1")
+    table(
+        doc,
+        ["Keuze", "Alternatief", "Reden voor keuze"],
+        [
+            ["Vitest boven Jest", "Jest", "Sneller, native ESM, minder configuratie voor Next.js-projecten in 2026."],
+            ["Echte Supabase in integratietests", "Gemockte Supabase-client", "Mocks verbergen RLS- en querygedrag. Echte database geeft meer vertrouwen. Precedent: productie-incident door mock/prod-divergentie."],
+            ["pgTAP voor RLS", "Applicatielaag-tests voor RLS", "RLS draait in de database; alleen pgTAP test op het exacte executieniveau."],
+            ["Programmatische Playwright-login", "UI-login per test", "Sneller, minder foutgevoelig, vermijdt het testen van hetzelfde auth-pad bij elke test."],
+            ["Zod voor validatie", "Handmatige validatiefuncties", "Eén bron van waarheid voor types en validatie. zod-fixture genereert automatisch testdata."],
+            ["Geen snapshot tests", "React Testing Library snapshots", "Snapshots zijn fragiel bij kleine UI-wijzigingen en geven weinig semantisch vertrouwen."],
+        ],
+    )
+
+    p(doc, "13. Externe referenties", "Heading 1")
+    references = [
+        ("Next.js Testing Guide — Vitest", "https://nextjs.org/docs/app/guides/testing/vitest"),
+        ("Next.js Testing Guide — Playwright", "https://nextjs.org/docs/app/guides/testing/playwright"),
+        ("Supabase Testing Overview", "https://supabase.com/docs/guides/local-development/testing/overview"),
+        ("pgTAP documentatie", "https://pgtap.org/"),
+        ("Zod documentatie", "https://zod.dev/"),
+        ("zod-fixture — testdata genereren vanuit Zod-schema's", "https://github.com/timdeschryver/zod-fixture"),
+        ("Playwright — Supabase auth via REST API", "https://mokkapps.de/blog/login-at-supabase-via-rest-api-in-playwright-e2e-test"),
+        ("Playwright — opslaan en hergebruiken van auth-state", "https://playwright.dev/docs/auth"),
+    ]
+    for name, url in references:
+        para = doc.add_paragraph(style="List Bullet")
+        para.add_run(f"{name}: ")
+        add_hyperlink(para, url, url)
+
+    set_footer(doc, f"{PRODUCT_NAME} Testplan v0.1")
+    doc.save(BASE_DIR / "inspannings-monitor-07-testplan-v01.docx")
+
+
 def main() -> None:
     BASE_DIR.mkdir(parents=True, exist_ok=True)
     build_productkader()
@@ -1201,6 +1593,7 @@ def main() -> None:
     build_roadmap()
     build_technische_architectuur()
     build_implementatieplan_backlog()
+    build_testplan()
 
 
 if __name__ == "__main__":

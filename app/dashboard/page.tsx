@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOutAction } from "@/app/auth-actions";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { CheckInCard } from "@/components/check-in/check-in-card";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
+import { PageIntro } from "@/components/navigation/page-intro";
+import { EnergyMeterCard } from "@/components/planning/energy-meter-card";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import {
   Card,
   CardContent,
@@ -12,22 +15,19 @@ import {
 } from "@/components/ui/card";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
+import { isTestWizardEnabled } from "@/lib/config/feature-flags";
+import { getDashboardStatusToast } from "@/lib/feedback/status-messages";
+import { getTodayActivitiesForCurrentUser } from "@/lib/planning/service";
+import { calculatePlanningMeterSnapshot } from "@/lib/planning/meter";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
-import { cn } from "@/lib/utils";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
 
 type DashboardPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
 
 function formatToggleState(value: boolean, enabledLabel = "Aan", disabledLabel = "Uit") {
   return value ? enabledLabel : disabledLabel;
@@ -35,18 +35,6 @@ function formatToggleState(value: boolean, enabledLabel = "Aan", disabledLabel =
 
 function formatReminderTime(value: string | null) {
   return value ? value.slice(0, 5) : "Nog niet ingesteld";
-}
-
-function getDashboardNotice(status: string | null) {
-  if (status === "onboarding-completed") {
-    return "Je onboarding is opgeslagen. Je basisinstellingen staan nu klaar.";
-  }
-
-  if (status === "onboarding-skipped") {
-    return "Je hebt de onboarding nu overgeslagen. Je kunt hem later alsnog afronden.";
-  }
-
-  return null;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
@@ -68,7 +56,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   const { profile, settings } = profileBundle;
-  const notice = getDashboardNotice(getParamValue(resolvedSearchParams, "status"));
+  const [checkInStatus, planningStatus] = await Promise.all([
+    getTodayCheckInForCurrentUser(),
+    getTodayActivitiesForCurrentUser(),
+  ]);
+  const statusToast = getDashboardStatusToast(getParamValue(resolvedSearchParams, "status"));
 
   if (!profile.onboardingSeen) {
     redirect("/onboarding");
@@ -79,58 +71,39 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const morningReminderState = settings.morningReminderEnabled
     ? `Aan om ${formatReminderTime(settings.morningReminderTime)}`
     : "Uit";
+  const planningMeter = calculatePlanningMeterSnapshot(
+    planningStatus?.activities ?? [],
+    checkInStatus?.todayCheckIn?.dailyBudget ?? null,
+  );
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        {notice ? (
-          <Alert className="rounded-[1.5rem] border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700">
-            <AlertDescription className="leading-7 text-current">
-              {notice}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
+        <StatusToastBridge toast={statusToast} />
 
-        <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              Protected route
-            </p>
-            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
-              Dashboard placeholder voor release 1
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-700">
-              Je sessie is server-side gevalideerd en het minimale profielbundle is
-              nu beschikbaar. Daarmee staat de fundering voor onboarding, settings
-              en de eerste energieflows klaar.
-            </p>
-          </div>
-
-          <form action={signOutAction}>
-            <div className="flex flex-wrap items-center gap-3">
+        <PageIntro
+          eyebrow="Dashboard"
+          title="Je huidige dagstatus"
+          description="Hier zie je in één overzicht je profielbasis, ochtendcheck-in, planningstatus en huidige energiemeter voor vandaag."
+          aside={
+            isTestWizardEnabled() ? (
               <Link
-                href="/settings"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "h-11 rounded-full px-5",
-                )}
+                href="/wizard-test"
+                className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
               >
-                Instellingen
+                Test wizard
               </Link>
-              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-                Uitloggen
-              </Button>
-            </div>
-          </form>
-        </header>
+            ) : null
+          }
+        />
 
         <section className="grid gap-5 md:grid-cols-3">
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Auth
               </p>
-              <CardTitle className="text-lg text-slate-900">Cookie-based sessie actief</CardTitle>
+              <CardTitle className="text-lg text-foreground">Cookie-based sessie actief</CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -139,27 +112,45 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Profiel
               </p>
-              <CardTitle className="text-lg text-slate-900">{profileTitle}</CardTitle>
             </CardHeader>
-            <CardContent className="pb-6">
+            <CardContent className="space-y-4 pb-6">
+              <div className="flex items-center gap-4">
+                <ProfileAvatar
+                  avatarUrl={profile.avatarUrl}
+                  displayName={profile.displayName}
+                  email={profile.email}
+                  size="md"
+                />
+                <div className="space-y-1">
+                  <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
+                  <CardDescription className="text-sm leading-7 text-muted-foreground">
+                    {profile.tagline ?? "Nog geen korte profielregel toegevoegd."}
+                  </CardDescription>
+                </div>
+              </div>
               <CardDescription className="text-sm leading-7 text-muted-foreground">
                 Taal `{profile.locale}` en timezone `{profile.timezone}` staan nu per
                 gebruiker opgeslagen.
               </CardDescription>
+              {profile.bio ? (
+                <CardDescription className="whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                  {profile.bio}
+                </CardDescription>
+              ) : null}
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Onboarding
               </p>
-              <CardTitle className="text-lg text-slate-900">{onboardingState}</CardTitle>
+              <CardTitle className="text-lg text-foreground">{onboardingState}</CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -169,12 +160,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Instellingen
               </p>
-              <CardTitle className="text-lg text-slate-900">
+              <CardTitle className="text-lg text-foreground">
                 Punten {formatToggleState(settings.showEnergyPoints, "zichtbaar", "verborgen")}
               </CardTitle>
             </CardHeader>
@@ -185,31 +176,68 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               </CardDescription>
             </CardContent>
           </Card>
+
+          <CheckInCard todayCheckIn={checkInStatus?.todayCheckIn ?? null} />
+
+          <Card className="py-0">
+            <CardHeader className="pb-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                Dagplanning
+              </p>
+              <CardTitle className="text-lg text-foreground">
+                {planningStatus?.activities.length
+                  ? `${planningStatus.activities.length} activiteiten voor vandaag`
+                  : "Nog niets toegevoegd voor vandaag"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-6">
+              <CardDescription className="text-sm leading-7 text-muted-foreground">
+                Plan kleine, concrete activiteiten voor vandaag en leg ook onverwachte activiteiten vast als je dag anders loopt dan gedacht.
+              </CardDescription>
+              <div className="mt-4">
+                <Link href="/planning" className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary">
+                  Open dagplanning
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          <EnergyMeterCard meter={planningMeter} tone="subtle" />
+
+          {isTestWizardEnabled() ? (
+            <Card className="py-0">
+              <CardHeader className="pb-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                  Wizard core
+                </p>
+                <CardTitle className="text-lg text-foreground">Interne testwizard actief</CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6">
+                <CardDescription className="text-sm leading-7 text-muted-foreground">
+                  Gebruik deze alleen in development of preview om nieuwe multi-step flows te controleren.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ) : null}
         </section>
 
         {!profile.onboardingCompleted ? (
-          <Card className="rounded-[1.75rem] border border-amber-900/15 bg-amber-50 py-0 text-amber-950 shadow-[0_12px_40px_rgba(146,64,14,0.08)]">
+          <Card className="border-warning/32 bg-warning/16 py-0 text-foreground shadow-[var(--shadow-1)]">
             <CardContent className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-semibold">Je onboarding is nog niet afgerond.</p>
-                <p className="mt-1 max-w-2xl text-sm leading-7 text-amber-900">
+                <p className="mt-1 max-w-2xl text-sm leading-7 text-foreground/82">
                   Je kunt de korte flow later alsnog afronden om je basisinstellingen
                   en eerste voorkeuren vast te leggen.
                 </p>
               </div>
-              <Link
-                href="/onboarding"
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "h-11 shrink-0 rounded-full bg-amber-950 px-5 text-amber-50 hover:bg-amber-900",
-                )}
-              >
-                Rond onboarding af
-              </Link>
+                <Link href="/onboarding" className="inline-flex items-center rounded-full bg-warning px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:brightness-[0.98]">
+                  Rond onboarding af
+                </Link>
             </CardContent>
           </Card>
         ) : (
-          <Card className="rounded-[1.75rem] border border-primary/10 bg-primary py-0 text-primary-foreground shadow-[0_12px_40px_rgba(22,58,43,0.18)]">
+          <Card tone="primary" elevation="raised" className="py-0">
             <CardContent className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-semibold">Je instellingen kun je nu ook los beheren.</p>
@@ -218,19 +246,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                   timezone en zichtbaarheid van punten later zelfstandig kunt aanpassen.
                 </p>
               </div>
-              <Link
-                href="/settings"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "lg" }),
-                  "h-11 shrink-0 rounded-full px-5",
-                )}
-              >
-                Open instellingen
-              </Link>
-            </CardContent>
-          </Card>
-        )}
+                <Link href="/settings" className="inline-flex items-center rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-[var(--shadow-1)] transition-colors hover:brightness-[0.98]">
+                  Open instellingen
+                </Link>
+              </CardContent>
+            </Card>
+          )}
       </div>
-    </main>
+    </AppShell>
   );
 }

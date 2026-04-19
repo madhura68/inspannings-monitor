@@ -1,29 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AuthNotice } from "@/components/auth/auth-notice";
+import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { AuthPanel } from "@/components/auth/auth-panel";
 import { signInAction } from "@/app/auth-actions";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getAuthNotice } from "@/lib/auth/messages";
 import { buildPathWithQuery, sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
+import { getAuthStatusToast } from "@/lib/feedback/status-messages";
+import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
 
 type LoginPageProps = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<PageSearchParams>;
 };
-
-function getParamValue(
-  params: Record<string, string | string[] | undefined>,
-  key: string,
-) {
-  const value = params[key];
-  return typeof value === "string" ? value : null;
-}
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const authState = await getAuthState();
@@ -34,7 +27,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     redirect(next);
   }
 
-  const notice = getAuthNotice(
+  const statusToast = getAuthStatusToast(
     getParamValue(resolvedSearchParams, "error"),
     getParamValue(resolvedSearchParams, "status"),
   );
@@ -48,16 +41,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       footer={
         <p>
           Nog geen account?{" "}
-          <Link href={signUpHref} className="font-semibold text-emerald-900">
+          <Link href={signUpHref} className="font-semibold text-primary underline-offset-4 hover:underline">
             Maak er een aan
           </Link>
         </p>
       }
     >
-      <AuthNotice notice={notice} />
+      <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
       {!authState.isConfigured ? (
-        <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+        <Alert variant="info">
           <AlertDescription className="leading-7 text-current">
             Voeg eerst je Supabase-gegevens toe in `.env.local` op basis van `.env.example`.
           </AlertDescription>
@@ -67,7 +60,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <input type="hidden" name="next" value={next} />
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-800">
+            <Label htmlFor="email" className="text-foreground">
               E-mailadres
             </Label>
             <Input
@@ -81,7 +74,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-800">
+            <Label htmlFor="password" className="text-foreground">
               Wachtwoord
             </Label>
             <Input
