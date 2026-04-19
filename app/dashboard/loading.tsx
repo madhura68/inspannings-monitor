@@ -22,7 +22,7 @@ export default function DashboardLoading() {
 
           <div className="grid gap-5 md:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i} className="py-0">
+              <Card key={i} className="pb-0">
                 <CardHeader className="pb-0">
                   <Skeleton className="h-3 w-14" />
                   <Skeleton className="mt-1 h-5 w-40" />

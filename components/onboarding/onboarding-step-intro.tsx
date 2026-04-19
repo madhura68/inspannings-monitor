@@ -9,7 +9,7 @@ import {
 export function OnboardingStepIntro() {
   return (
     <div className="space-y-4">
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardHeader className="pb-0">
           <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
             Wat je hier wél krijgt
@@ -23,7 +23,7 @@ export function OnboardingStepIntro() {
         </CardContent>
       </Card>
 
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardHeader className="pb-0">
           <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
             Wat deze app niet doet

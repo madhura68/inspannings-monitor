@@ -79,7 +79,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           <SettingsForm profileBundle={profileBundle} />
 
           <aside className="space-y-5">
-            <Card className="py-0">
+            <Card className="pb-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Account
@@ -111,7 +111,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               </CardContent>
             </Card>
 
-            <Card className="py-0">
+            <Card className="pb-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Huidige status

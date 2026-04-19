@@ -104,7 +104,7 @@ export function ActivityForm({
       <input type="hidden" name="impactLevel" value={impactLevel} />
       <input type="hidden" name="priorityLevel" value={priorityLevel} />
 
-      <Card elevation="raised" className="py-0">
+      <Card elevation="raised" className="pb-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Dagplanning
@@ -215,7 +215,7 @@ export function ActivityForm({
 
           <Separator />
 
-          <Card tone="subtle" className="py-0 shadow-none">
+          <Card tone="subtle" className="pb-0 shadow-none">
             <CardContent className="space-y-2 py-5">
               <p className="text-sm font-semibold text-foreground">Vooruitblik op de meter</p>
               <p className="text-sm leading-7 text-muted-foreground" aria-live="polite">

@@ -50,7 +50,7 @@ export function EnergyMeterCard({
     meter.dailyBudget === null ? null : Math.min(100, Math.max(0, meter.progressPercent ?? 0));
 
   return (
-    <Card tone={tone === "default" ? "default" : "subtle"} className="py-0">
+    <Card tone={tone === "default" ? "default" : "subtle"} className="pb-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           EnergyMeter

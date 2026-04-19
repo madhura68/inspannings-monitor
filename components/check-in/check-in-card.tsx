@@ -34,7 +34,7 @@ export function CheckInCard({ todayCheckIn }: CheckInCardProps) {
     : "Leg je energiestart en slaapkwaliteit van vandaag vast.";
 
   return (
-    <Card className="py-0">
+    <Card className="pb-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           Ochtendcheck-in

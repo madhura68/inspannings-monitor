@@ -102,7 +102,7 @@ export function AdHocActivityForm({
       <input type="hidden" name="categoryId" value={categoryId} />
       <input type="hidden" name="impactLevel" value={impactLevel} />
 
-      <Card tone="subtle" className="py-0">
+      <Card tone="subtle" className="pb-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Ongepland
@@ -252,7 +252,7 @@ export function AdHocActivityForm({
             </div>
           </div>
 
-          <Card tone="subtle" className="py-0 shadow-none">
+          <Card tone="subtle" className="pb-0 shadow-none">
             <CardContent className="space-y-2 py-5">
               <p className="text-sm font-semibold text-foreground">Effect op je dagtotaal</p>
               <p className="text-sm leading-7 text-muted-foreground" aria-live="polite">

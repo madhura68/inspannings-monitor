@@ -21,7 +21,7 @@ export default function PlanningLoading() {
           </div>
 
           <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <Card className="py-0">
+            <Card className="pb-0">
               <CardContent className="space-y-4 pb-6 pt-4">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-10 w-full" />
@@ -36,7 +36,7 @@ export default function PlanningLoading() {
             </Card>
 
             <div className="space-y-5">
-              <Card className="py-0">
+              <Card className="pb-0">
                 <CardHeader className="pb-0">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="mt-1 h-5 w-48" />
@@ -46,14 +46,14 @@ export default function PlanningLoading() {
                   <Skeleton className="mt-1.5 h-4 w-3/4" />
                 </CardContent>
               </Card>
-              <Card className="py-0">
+              <Card className="pb-0">
                 <CardContent className="space-y-3 pb-6 pt-4">
                   <Skeleton className="h-4 w-32" />
                   <Skeleton className="h-5 w-full rounded-full" />
                   <Skeleton className="h-3 w-24" />
                 </CardContent>
               </Card>
-              <Card className="py-0">
+              <Card className="pb-0">
                 <CardHeader className="pb-0">
                   <Skeleton className="h-3 w-24" />
                 </CardHeader>
@@ -69,7 +69,7 @@ export default function PlanningLoading() {
           <div className="space-y-3">
             <Skeleton className="h-5 w-48" />
             {[0, 1, 2].map((i) => (
-              <Card key={i} className="py-0">
+              <Card key={i} className="pb-0">
                 <CardContent className="flex items-center justify-between px-4 py-3">
                   <div className="space-y-1.5">
                     <Skeleton className="h-4 w-48" />

@@ -106,7 +106,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
           </div>
 
           <aside className="space-y-5">
-            <Card className="py-0">
+            <Card className="pb-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Vandaag
@@ -139,7 +139,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
 
             <EnergyMeterCard meter={planningMeter} />
 
-            <Card tone="primary" elevation="raised" className="py-0">
+            <Card tone="primary" elevation="raised" className="pb-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
                   Bewuste grens

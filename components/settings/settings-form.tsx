@@ -60,7 +60,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       <input type="hidden" name="locale" value={locale} />
       <PreferenceHiddenFields draft={draft} />
 
-      <Card elevation="raised" className="py-0">
+      <Card elevation="raised" className="pb-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Account
@@ -83,7 +83,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="py-0">
+      <Card className="pb-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Profiel
@@ -97,7 +97,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6 pb-6 lg:grid-cols-[16rem_1fr]">
-          <Card tone="subtle" className="py-0 shadow-none">
+          <Card tone="subtle" className="pb-0 shadow-none">
             <CardContent className="flex h-full flex-col items-center gap-4 px-5 py-5 text-center">
               <ProfileAvatar
                 avatarUrl={profileBundle.profile.avatarUrl}
@@ -182,7 +182,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       </Card>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Taal en tijd
@@ -235,14 +235,14 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Interface
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
                   <Label htmlFor="show-energy-points" className="text-sm font-semibold text-foreground">
@@ -267,14 +267,14 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       </section>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Reminders
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="space-y-4 py-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
@@ -318,7 +318,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
               </CardContent>
             </Card>
 
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
                   <Label htmlFor="reflection-reminder-enabled" className="text-sm font-semibold text-foreground">
@@ -341,7 +341,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card tone="primary" elevation="raised" className="py-0">
+        <Card tone="primary" elevation="raised" className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
               Bewuste grenzen

@@ -58,7 +58,7 @@ export function CheckInForm({ todayCheckIn }: CheckInFormProps) {
       <input type="hidden" name="energyScore" value={energyScore ?? ""} />
       <input type="hidden" name="sleepQuality" value={sleepQuality ?? ""} />
 
-      <Card elevation="raised" className="py-0">
+      <Card elevation="raised" className="pb-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Ochtendcheck-in
