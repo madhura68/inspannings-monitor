@@ -169,3 +169,21 @@ export function getUuidValue(
 
   return value;
 }
+
+export function getOptionalUuidValue(
+  formData: FormData,
+  key: string,
+  errorCode: string,
+): string | null {
+  const value = getOptionalString(formData, key);
+
+  if (!value) {
+    return null;
+  }
+
+  if (!UUID_VALUE_PATTERN.test(value)) {
+    fail(errorCode);
+  }
+
+  return value;
+}

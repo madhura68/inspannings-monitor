@@ -5,14 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ActivityEvaluationFields } from "@/components/planning/activity-evaluation-fields";
 import { ActivityStatusActions } from "@/components/planning/activity-status-actions";
 import { deriveActivityEnergyPoints } from "@/lib/planning/meter";
-import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
+import type {
+  ActivityCategory,
+  ActivityRecord,
+  SkipReason,
+} from "@/lib/planning/types";
 import { cn } from "@/lib/utils";
 
 type TodayActivitiesListProps = {
   activities: ActivityRecord[];
   categories: ActivityCategory[];
+  skipReasons: SkipReason[];
 };
 
 function getCategoryLabel(categories: ActivityCategory[], categoryId: string) {
@@ -78,6 +84,7 @@ function getStatusBadgeClassName(value: ActivityRecord["status"]) {
 export function TodayActivitiesList({
   activities,
   categories,
+  skipReasons,
 }: TodayActivitiesListProps) {
   return (
     <Card className="py-0">
@@ -141,6 +148,19 @@ export function TodayActivitiesList({
                   status={activity.status}
                 />
               </div>
+
+              {(activity.status === "skipped" || activity.status === "adjusted") ? (
+                <div className="mt-4 rounded-[var(--radius-lg)] border border-border/60 bg-card/60 p-4">
+                  <ActivityEvaluationFields
+                    key={`${activity.id}-${activity.status}`}
+                    activityId={activity.id}
+                    status={activity.status}
+                    skipReasons={skipReasons}
+                    initialSkipReasonId={activity.skipReasonId}
+                    initialNotes={activity.notes}
+                  />
+                </div>
+              ) : null}
             </div>
           ))
         )}

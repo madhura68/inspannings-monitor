@@ -92,13 +92,13 @@ Status: `ST-301`, `ST-302`, `ST-304` en `ST-305` zijn inmiddels gerealiseerd in 
 
 Doel: de kernloop afronden door geplande activiteiten te evalueren en terug te zien.
 
-Status: `ST-401` is inmiddels gerealiseerd in de app. De volgende logische stap
-ligt nu in `ST-402` en `ST-403`.
+Status: `ST-401` en `ST-402` zijn inmiddels gerealiseerd in de app. De volgende
+logische stap ligt nu in `ST-403`.
 
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
 | ST-401 | Statusflows voor uitgevoerd, geskipt en aangepast bouwen | Build | Afgerond: activiteiten van vandaag kunnen direct tussen de vier statussen wisselen |
-| ST-402 | Evaluatievelden toevoegen | UI | Contextuele velden verschijnen passend per status |
+| ST-402 | Evaluatievelden toevoegen | UI | Afgerond: skip-reden en toelichting verschijnen passend per status en worden opgeslagen |
 | ST-403 | Ongeplande activiteiten ondersteunen | Build | Ongeplande activiteit telt mee in werkelijke totalen |
 | ST-404 | Dagoverzicht bouwen | UI | Gepland versus uitgevoerd en statusverdeling zijn zichtbaar |
 | ST-405 | Dagaggregaties server-side implementeren | Logic | Dagtotalen blijven consistent met individuele records |

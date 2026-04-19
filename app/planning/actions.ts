@@ -9,10 +9,12 @@ import {
 } from "@/lib/planning/options";
 import {
   createActivityForTodayForCurrentUser,
+  updateActivityEvaluationForTodayForCurrentUser,
   updateActivityStatusForTodayForCurrentUser,
 } from "@/lib/planning/service";
 import type {
   CreateActivitySubmission,
+  UpdateActivityEvaluationSubmission,
   UpdateActivityStatusSubmission,
 } from "@/lib/planning/types";
 import {
@@ -20,6 +22,8 @@ import {
   FormDataValidationError,
   getEnumValue,
   getIntegerValue,
+  getOptionalString,
+  getOptionalUuidValue,
   getRequiredString,
   getUuidValue,
 } from "@/lib/forms/parse";
@@ -69,6 +73,24 @@ function buildUpdateActivityStatusSubmission(
   };
 }
 
+function buildUpdateActivityEvaluationSubmission(
+  formData: FormData,
+): UpdateActivityEvaluationSubmission {
+  const notes = getOptionalString(formData, "notes");
+
+  return {
+    activityId: getUuidValue(formData, "activityId", "invalid-activity-evaluation"),
+    skipReasonId: getOptionalUuidValue(
+      formData,
+      "skipReasonId",
+      "invalid-activity-evaluation",
+    ),
+    notes: notes
+      ? assertMaxLength(notes, 500, "invalid-activity-evaluation")
+      : null,
+  };
+}
+
 export async function createActivityAction(
   _previousState: null,
   formData: FormData,
@@ -112,5 +134,35 @@ export async function updateActivityStatusAction(
   }
 
   redirect(buildPathWithQuery("/planning", { status: "activity-status-saved" }));
+  return null;
+}
+
+export async function saveActivityEvaluationAction(
+  _previousState: null,
+  formData: FormData,
+): Promise<null> {
+  try {
+    await updateActivityEvaluationForTodayForCurrentUser(
+      buildUpdateActivityEvaluationSubmission(formData),
+    );
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      redirect(buildPathWithQuery("/planning", { error: error.code }));
+    }
+
+    if (
+      error instanceof Error &&
+      (error.message === "Ongeldige of niet-beschikbare activiteit." ||
+        error.message === "Skip-reden is verplicht voor een overgeslagen activiteit." ||
+        error.message === "Toelichting is verplicht voor een aangepaste activiteit." ||
+        error.message === "Ongeldige skip-reden.")
+    ) {
+      redirect(buildPathWithQuery("/planning", { error: "invalid-activity-evaluation" }));
+    }
+
+    redirect(buildPathWithQuery("/planning", { error: "activity-evaluation-failed" }));
+  }
+
+  redirect(buildPathWithQuery("/planning", { status: "activity-evaluation-saved" }));
   return null;
 }

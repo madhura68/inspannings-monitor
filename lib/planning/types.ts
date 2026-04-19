@@ -58,6 +58,12 @@ export type UpdateActivityStatusSubmission = {
   status: ActivityStatus;
 };
 
+export type UpdateActivityEvaluationSubmission = {
+  activityId: string;
+  skipReasonId: string | null;
+  notes: string | null;
+};
+
 export type ActivitiesForDateStatus = {
   timezone: string;
   activityDate: string;
@@ -68,5 +74,6 @@ export type PlanningPageData = {
   timezone: string;
   activityDate: string;
   categories: ActivityCategory[];
+  skipReasons: SkipReason[];
   activities: ActivityRecord[];
 };

@@ -10,6 +10,7 @@ import type {
   ActivitiesForDateStatus,
   ActivityStatus,
   SkipReason,
+  UpdateActivityEvaluationSubmission,
   UpdateActivityStatusSubmission,
 } from "@/lib/planning/types";
 import { ensureProfileBundleForCurrentUser } from "@/lib/profile/service";
@@ -166,6 +167,26 @@ async function assertCategoryExists(
   }
 }
 
+async function assertSkipReasonExists(
+  supabase: SupabaseServerClient,
+  skipReasonId: string,
+): Promise<void> {
+  const { data, error } = await supabase
+    .from("skip_reasons")
+    .select("id")
+    .eq("id", skipReasonId)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Skip-reden kon niet worden gevalideerd: ${error.message}`);
+  }
+
+  if (!data) {
+    throw new Error("Ongeldige skip-reden.");
+  }
+}
+
 export async function listActivityCategories(): Promise<ActivityCategory[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -246,8 +267,9 @@ export async function getPlanningPageDataForCurrentUser(): Promise<PlanningPageD
     return null;
   }
 
-  const [categories, activitiesStatus] = await Promise.all([
+  const [categories, skipReasons, activitiesStatus] = await Promise.all([
     listActivityCategories(),
+    listSkipReasons(),
     getTodayActivitiesForCurrentUser(),
   ]);
 
@@ -256,6 +278,7 @@ export async function getPlanningPageDataForCurrentUser(): Promise<PlanningPageD
     activityDate:
       activitiesStatus?.activityDate ?? getLocalDateForTimezone(profileBundle.profile.timezone),
     categories,
+    skipReasons,
     activities: activitiesStatus?.activities ?? [],
   };
 }
@@ -340,6 +363,80 @@ export async function updateActivityStatusForTodayForCurrentUser(
 
   if (!data) {
     throw new Error("Ongeldige of niet-beschikbare activiteit.");
+  }
+
+  return mapActivityRow(data);
+}
+
+export async function updateActivityEvaluationForTodayForCurrentUser(
+  submission: UpdateActivityEvaluationSubmission,
+): Promise<ActivityRecord> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    throw new Error("Profielbundle ontbreekt voor de huidige gebruiker.");
+  }
+
+  const activityDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const supabase = await createClient();
+
+  const { data: existingActivity, error: existingActivityError } = await supabase
+    .from("activities")
+    .select(ACTIVITY_COLUMNS)
+    .eq("id", submission.activityId)
+    .eq("user_id", user.id)
+    .eq("activity_date", activityDate)
+    .maybeSingle();
+
+  if (existingActivityError) {
+    throw new Error(
+      `Activiteit voor evaluatie kon niet worden geladen: ${existingActivityError.message}`,
+    );
+  }
+
+  if (!existingActivity) {
+    throw new Error("Ongeldige of niet-beschikbare activiteit.");
+  }
+
+  let nextSkipReasonId: string | null = null;
+  let nextNotes: string | null = null;
+
+  if (existingActivity.status === "skipped") {
+    if (!submission.skipReasonId) {
+      throw new Error("Skip-reden is verplicht voor een overgeslagen activiteit.");
+    }
+
+    await assertSkipReasonExists(supabase, submission.skipReasonId);
+    nextSkipReasonId = submission.skipReasonId;
+    nextNotes = submission.notes;
+  } else if (existingActivity.status === "adjusted") {
+    if (!submission.notes) {
+      throw new Error("Toelichting is verplicht voor een aangepaste activiteit.");
+    }
+
+    nextNotes = submission.notes;
+  }
+
+  const { data, error } = await supabase
+    .from("activities")
+    .update({
+      skip_reason_id: nextSkipReasonId,
+      notes: nextNotes,
+    })
+    .eq("id", existingActivity.id)
+    .eq("user_id", user.id)
+    .eq("activity_date", activityDate)
+    .select(ACTIVITY_COLUMNS)
+    .single();
+
+  if (error) {
+    throw new Error(`Evaluatiecontext kon niet worden opgeslagen: ${error.message}`);
   }
 
   return mapActivityRow(data);

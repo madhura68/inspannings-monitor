@@ -144,6 +144,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
         <TodayActivitiesList
           activities={planningPageData.activities}
           categories={planningPageData.categories}
+          skipReasons={planningPageData.skipReasons}
         />
       </div>
     </AppShell>

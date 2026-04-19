@@ -74,6 +74,11 @@ const planningStatusToasts: Record<string, StatusToast> = {
     title: "Activiteit bijgewerkt",
     message: "De status van je activiteit is opgeslagen.",
   },
+  "activity-evaluation-saved": {
+    variant: "success",
+    title: "Evaluatie opgeslagen",
+    message: "De extra context bij deze activiteit is bijgewerkt.",
+  },
 };
 
 const planningErrorToasts: Record<string, StatusToast> = {
@@ -92,6 +97,17 @@ const planningErrorToasts: Record<string, StatusToast> = {
     variant: "error",
     title: "Status niet opgeslagen",
     message: "De activiteitstatus kon niet worden bijgewerkt. Probeer het opnieuw.",
+  },
+  "invalid-activity-evaluation": {
+    variant: "error",
+    title: "Evaluatie niet opgeslagen",
+    message:
+      "Controleer de skip-reden of toelichting en probeer het opnieuw.",
+  },
+  "activity-evaluation-failed": {
+    variant: "error",
+    title: "Evaluatie niet opgeslagen",
+    message: "De extra context bij deze activiteit kon niet worden opgeslagen.",
   },
 };
 

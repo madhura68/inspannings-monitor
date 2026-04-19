@@ -17,7 +17,7 @@ const statusOptions: Array<{
 }> = [
   { value: "planned", label: "Gepland" },
   { value: "completed", label: "Uitgevoerd" },
-  { value: "skipped", label: "Geschipt" },
+  { value: "skipped", label: "Overgeslagen" },
   { value: "adjusted", label: "Aangepast" },
 ];
 
