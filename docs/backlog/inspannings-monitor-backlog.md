@@ -80,7 +80,7 @@ Doel: de gebruiker kan activiteiten voor de dag plannen binnen een eenvoudig ene
 
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
-| ST-301 | Datamodel voor activiteiten implementeren | Build | Migraties en seed-data voor categorieën en skip-redenen zijn aanwezig |
+| ST-301 | Datamodel voor activiteiten implementeren | Build | Afgerond: migraties en seed-data voor categorieën en skip-redenen zijn aanwezig |
 | ST-302 | Planningformulier bouwen | UI | Activiteit kan met naam, categorie, duur, impact en prioriteit worden aangemaakt |
 | ST-303 | Autocomplete op eerdere activiteiten toevoegen | UX | Veelgebruikte activiteiten zijn snel opnieuw te kiezen |
 | ST-304 | EnergyMeter en lopend totaal implementeren | Logic/UI | Totaal update direct na elke wijziging |

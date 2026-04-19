@@ -20,6 +20,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - ochtendcheck-in voor energiescore en slaapkwaliteit van vandaag
 - eenvoudig dagbudget en energieniveau op basis van de ochtendscore
 - dashboardweergave van check-instatus, energieniveau en dagbudget
+- planningsfundering met activiteitenmodel, categorieën en skip-redenen in Supabase
 - eerste unit tests voor budgetmapping via `Vitest`
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
@@ -77,6 +78,7 @@ De huidige app gebruikt onder meer deze migraties:
 - `supabase/migrations/20260418_add_onboarding_seen_to_profiles.sql`
 - `supabase/migrations/20260418_create_morning_check_ins.sql`
 - `supabase/migrations/20260418_add_budget_fields_to_morning_check_ins.sql`
+- `supabase/migrations/20260419_create_activities_and_reference_data.sql`
 
 Voer deze SQL uit in de Supabase SQL Editor of via de Supabase CLI voordat je
 de profile-, check-in- en budgetlagen lokaal test.
@@ -109,7 +111,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-301` Activiteitenmodel en planning opzetten
+1. `ST-302` Planningformulier bouwen
 2. `ST-304` EnergyMeter en lopend totaal implementeren
 3. `ST-401` Evaluatie- en dagoverzichtslus bouwen
 4. `ST-105` RLS-policy tests en hardening afronden
