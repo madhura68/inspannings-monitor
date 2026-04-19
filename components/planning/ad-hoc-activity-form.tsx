@@ -150,7 +150,9 @@ export function AdHocActivityForm({
                 onValueChange={(value) => setCategoryId(value ?? categories[0]?.id ?? "")}
               >
                 <SelectTrigger className="h-12 w-full rounded-[1.25rem] bg-background/80 px-4 text-base">
-                  <SelectValue placeholder="Kies een categorie" />
+                  <SelectValue placeholder="Kies een categorie">
+                    {selectedCategory?.labelNl}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (

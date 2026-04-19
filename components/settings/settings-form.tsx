@@ -56,7 +56,6 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       action={formAction}
       className="space-y-6"
       aria-busy={isPending}
-      encType="multipart/form-data"
     >
       <input type="hidden" name="locale" value={locale} />
       <PreferenceHiddenFields draft={draft} />

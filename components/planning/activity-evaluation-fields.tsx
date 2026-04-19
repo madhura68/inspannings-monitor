@@ -33,6 +33,8 @@ export function ActivityEvaluationFields({
     initialSkipReasonId ?? skipReasons[0]?.id ?? "",
   );
   const [notes, setNotes] = useState(initialNotes ?? "");
+  const selectedSkipReason =
+    skipReasons.find((skipReason) => skipReason.id === skipReasonId) ?? null;
 
   if (status !== "skipped" && status !== "adjusted") {
     return null;
@@ -54,7 +56,9 @@ export function ActivityEvaluationFields({
               onValueChange={(value) => setSkipReasonId(value ?? skipReasons[0]?.id ?? "")}
             >
               <SelectTrigger className="h-11 w-full rounded-[1.15rem] bg-background/80 px-4 text-sm">
-                <SelectValue placeholder="Kies een skip-reden" />
+                <SelectValue placeholder="Kies een skip-reden">
+                  {selectedSkipReason?.labelNl}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {skipReasons.map((skipReason) => (

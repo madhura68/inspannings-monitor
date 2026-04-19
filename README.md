@@ -101,7 +101,8 @@ persona-set in [inspannings-monitor-08-gebruikerspersonas-v01.docx](/Users/janpe
 Benodigd:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY` voorkeur
+- `SUPABASE_SERVICE_ROLE_KEY` mag nog als legacy alias
 - `DEMO_USER_PASSWORD`
 
 Uitvoeren:
@@ -109,6 +110,12 @@ Uitvoeren:
 1. zorg dat de profiel- en storage-migraties al in Supabase zijn uitgevoerd
 2. zet de drie env-vars lokaal
 3. run `npm run seed:demo-users`
+
+Voor bestaande lokale setups accepteert het script tijdelijk ook:
+- `NEXT_PUBLIC_SUPABASE_SERVICE_KEY`
+
+Maar mijn advies is om voor seedscripts alleen deze nette niet-public adminnaam te gebruiken:
+- `SUPABASE_SECRET_KEY`
 
 De seeddata zelf staat in:
 - [demo-personas.mjs](/Users/janpetervisser/Development/third/scripts/seed/demo-personas.mjs)
