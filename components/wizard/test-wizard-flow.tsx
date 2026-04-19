@@ -69,7 +69,7 @@ export function TestWizardFlow() {
   }
 
   const aside = (
-    <Alert className="rounded-[1.5rem] border-white/10 bg-white/8 text-primary-foreground [&_svg]:text-primary-foreground/80">
+    <Alert className="rounded-[var(--radius-2xl)] border-white/10 bg-white/8 text-primary-foreground [&_svg]:text-primary-foreground/80">
       <AlertDescription className="leading-7 text-current">
         <span className="block font-semibold">Interne testwizard</span>
         <span className="mt-2 block">
@@ -129,7 +129,7 @@ export function TestWizardFlow() {
       backAction={backAction}
       nextAction={nextAction}
     >
-      <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+      <Card tone="subtle" className="py-0 shadow-none">
         <CardHeader className="pb-0">
           <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
             {wizard.currentStep.title}

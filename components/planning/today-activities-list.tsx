@@ -46,12 +46,12 @@ export function TodayActivitiesList({
   categories,
 }: TodayActivitiesListProps) {
   return (
-    <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+    <Card className="py-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           Vandaag gepland
         </p>
-        <CardTitle className="text-lg text-slate-900">
+        <CardTitle className="text-lg text-foreground">
           {activities.length === 0
             ? "Nog geen activiteiten gepland"
             : `${activities.length} ${activities.length === 1 ? "activiteit" : "activiteiten"}`}
@@ -66,11 +66,11 @@ export function TodayActivitiesList({
           activities.map((activity) => (
             <div
               key={activity.id}
-              className="rounded-[1.25rem] border border-border/60 bg-background/80 px-4 py-4"
+              className="rounded-[var(--radius-xl)] border border-border/60 bg-background/80 px-4 py-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{activity.name}</p>
+                  <p className="text-sm font-semibold text-foreground">{activity.name}</p>
                   <p className="mt-1 text-sm leading-7 text-muted-foreground">
                     {getCategoryLabel(categories, activity.categoryId)}
                   </p>
@@ -80,7 +80,7 @@ export function TodayActivitiesList({
                 </span>
               </div>
 
-              <div className="mt-4 grid gap-3 text-sm leading-7 text-slate-700 sm:grid-cols-3">
+              <div className="mt-4 grid gap-3 text-sm leading-7 text-foreground/80 sm:grid-cols-3">
                 <p>
                   <strong>Duur:</strong> {activity.durationMinutes} min
                 </p>

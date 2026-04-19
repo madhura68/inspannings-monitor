@@ -77,19 +77,19 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   );
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
+    <main className="app-page">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <StatusToastBridge toast={statusToast} />
 
-        <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
+        <header className="app-page-header">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Protected route
             </p>
             <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
               Dashboard placeholder voor release 1
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-700">
+            <p className="app-page-copy">
               Je sessie is server-side gevalideerd en het minimale profielbundle is
               nu beschikbaar. Daarmee staat de fundering voor onboarding, settings
               en de eerste energieflows klaar.
@@ -135,12 +135,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </header>
 
         <section className="grid gap-5 md:grid-cols-3">
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Auth
               </p>
-              <CardTitle className="text-lg text-slate-900">Cookie-based sessie actief</CardTitle>
+              <CardTitle className="text-lg text-foreground">Cookie-based sessie actief</CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -149,12 +149,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Profiel
               </p>
-              <CardTitle className="text-lg text-slate-900">{profileTitle}</CardTitle>
+              <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -164,12 +164,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Onboarding
               </p>
-              <CardTitle className="text-lg text-slate-900">{onboardingState}</CardTitle>
+              <CardTitle className="text-lg text-foreground">{onboardingState}</CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -179,12 +179,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Instellingen
               </p>
-              <CardTitle className="text-lg text-slate-900">
+              <CardTitle className="text-lg text-foreground">
                 Punten {formatToggleState(settings.showEnergyPoints, "zichtbaar", "verborgen")}
               </CardTitle>
             </CardHeader>
@@ -198,12 +198,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
           <CheckInCard todayCheckIn={checkInStatus?.todayCheckIn ?? null} />
 
-          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+          <Card className="py-0">
             <CardHeader className="pb-0">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Dagplanning
               </p>
-              <CardTitle className="text-lg text-slate-900">
+              <CardTitle className="text-lg text-foreground">
                 {planningStatus?.activities.length
                   ? `${planningStatus.activities.length} activiteiten voor vandaag`
                   : "Nog niets gepland voor vandaag"}
@@ -230,12 +230,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           <EnergyMeterCard meter={planningMeter} tone="subtle" />
 
           {isTestWizardEnabled() ? (
-            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <Card className="py-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Wizard core
                 </p>
-                <CardTitle className="text-lg text-slate-900">Interne testwizard actief</CardTitle>
+                <CardTitle className="text-lg text-foreground">Interne testwizard actief</CardTitle>
               </CardHeader>
               <CardContent className="pb-6">
                 <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -247,11 +247,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </section>
 
         {!profile.onboardingCompleted ? (
-          <Card className="rounded-[1.75rem] border border-amber-900/15 bg-amber-50 py-0 text-amber-950 shadow-[0_12px_40px_rgba(146,64,14,0.08)]">
+          <Card className="border-warning/32 bg-warning/16 py-0 text-foreground shadow-[var(--shadow-1)]">
             <CardContent className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-semibold">Je onboarding is nog niet afgerond.</p>
-                <p className="mt-1 max-w-2xl text-sm leading-7 text-amber-900">
+                <p className="mt-1 max-w-2xl text-sm leading-7 text-foreground/82">
                   Je kunt de korte flow later alsnog afronden om je basisinstellingen
                   en eerste voorkeuren vast te leggen.
                 </p>
@@ -259,8 +259,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <Link
                 href="/onboarding"
                 className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "h-11 shrink-0 rounded-full bg-amber-950 px-5 text-amber-50 hover:bg-amber-900",
+                  buttonVariants({ variant: "warning", size: "lg" }),
+                  "h-11 shrink-0 rounded-full px-5",
                 )}
               >
                 Rond onboarding af
@@ -268,7 +268,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </CardContent>
           </Card>
         ) : (
-          <Card className="rounded-[1.75rem] border border-primary/10 bg-primary py-0 text-primary-foreground shadow-[0_12px_40px_rgba(22,58,43,0.18)]">
+          <Card tone="primary" elevation="raised" className="py-0">
             <CardContent className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="font-semibold">Je instellingen kun je nu ook los beheren.</p>

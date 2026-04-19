@@ -11,11 +11,15 @@ export function WizardProgress({ current, total }: WizardProgressProps) {
       {Array.from({ length: total }, (_, index) => (
         <li
           key={index}
+          aria-current={index + 1 === current ? "step" : undefined}
+          aria-label={`Stap ${index + 1} van ${total}`}
           className={cn(
             "h-2 flex-1 rounded-full transition-colors",
             index < current ? "bg-primary-foreground/85" : "bg-white/15",
           )}
-        />
+        >
+          <span className="sr-only">Stap {index + 1} van {total}</span>
+        </li>
       ))}
     </ol>
   );

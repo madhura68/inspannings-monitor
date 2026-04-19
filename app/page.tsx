@@ -51,11 +51,11 @@ export default async function Home({ searchParams }: HomePageProps) {
   );
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] text-slate-900">
+    <main className="app-page">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-10 sm:px-8 lg:px-10">
-        <header className="mb-10 flex items-center justify-between border-b border-black/10 pb-5">
+        <header className="mb-10 flex items-center justify-between border-b border-border/70 pb-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Inspannings Monitor
             </p>
             <h1 className="font-[family-name:var(--font-display)] text-3xl leading-tight sm:text-5xl">
@@ -104,7 +104,7 @@ export default async function Home({ searchParams }: HomePageProps) {
                 </>
               )
             ) : (
-              <span className="rounded-full border border-amber-900/15 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-900 shadow-sm">
+              <span className="rounded-full border border-warning/30 bg-warning/14 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)]">
                 Supabase nog niet geconfigureerd
               </span>
             )}
@@ -114,9 +114,9 @@ export default async function Home({ searchParams }: HomePageProps) {
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
         <section className="grid gap-6 lg:grid-cols-[1.35fr_0.95fr]">
-          <Card className="rounded-[2rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur">
+          <Card elevation="raised" className="rounded-[var(--radius-4xl)] py-0 backdrop-blur">
             <CardContent className="p-6 sm:p-8">
-              <p className="mb-4 max-w-2xl text-lg leading-8 text-slate-700">
+              <p className="mb-4 max-w-2xl text-lg leading-8 text-muted-foreground">
               De projectbasis staat nu, inclusief de eerste auth-laag via Supabase.
               Release 1 blijft bewust smal: publieke landing, aparte login/signup
               routes en een eerste protected dashboard als basis voor de volgende stories.
@@ -125,7 +125,8 @@ export default async function Home({ searchParams }: HomePageProps) {
                 {loopSteps.map((step, index) => (
                   <Card
                     key={step.title}
-                    className="rounded-[1.5rem] border border-border/50 bg-background/80 py-0 shadow-none"
+                    tone="subtle"
+                    className="rounded-[var(--radius-2xl)] py-0 shadow-none"
                   >
                     <CardHeader className="pb-0">
                       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
@@ -146,7 +147,7 @@ export default async function Home({ searchParams }: HomePageProps) {
             </CardContent>
           </Card>
 
-          <Card className="rounded-[2rem] border border-primary/10 bg-primary py-0 text-primary-foreground shadow-[0_18px_60px_rgba(22,58,43,0.18)]">
+          <Card tone="primary" elevation="raised" className="rounded-[var(--radius-4xl)] py-0">
             <CardHeader className="px-6 pt-7 sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
                 Release 1 focus
@@ -156,7 +157,7 @@ export default async function Home({ searchParams }: HomePageProps) {
               {releaseFocus.map((item) => (
                 <Card
                   key={item}
-                  className="rounded-[1.5rem] border border-white/10 bg-white/8 py-0 text-primary-foreground shadow-none"
+                  className="rounded-[var(--radius-2xl)] border-white/10 bg-white/8 py-0 text-primary-foreground shadow-none"
                 >
                   <CardContent className="px-4 py-3 text-sm leading-7">{item}</CardContent>
                 </Card>
@@ -174,31 +175,31 @@ export default async function Home({ searchParams }: HomePageProps) {
           </Card>
         </section>
 
-        <Card className="mt-8 rounded-[2rem] border border-border/60 bg-card/80 py-0 shadow-[0_10px_45px_rgba(71,85,105,0.08)] backdrop-blur">
+        <Card tone="subtle" className="mt-8 rounded-[var(--radius-4xl)] py-0 backdrop-blur">
           <CardContent className="grid gap-5 p-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Volgende story
               </p>
-              <p className="mt-2 font-semibold text-slate-900">ST-201 Ochtendcheck-in</p>
+              <p className="mt-2 font-semibold text-foreground">ST-201 Ochtendcheck-in</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Doelgroep
               </p>
-              <p className="mt-2 font-semibold text-slate-900">Volwassen individuele gebruikers</p>
+              <p className="mt-2 font-semibold text-foreground">Volwassen individuele gebruikers</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Positionering
               </p>
-              <p className="mt-2 font-semibold text-slate-900">Wellness / self-management</p>
+              <p className="mt-2 font-semibold text-foreground">Wellness / self-management</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Status
               </p>
-              <p className="mt-2 font-semibold text-slate-900">Auth, onboarding en settings actief</p>
+              <p className="mt-2 font-semibold text-foreground">Auth, onboarding en settings actief</p>
             </div>
           </CardContent>
         </Card>

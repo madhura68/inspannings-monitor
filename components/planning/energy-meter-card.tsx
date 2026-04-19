@@ -46,18 +46,16 @@ export function EnergyMeterCard({
   meter,
   tone = "default",
 }: EnergyMeterCardProps) {
+  const progressValue =
+    meter.dailyBudget === null ? null : Math.min(100, Math.max(0, meter.progressPercent ?? 0));
+
   return (
-    <Card
-      className={cn(
-        "rounded-[1.75rem] border border-border/60 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]",
-        tone === "default" ? "bg-card/90" : "bg-white/70",
-      )}
-    >
+    <Card tone={tone === "default" ? "default" : "subtle"} className="py-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           EnergyMeter
         </p>
-        <CardTitle className="text-lg text-slate-900">
+        <CardTitle className="text-lg text-foreground">
           {meter.dailyBudget === null
             ? `${meter.plannedPoints} geplande punten`
             : `${meter.plannedPoints} van ${meter.dailyBudget} punten gepland`}
@@ -69,17 +67,32 @@ export function EnergyMeterCard({
         </CardDescription>
 
         <div className="space-y-2">
-          <div className="h-3 overflow-hidden rounded-full bg-secondary">
+          <div
+            className="h-3 overflow-hidden rounded-full bg-secondary"
+            role={progressValue === null ? undefined : "progressbar"}
+            aria-label="Voortgang van je dagbudget"
+            aria-valuemin={progressValue === null ? undefined : 0}
+            aria-valuemax={progressValue === null ? undefined : 100}
+            aria-valuenow={progressValue === null ? undefined : progressValue}
+            aria-valuetext={
+              meter.dailyBudget === null
+                ? "Nog geen dagbudget beschikbaar"
+                : `${meter.plannedPoints} van ${meter.dailyBudget} punten gepland`
+            }
+          >
             <div
               className={cn(
                 "h-full rounded-full transition-[width]",
-                meter.isOverBudget ? "bg-amber-500" : "bg-primary",
+                meter.isOverBudget ? "bg-warning" : "bg-primary",
               )}
               style={{ width: `${meter.progressPercent ?? 0}%` }}
             />
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 text-sm leading-7 text-slate-700">
+          <div
+            className="flex flex-wrap items-center justify-between gap-3 text-sm leading-7 text-muted-foreground"
+            aria-live="polite"
+          >
             <p>
               <strong>Activiteiten:</strong> {meter.activityCount}
             </p>
@@ -92,9 +105,9 @@ export function EnergyMeterCard({
         </div>
 
         {meter.dailyBudget !== null && meter.isOverBudget ? (
-          <Alert className="rounded-[1.25rem] border-amber-300 bg-amber-50 text-amber-950 [&_svg]:text-amber-700">
+          <Alert variant="warning">
             <AlertTitle className="text-sm">Je zit boven je dagbudget</AlertTitle>
-            <AlertDescription className="leading-7 text-amber-900">
+            <AlertDescription className="leading-7 text-current">
               Je planning komt nu <strong>{Math.abs(meter.remainingBudget ?? 0)} punten</strong> boven het dagbudget uit.
               Je kunt nog steeds doorgaan, maar dit is een goed moment om iets te schrappen, te verkorten of later te doen.
             </AlertDescription>

@@ -48,12 +48,12 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       <input type="hidden" name="locale" value={locale} />
       <PreferenceHiddenFields draft={draft} />
 
-      <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.1)]">
+      <Card elevation="raised" className="py-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Account
           </p>
-          <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
+          <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-foreground">
             Basisinstellingen voor jouw account
           </CardTitle>
           <CardDescription className="max-w-2xl text-sm leading-7 text-muted-foreground">
@@ -62,7 +62,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-1 pb-6">
-          <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+          <Alert variant="info">
             <AlertDescription className="leading-7 text-current">
               Release 1 draait bewust volledig in het <strong>Nederlands</strong>.
               De taalinstelling blijft wel al aanwezig in het accountmodel.
@@ -72,7 +72,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       </Card>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+        <Card className="py-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Taal en tijd
@@ -80,7 +80,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardHeader>
           <CardContent className="space-y-5 pb-6">
             <div className="space-y-2">
-              <Label className="text-slate-800">Taal</Label>
+              <Label className="text-foreground">Taal</Label>
               <Select
                 disabled={isPending}
                 value={locale}
@@ -100,7 +100,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-slate-800">Timezone</Label>
+              <Label className="text-foreground">Timezone</Label>
               <Select
                 disabled={isPending}
                 value={draft.timezone}
@@ -125,17 +125,17 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+        <Card className="py-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Interface
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+            <Card tone="subtle" className="py-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
-                  <Label htmlFor="show-energy-points" className="text-sm font-semibold text-slate-900">
+                  <Label htmlFor="show-energy-points" className="text-sm font-semibold text-foreground">
                     Toon energiebudgetpunten
                   </Label>
                   <p className="text-sm leading-7 text-muted-foreground">
@@ -157,18 +157,18 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       </section>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+        <Card className="py-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Reminders
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+            <Card tone="subtle" className="py-0 shadow-none">
               <CardContent className="space-y-4 py-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <Label htmlFor="morning-reminder-enabled" className="text-sm font-semibold text-slate-900">
+                    <Label htmlFor="morning-reminder-enabled" className="text-sm font-semibold text-foreground">
                       Ochtendreminder
                     </Label>
                     <p className="text-sm leading-7 text-muted-foreground">
@@ -189,12 +189,12 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
                   <>
                     <Separator />
                     <div className="space-y-2">
-                      <Label htmlFor="morning-reminder-time" className="text-slate-800">
+                      <Label htmlFor="morning-reminder-time" className="text-foreground">
                         Tijdstip voor de ochtendreminder
                       </Label>
                       <Input
                         id="morning-reminder-time"
-                        className="h-12 rounded-[1.25rem] bg-white px-4 text-base md:text-base"
+                        className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
                         disabled={isPending}
                         type="time"
                         value={draft.morningReminderTime}
@@ -208,10 +208,10 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
               </CardContent>
             </Card>
 
-            <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+            <Card tone="subtle" className="py-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
-                  <Label htmlFor="reflection-reminder-enabled" className="text-sm font-semibold text-slate-900">
+                  <Label htmlFor="reflection-reminder-enabled" className="text-sm font-semibold text-foreground">
                     Reflectieprompts toestaan
                   </Label>
                   <p className="text-sm leading-7 text-muted-foreground">
@@ -231,7 +231,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.75rem] border border-primary/15 bg-primary py-0 text-primary-foreground shadow-[0_12px_40px_rgba(22,58,43,0.18)]">
+        <Card tone="primary" elevation="raised" className="py-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
               Bewuste grenzen

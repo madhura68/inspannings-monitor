@@ -25,7 +25,7 @@ export function OnboardingStepProfile({
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="display-name" className="text-slate-800">
+        <Label htmlFor="display-name" className="text-foreground">
           Schermnaam
         </Label>
         <Input
@@ -40,14 +40,14 @@ export function OnboardingStepProfile({
         />
       </div>
 
-      <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+      <Alert variant="info">
         <AlertDescription className="leading-7 text-current">
           Voertaal voor release 1 staat vast op <strong>Nederlands</strong>.
         </AlertDescription>
       </Alert>
 
       <div className="space-y-2">
-        <Label className="text-slate-800">Timezone</Label>
+        <Label className="text-foreground">Timezone</Label>
         <Select
           disabled={disabled}
           value={draft.timezone}

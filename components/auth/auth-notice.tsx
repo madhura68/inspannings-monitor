@@ -9,16 +9,18 @@ type AuthNoticeProps = {
 
 const toneStyles = {
   error: {
-    className: "mb-5 border-rose-200 bg-rose-50 text-rose-950 [&_svg]:text-rose-700",
+    variant: "destructive" as const,
+    className: "mb-5",
     icon: AlertCircleIcon,
   },
   success: {
-    className:
-      "mb-5 border-emerald-200 bg-emerald-50 text-emerald-950 [&_svg]:text-emerald-700",
+    variant: "success" as const,
+    className: "mb-5",
     icon: CheckCircle2Icon,
   },
   info: {
-    className: "mb-5 border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700",
+    variant: "info" as const,
+    className: "mb-5",
     icon: InfoIcon,
   },
 };
@@ -32,7 +34,7 @@ export function AuthNotice({ notice }: AuthNoticeProps) {
   const Icon = tone.icon;
 
   return (
-    <Alert className={cn("rounded-[1.5rem] px-4 py-3", tone.className)}>
+    <Alert variant={tone.variant} className={cn("px-4 py-3", tone.className)}>
       <Icon className="size-4" />
       <AlertDescription className="leading-7 text-current">
         {notice.text}

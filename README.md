@@ -28,6 +28,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
 - `shadcn/ui` foundation voor knoppen, formulieren, kaarten en meldingen
+- `Dusk`-theme met dark-mode prioriteit, semantische oppervlakken en verbeterde focus-/toegankelijkheidsstijlen
 
 ## Stack
 
@@ -94,6 +95,10 @@ knoppen, formulieren, kaarten en meldingen. De theme tokens staan centraal in
 Voor feedback na redirects of server actions krijgt de app nu standaard de voorkeur
 voor `sonner`-toasts boven losse inline statusmeldingen.
 
+De actuele visuele richting is `Dusk`: warme paper-achtergronden, gedempte indigo
+als primaire kleur, dark mode als standaard en semantische `success`/`warning`
+tokens voor rustige, niet-medische feedback.
+
 ## Interne wizard-test
 
 Er is een interne testwizard beschikbaar op `/wizard-test` om een toekomstige
@@ -109,6 +114,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 ## Documentatie
 
 - Hoofdset specificaties en plannen: [docs/README.md](/Users/janpetervisser/Development/third/docs/README.md)
+- Dusk theme-specificatie: [inspannings-monitor-09-dusk-theme-specificatie-v01.md](/Users/janpetervisser/Development/third/docs/inspannings-monitor-09-dusk-theme-specificatie-v01.md)
 - Technische architectuur: [inspannings-monitor-05-technische-architectuur-en-implementatie-v01.docx](/Users/janpetervisser/Development/third/docs/inspannings-monitor-05-technische-architectuur-en-implementatie-v01.docx)
 - Implementatieplan en backlog: [inspannings-monitor-06-implementatieplan-en-backlog-v01.docx](/Users/janpetervisser/Development/third/docs/inspannings-monitor-06-implementatieplan-en-backlog-v01.docx)
 

@@ -41,7 +41,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   );
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
+    <main className="app-page">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
         <OnboardingFlow profileBundle={profileBundle} />

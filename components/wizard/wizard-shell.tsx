@@ -28,7 +28,7 @@ export function WizardShell({
 }: WizardShellProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-      <section className="rounded-[2rem] border border-primary/15 bg-primary p-7 text-primary-foreground shadow-[0_18px_60px_rgba(22,58,43,0.18)] sm:p-9">
+      <section className="app-panel-primary rounded-[var(--radius-4xl)] p-7 sm:p-9">
         {eyebrow ? (
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/70">
             {eyebrow}
@@ -46,7 +46,7 @@ export function WizardShell({
         <WizardProgress current={progressCurrent} total={progressTotal} />
       </section>
 
-      <section className="rounded-[2rem] border border-border/60 bg-card/90 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:p-8">
+      <section className="rounded-[var(--radius-4xl)] border border-border/70 bg-card/86 p-6 shadow-[var(--shadow-2)] backdrop-blur sm:p-8">
         {topAction ? (
           <div className="mb-6 flex items-center justify-between gap-3">{topAction}</div>
         ) : null}

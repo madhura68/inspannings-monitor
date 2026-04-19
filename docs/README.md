@@ -33,6 +33,7 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
 - Database: `Supabase PostgreSQL`
 - Authenticatie: `Supabase Auth`
 - UI foundation in de app: `Tailwind CSS + shadcn/ui`
+- Visueel thema in de app: `Dusk` met dark-mode prioriteit en semantische statuskleuren
 
 ## Actuele app-status
 
@@ -59,6 +60,8 @@ Deze map bevat de vernieuwde documentatie voor de gekozen `wellness/self-managem
   Legt de actuele operationele en security-keuzes vast rond repositorybescherming, Vercel-deploys en secretbeheer.
 - [gpt-instructies.md](./gpt-instructies.md)
   Bundelt de inhoudelijke instructies en expliciete keuzes die in deze context zijn gegeven als compacte bron voor vervolgwerk.
+- [inspannings-monitor-09-dusk-theme-specificatie-v01.md](./inspannings-monitor-09-dusk-theme-specificatie-v01.md)
+  Legt het leidende Dusk-thema vast voor kleur, typografie, iconografie, motion en toegankelijkheidsregels in de app.
 
 ## Backlog en Linear
 

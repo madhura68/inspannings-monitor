@@ -21,10 +21,10 @@ export function OnboardingStepPreferences({
 }: OnboardingStepPreferencesProps) {
   return (
     <div className="space-y-4">
-      <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+      <Card tone="subtle" className="py-0 shadow-none">
         <CardContent className="flex items-start justify-between gap-4 py-5">
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-900">
+            <Label className="text-sm font-semibold text-foreground">
               Toon energiebudgetpunten
             </Label>
             <p className="text-sm leading-7 text-muted-foreground">
@@ -39,11 +39,11 @@ export function OnboardingStepPreferences({
         </CardContent>
       </Card>
 
-      <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+      <Card tone="subtle" className="py-0 shadow-none">
         <CardContent className="space-y-4 py-5">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
-              <Label className="text-sm font-semibold text-slate-900">
+              <Label className="text-sm font-semibold text-foreground">
                 Zet een lichte ochtendreminder aan
               </Label>
               <p className="text-sm leading-7 text-muted-foreground">
@@ -63,12 +63,12 @@ export function OnboardingStepPreferences({
             <>
               <Separator />
               <div className="space-y-2">
-                <Label htmlFor="morning-reminder-time" className="text-slate-800">
+                <Label htmlFor="morning-reminder-time" className="text-foreground">
                   Tijdstip voor de ochtendreminder
                 </Label>
                 <Input
                   id="morning-reminder-time"
-                  className="h-12 rounded-[1.25rem] bg-white px-4 text-base md:text-base"
+                  className="h-12 rounded-[1.25rem] bg-background/80 px-4 text-base md:text-base"
                   disabled={disabled}
                   type="time"
                   value={draft.morningReminderTime}
@@ -82,10 +82,10 @@ export function OnboardingStepPreferences({
         </CardContent>
       </Card>
 
-      <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0">
+      <Card tone="subtle" className="py-0 shadow-none">
         <CardContent className="flex items-start justify-between gap-4 py-5">
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-900">
+            <Label className="text-sm font-semibold text-foreground">
               Sta lichte reflectieprompts toe
             </Label>
             <p className="text-sm leading-7 text-muted-foreground">

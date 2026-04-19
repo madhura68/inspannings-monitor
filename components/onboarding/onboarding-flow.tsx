@@ -84,7 +84,7 @@ export function OnboardingFlow({ profileBundle }: OnboardingFlowProps) {
   const isPending = isCompleting || isSkipping;
 
   const aside = (
-    <Alert className="rounded-[1.5rem] border-white/10 bg-white/8 text-primary-foreground [&_svg]:text-primary-foreground/80">
+    <Alert className="rounded-[var(--radius-2xl)] border-white/10 bg-white/8 text-primary-foreground [&_svg]:text-primary-foreground/80">
       <AlertDescription className="leading-7 text-current">
         <span className="block font-semibold">Release 1 blijft bewust wellness-first.</span>
         <span className="mt-2 block">

@@ -41,7 +41,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
       footer={
         <p>
           Heb je al een account?{" "}
-          <Link href={loginHref} className="font-semibold text-emerald-900">
+          <Link href={loginHref} className="font-semibold text-primary">
             Log dan in
           </Link>
         </p>
@@ -50,7 +50,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
       <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
       {!authState.isConfigured ? (
-        <Alert className="rounded-[1.5rem] border-sky-200 bg-sky-50 text-sky-950 [&_svg]:text-sky-700">
+        <Alert variant="info">
           <AlertDescription className="leading-7 text-current">
             Voeg eerst je Supabase-gegevens toe in `.env.local` op basis van `.env.example`.
           </AlertDescription>
@@ -60,7 +60,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           <input type="hidden" name="next" value={next} />
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-800">
+            <Label htmlFor="email" className="text-foreground">
               E-mailadres
             </Label>
             <Input
@@ -74,7 +74,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-800">
+            <Label htmlFor="password" className="text-foreground">
               Wachtwoord
             </Label>
             <Input

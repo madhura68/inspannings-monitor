@@ -57,14 +57,14 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     "Ingelogde gebruiker";
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
+    <main className="app-page">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
-        <header className="flex flex-col gap-5 rounded-[2rem] border border-black/10 bg-white/75 p-6 shadow-[0_18px_60px_rgba(71,85,105,0.12)] backdrop-blur sm:flex-row sm:items-start sm:justify-between sm:p-8">
+        <header className="app-page-header">
           <div>
-            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              <Link href="/dashboard" className="transition hover:text-slate-900">
+            <div className="app-page-breadcrumb">
+              <Link href="/dashboard" className="app-page-link">
                 Dashboard
               </Link>
               <span>/</span>
@@ -73,7 +73,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
               Instellingen
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-700">
+            <p className="app-page-copy">
               Pas je basisvoorkeuren rustig aan. Alles blijft beperkt tot jouw eigen
               account en de wellness-first scope van release 1.
             </p>
@@ -101,12 +101,12 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           <SettingsForm profileBundle={profileBundle} />
 
           <aside className="space-y-5">
-            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <Card className="py-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Account
                 </p>
-                <CardTitle className="text-lg text-slate-900">{profileTitle}</CardTitle>
+                <CardTitle className="text-lg text-foreground">{profileTitle}</CardTitle>
               </CardHeader>
               <CardContent className="pb-6">
                 <CardDescription className="text-sm leading-7 text-muted-foreground">
@@ -115,12 +115,12 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
               </CardContent>
             </Card>
 
-            <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <Card className="py-0">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                   Huidige status
                 </p>
-                <CardTitle className="text-lg text-slate-900">
+                <CardTitle className="text-lg text-foreground">
                   Onboarding {profileBundle.profile.onboardingCompleted ? "afgerond" : "later afronden"}
                 </CardTitle>
               </CardHeader>

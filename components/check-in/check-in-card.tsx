@@ -34,12 +34,12 @@ export function CheckInCard({ todayCheckIn }: CheckInCardProps) {
     : "Leg je energiestart en slaapkwaliteit van vandaag vast.";
 
   return (
-    <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+    <Card className="py-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           Ochtendcheck-in
         </p>
-        <CardTitle className="text-lg text-slate-900">{title}</CardTitle>
+        <CardTitle className="text-lg text-foreground">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pb-6">
         <CardDescription className="text-sm leading-7 text-muted-foreground">

@@ -89,12 +89,12 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
       <input type="hidden" name="impactLevel" value={impactLevel} />
       <input type="hidden" name="priorityLevel" value={priorityLevel} />
 
-      <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_18px_60px_rgba(71,85,105,0.1)]">
+      <Card elevation="raised" className="py-0">
         <CardHeader className="pb-0">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
             Dagplanning
           </p>
-          <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-slate-900">
+          <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-foreground">
             Plan een activiteit voor vandaag
           </CardTitle>
           <CardDescription className="max-w-2xl text-sm leading-7 text-muted-foreground">
@@ -104,7 +104,7 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
         </CardHeader>
         <CardContent className="space-y-6 pb-6">
           <div className="space-y-2">
-            <Label htmlFor="activity-name" className="text-slate-800">
+            <Label htmlFor="activity-name" className="text-foreground">
               Naam van de activiteit
             </Label>
             <Input
@@ -121,7 +121,7 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-slate-800">Categorie</Label>
+              <Label className="text-foreground">Categorie</Label>
               <Select
                 disabled={isPending}
                 value={categoryId}
@@ -146,7 +146,7 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration-minutes" className="text-slate-800">
+              <Label htmlFor="duration-minutes" className="text-foreground">
                 Geschatte duur in minuten
               </Label>
               <Input
@@ -162,13 +162,18 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
                 value={durationMinutes}
                 onChange={(event) => setDurationMinutes(event.target.value)}
               />
-              <div className="flex flex-wrap gap-2">
+              <div
+                className="flex flex-wrap gap-2"
+                role="group"
+                aria-label="Snelle duurkeuzes"
+              >
                 {ACTIVITY_DURATION_SUGGESTIONS.map((value) => (
                   <button
                     key={value}
                     type="button"
                     disabled={isPending}
                     onClick={() => setDurationMinutes(String(value))}
+                    aria-pressed={durationMinutes === String(value)}
                     className={cn(
                       buttonVariants({
                         variant: durationMinutes === String(value) ? "default" : "outline",
@@ -186,24 +191,24 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
 
           <Separator />
 
-          <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+          <Card tone="subtle" className="py-0 shadow-none">
             <CardContent className="space-y-2 py-5">
-              <p className="text-sm font-semibold text-slate-900">Vooruitblik op de meter</p>
-              <p className="text-sm leading-7 text-muted-foreground">
+              <p className="text-sm font-semibold text-foreground">Vooruitblik op de meter</p>
+              <p className="text-sm leading-7 text-muted-foreground" aria-live="polite">
                 {previewPoints === null
                   ? "Kies een geldige duur en impact om te zien hoeveel punten deze activiteit ongeveer toevoegt."
                   : `Deze activiteit telt voorlopig voor ${previewPoints} punten. Je totaal zou dan uitkomen op ${previewMeter?.plannedPoints ?? currentMeter.plannedPoints} geplande punten.`}
               </p>
               {dailyBudget !== null && previewMeter ? (
-                <p className="text-sm leading-7 text-slate-700">
+                <p className="text-sm leading-7 text-foreground/80" aria-live="polite">
                   Dat is {previewMeter.dailyBudget} punten budget, met daarna nog{" "}
                   <strong>{previewMeter.remainingBudget} punten ruimte</strong>.
                 </p>
               ) : null}
               {previewMeter?.isOverBudget ? (
-                <Alert className="rounded-[1.25rem] border-amber-300 bg-amber-50 text-amber-950 [&_svg]:text-amber-700">
+                <Alert variant="warning">
                   <AlertTitle className="text-sm">Niet-blokkerende waarschuwing</AlertTitle>
-                  <AlertDescription className="leading-7 text-amber-900">
+                  <AlertDescription className="leading-7 text-current">
                     Met deze activiteit kom je ongeveer{" "}
                     <strong>{Math.abs(previewMeter.remainingBudget ?? 0)} punten</strong> boven je dagbudget uit.
                     Je kunt nog steeds opslaan, maar dit is een goed moment om bewust te heroverwegen of te versimpelen.
@@ -216,14 +221,18 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-3">
               <div className="space-y-1">
-                <Label className="text-sm font-semibold text-slate-900">
+                <Label id="impact-group-label" className="text-sm font-semibold text-foreground">
                   Verwachte impact
                 </Label>
                 <p className="text-sm leading-7 text-muted-foreground">
                   Kies hoe belastend deze activiteit voor jou aanvoelt.
                 </p>
               </div>
-              <div className="grid gap-3">
+              <div
+                className="grid gap-3"
+                role="group"
+                aria-labelledby="impact-group-label"
+              >
                 {ACTIVITY_IMPACT_OPTIONS.map((option) => {
                   const isSelected = impactLevel === option.value;
 
@@ -233,11 +242,12 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
                       type="button"
                       disabled={isPending}
                       onClick={() => setImpactLevel(option.value)}
+                      aria-pressed={isSelected}
                       className={cn(
                         "rounded-[1.25rem] border px-4 py-4 text-left transition",
                         isSelected
-                          ? "border-primary bg-primary text-primary-foreground shadow-[0_12px_30px_rgba(22,58,43,0.18)]"
-                          : "border-border/60 bg-background/80 text-slate-900 hover:border-primary/35",
+                          ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-2)]"
+                          : "border-border/60 bg-background/80 text-foreground hover:border-primary/35",
                         isPending && "pointer-events-none opacity-70",
                       )}
                     >
@@ -260,14 +270,18 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <Label className="text-sm font-semibold text-slate-900">
+                <Label id="priority-group-label" className="text-sm font-semibold text-foreground">
                   Prioriteit voor vandaag
                 </Label>
                 <p className="text-sm leading-7 text-muted-foreground">
                   Dit helpt straks om bewust te herschikken zonder alles te verliezen.
                 </p>
               </div>
-              <div className="grid gap-3">
+              <div
+                className="grid gap-3"
+                role="group"
+                aria-labelledby="priority-group-label"
+              >
                 {ACTIVITY_PRIORITY_OPTIONS.map((option) => {
                   const isSelected = priorityLevel === option.value;
 
@@ -277,11 +291,12 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
                       type="button"
                       disabled={isPending}
                       onClick={() => setPriorityLevel(option.value)}
+                      aria-pressed={isSelected}
                       className={cn(
                         "rounded-[1.25rem] border px-4 py-4 text-left transition",
                         isSelected
-                          ? "border-primary bg-primary text-primary-foreground shadow-[0_12px_30px_rgba(22,58,43,0.18)]"
-                          : "border-border/60 bg-background/80 text-slate-900 hover:border-primary/35",
+                          ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-2)]"
+                          : "border-border/60 bg-background/80 text-foreground hover:border-primary/35",
                         isPending && "pointer-events-none opacity-70",
                       )}
                     >
@@ -306,7 +321,7 @@ export function ActivityForm({ categories, activities, dailyBudget }: ActivityFo
       </Card>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm leading-7 text-muted-foreground">
+        <p className="text-sm leading-7 text-muted-foreground" aria-live="polite">
           {isPending
             ? "Je activiteit wordt opgeslagen..."
             : "Je activiteit wordt vandaag toegevoegd met status `gepland`, waarna de meter direct opnieuw wordt berekend."}
