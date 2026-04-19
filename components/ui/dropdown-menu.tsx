@@ -22,7 +22,7 @@ function DropdownMenuTrigger({
       {...props}
     >
       {children}
-      <ChevronDownIcon className="size-4 text-muted-foreground" />
+      <ChevronDownIcon className="hidden size-4 text-muted-foreground sm:inline-block" />
     </Menu.Trigger>
   );
 }

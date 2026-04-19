@@ -1,9 +1,11 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import { isSupportedOnboardingTimezone } from "@/lib/onboarding/options";
+import { processProfileAvatar } from "@/lib/profile/avatar-processing";
 import {
   getProfileAvatarPath,
   PROFILE_AVATAR_BUCKET,
 } from "@/lib/profile/avatar";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type {
   OnboardingSubmission,
@@ -71,7 +73,6 @@ const DEFAULT_TIMEZONE = "Europe/Amsterdam";
 const SUPPORTED_LOCALES = new Set([DEFAULT_LOCALE]);
 
 async function buildProfileRecord(
-  supabase: SupabaseServerClient,
   row: ProfileRow,
 ): Promise<ProfileRecord> {
   return {
@@ -81,7 +82,7 @@ async function buildProfileRecord(
     tagline: row.tagline,
     bio: row.bio,
     avatarPath: row.avatar_path,
-    avatarUrl: await getProfileAvatarUrl(supabase, row.avatar_path),
+    avatarUrl: await getProfileAvatarUrl(row.avatar_path),
     locale: row.locale,
     timezone: row.timezone,
     onboardingSeen: row.onboarding_seen,
@@ -164,14 +165,14 @@ function resolveTimezone(value: string) {
 }
 
 async function getProfileAvatarUrl(
-  supabase: SupabaseServerClient,
   avatarPath: string | null,
 ) {
   if (!avatarPath) {
     return null;
   }
 
-  const { data, error } = await supabase.storage
+  const adminSupabase = createAdminClient();
+  const { data, error } = await adminSupabase.storage
     .from(PROFILE_AVATAR_BUCKET)
     .createSignedUrl(avatarPath, 60 * 60);
 
@@ -182,19 +183,39 @@ async function getProfileAvatarUrl(
   return data.signedUrl;
 }
 
+async function getRequiredAuthenticatedUser(supabase: SupabaseServerClient) {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    throw new Error(`Gebruiker kon niet worden geladen: ${error.message}`);
+  }
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  return {
+    id: user.id,
+    email: user.email ?? null,
+  };
+}
+
 async function uploadProfileAvatar(
-  supabase: SupabaseServerClient,
   userId: string,
   file: File,
 ) {
   const avatarPath = getProfileAvatarPath(userId);
-  const fileBytes = await file.arrayBuffer();
+  const processedAvatar = await processProfileAvatar(file);
+  const adminSupabase = createAdminClient();
 
-  const { error } = await supabase.storage
+  const { error } = await adminSupabase.storage
     .from(PROFILE_AVATAR_BUCKET)
-    .upload(avatarPath, fileBytes, {
+    .upload(avatarPath, processedAvatar.buffer, {
       cacheControl: "3600",
-      contentType: file.type,
+      contentType: processedAvatar.contentType,
       upsert: true,
     });
 
@@ -366,15 +387,9 @@ export async function completeOnboardingForCurrentUser(
 export async function saveSettingsForCurrentUser(
   submission: SettingsSubmission,
 ) {
-  const user = await getAuthenticatedUser();
-
-  if (!user) {
-    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
-  }
-
-  await ensureProfileBundleForCurrentUser();
-
   const supabase = await createClient();
+  const user = await getRequiredAuthenticatedUser(supabase);
+  await ensureProfileBundleForCurrentUser();
   const locale = normalizeLocale(submission.locale);
   const timezone = resolveTimezone(submission.timezone);
   const displayName = normalizeDisplayName(submission.displayName);
@@ -385,7 +400,7 @@ export async function saveSettingsForCurrentUser(
     submission.morningReminderEnabled,
   );
   const avatarPath = submission.avatarFile
-    ? await uploadProfileAvatar(supabase, user.id, submission.avatarFile)
+    ? await uploadProfileAvatar(user.id, submission.avatarFile)
     : null;
 
   const { error: profileError } = await supabase
@@ -416,6 +431,26 @@ export async function saveSettingsForCurrentUser(
 
   if (settingsError) {
     throw new Error(`Gebruikersinstellingen konden niet worden bijgewerkt: ${settingsError.message}`);
+  }
+
+  return ensureProfileBundleForCurrentUser();
+}
+
+export async function saveProfileAvatarForCurrentUser(file: File) {
+  const supabase = await createClient();
+  const user = await getRequiredAuthenticatedUser(supabase);
+  await ensureProfileBundleForCurrentUser();
+  const avatarPath = await uploadProfileAvatar(user.id, file);
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      avatar_path: avatarPath,
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    throw new Error(`Profielfoto kon niet worden opgeslagen: ${error.message}`);
   }
 
   return ensureProfileBundleForCurrentUser();
@@ -457,7 +492,7 @@ export async function ensureProfileBundleForCurrentUser(): Promise<ProfileBundle
   }
 
   return {
-    profile: await buildProfileRecord(supabase, profileRow),
+    profile: await buildProfileRecord(profileRow),
     settings: mapUserSettingsRow(userSettingsRow),
   };
 }

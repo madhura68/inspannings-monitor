@@ -2,54 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ActivityIcon,
-  ClipboardCheckIcon,
-  InfoIcon,
-  LayoutDashboardIcon,
-} from "lucide-react";
 import type { AuthState } from "@/lib/auth/session";
 import { AccountMenu } from "@/components/navigation/account-menu";
+import {
+  isActivePath,
+  primaryNavItems,
+  shouldUseBottomNav,
+} from "@/components/navigation/navigation-config";
 import { ThemeMenu } from "@/components/navigation/theme-menu";
 import { cn } from "@/lib/utils";
-
-const primaryNavItems = [
-  {
-    href: "/",
-    label: "About",
-    icon: InfoIcon,
-  },
-  {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboardIcon,
-  },
-  {
-    href: "/planning",
-    label: "Planning",
-    icon: ActivityIcon,
-  },
-  {
-    href: "/check-in",
-    label: "Check-in",
-    icon: ClipboardCheckIcon,
-  },
-] as const;
 
 type TopNavProps = {
   authState: AuthState;
 };
 
-function isActivePath(pathname: string, href: string) {
-  if (href === "/") {
-    return pathname === "/";
-  }
-
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
 export function TopNav({ authState }: TopNavProps) {
   const pathname = usePathname();
+  const useCompactBottomNav = shouldUseBottomNav(pathname);
 
   return (
     <header className="sticky top-4 z-40">
@@ -65,7 +34,10 @@ export function TopNav({ authState }: TopNavProps) {
 
         <nav
           aria-label="Hoofdnavigatie"
-          className="flex flex-1 flex-wrap items-center gap-2 md:ml-6"
+          className={cn(
+            "flex flex-1 flex-wrap items-center gap-2 md:ml-6",
+            useCompactBottomNav ? "hidden sm:flex" : "flex",
+          )}
         >
           {primaryNavItems.map((item) => {
             const isActive = pathname ? isActivePath(pathname, item.href) : false;

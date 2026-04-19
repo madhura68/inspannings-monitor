@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { buildPathWithQuery } from "@/lib/auth/navigation";
 import {
@@ -11,12 +12,19 @@ import {
   getOptionalTimeValue,
 } from "@/lib/forms/parse";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
+import { ProfileAvatarProcessingError } from "@/lib/profile/avatar-processing";
 import {
   isAllowedProfileAvatarMimeType,
-  PROFILE_AVATAR_MAX_BYTES,
+  PROFILE_AVATAR_UPLOAD_MAX_BYTES,
 } from "@/lib/profile/avatar";
-import { saveSettingsForCurrentUser } from "@/lib/profile/service";
-import type { SettingsSubmission } from "@/lib/profile/types";
+import {
+  saveProfileAvatarForCurrentUser,
+  saveSettingsForCurrentUser,
+} from "@/lib/profile/service";
+import type {
+  AvatarUploadActionState,
+  SettingsSubmission,
+} from "@/lib/profile/types";
 
 const LOCALE_VALUES = ["nl-NL"] as const;
 const ONBOARDING_TIMEZONE_VALUES = ONBOARDING_TIMEZONE_OPTIONS.map((option) => option.value);
@@ -47,7 +55,7 @@ function getOptionalAvatarFile(formData: FormData) {
   }
 
   if (
-    value.size > PROFILE_AVATAR_MAX_BYTES ||
+    value.size > PROFILE_AVATAR_UPLOAD_MAX_BYTES ||
     !isAllowedProfileAvatarMimeType(value.type)
   ) {
     throw new FormDataValidationError("invalid-avatar-file");
@@ -110,6 +118,44 @@ function buildSettingsSubmission(formData: FormData): SettingsSubmission {
   };
 }
 
+export async function uploadAvatarAction(
+  _previousState: AvatarUploadActionState,
+  formData: FormData,
+): Promise<AvatarUploadActionState> {
+  try {
+    const avatarFile = getOptionalAvatarFile(formData);
+
+    if (!avatarFile) {
+      throw new FormDataValidationError("invalid-avatar-file");
+    }
+
+    await saveProfileAvatarForCurrentUser(avatarFile);
+    revalidatePath("/settings");
+    revalidatePath("/dashboard");
+
+    return {
+      status: "success",
+      code: "avatar-saved",
+    };
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      return {
+        status: "error",
+        code: error.code,
+      };
+    }
+
+    if (error instanceof ProfileAvatarProcessingError) {
+      return {
+        status: "error",
+        code: "invalid-avatar-file",
+      };
+    }
+
+    throw error;
+  }
+}
+
 export async function saveSettingsAction(
   _previousState: null,
   formData: FormData,
@@ -119,6 +165,10 @@ export async function saveSettingsAction(
   } catch (error) {
     if (error instanceof FormDataValidationError) {
       redirect(buildPathWithQuery("/settings", { error: error.code }));
+    }
+
+    if (error instanceof ProfileAvatarProcessingError) {
+      redirect(buildPathWithQuery("/settings", { error: "invalid-avatar-file" }));
     }
 
     throw error;
