@@ -41,7 +41,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
       footer={
         <p>
           Heb je al een account?{" "}
-          <Link href={loginHref} className="font-semibold text-primary">
+          <Link href={loginHref} className="font-semibold text-primary underline-offset-4 hover:underline">
             Log dan in
           </Link>
         </p>

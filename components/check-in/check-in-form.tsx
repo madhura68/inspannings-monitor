@@ -103,6 +103,7 @@ export function CheckInForm({ todayCheckIn }: CheckInFormProps) {
                     disabled={isPending}
                     onClick={() => setEnergyScore(value)}
                     aria-pressed={isSelected}
+                    aria-label={`Energie ${value} van 10`}
                     className={cn(
                       buttonVariants({
                         variant: isSelected ? "default" : "outline",

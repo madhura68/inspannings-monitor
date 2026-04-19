@@ -269,6 +269,12 @@ a {
     background: var(--primary);
     box-shadow: var(--shadow-2);
   }
+
+  .cn-toast {
+    border: 1px solid color-mix(in oklab, var(--border) 92%, transparent);
+    box-shadow: var(--shadow-3);
+    backdrop-filter: blur(18px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
