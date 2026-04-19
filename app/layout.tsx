@@ -32,11 +32,10 @@ export default function RootLayout({
     <html
       lang="nl"
       suppressHydrationWarning
-      className={`${fontBody.variable} ${fontMono.variable}`}
+      className={`${fontBody.variable} ${fontMono.variable} dark`}
     >
       <body className="min-h-screen antialiased">
         <ThemeProvider
-          attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange

@@ -1,7 +1,7 @@
 "use client";
 
 import { MoonStarIcon, MonitorCogIcon, SunMediumIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,25 +17,13 @@ const themeOptions = [
   { value: "system", label: "System", icon: MonitorCogIcon },
 ] as const;
 
-function getThemeIcon(theme: string | undefined) {
-  if (theme === "light") {
-    return <SunMediumIcon className="size-4" />;
-  }
-
-  if (theme === "dark") {
-    return <MoonStarIcon className="size-4" />;
-  }
-
-  return <MonitorCogIcon className="size-4" />;
-}
-
 export function ThemeMenu() {
   const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Thema kiezen">
-        {getThemeIcon(theme)}
+        <MonitorCogIcon className="size-4" />
         Theme
       </DropdownMenuTrigger>
       <DropdownMenuContent>
