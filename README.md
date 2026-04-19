@@ -24,6 +24,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - planningpagina voor vandaag met activiteit toevoegen en directe lijstweergave
 - statusflows voor activiteiten van vandaag (`gepland`, `uitgevoerd`, `overgeslagen`, `aangepast`)
 - contextuele evaluatievelden voor overgeslagen en aangepaste activiteiten
+- dagoverzicht op planning met gepland versus werkelijk en statusverdeling
 - energiemeter met lopend totaal ten opzichte van het dagbudget
 - niet-blokkerende waarschuwing bij budgetoverschrijding in planning en dashboard
 - eerste unit tests voor budget- en meterlogica via `Vitest`
@@ -133,7 +134,6 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-403` Ongeplande activiteiten ondersteunen
-2. `ST-404` Dagoverzicht bouwen
-3. `ST-405` Dagaggregaties server-side implementeren
-4. `ST-105` RLS-policy tests en hardening afronden
+1. `ST-405` Dagaggregaties server-side implementeren
+2. `ST-105` RLS-policy tests en hardening afronden
+3. `npm run test` toevoegen aan CI
