@@ -22,6 +22,8 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - dashboardweergave van check-instatus, energieniveau en dagbudget
 - planningsfundering met activiteitenmodel, categorieën en skip-redenen in Supabase
 - planningpagina voor vandaag met activiteit toevoegen en directe lijstweergave
+- statusflows voor activiteiten van vandaag (`gepland`, `uitgevoerd`, `overgeslagen`, `aangepast`)
+- contextuele evaluatievelden voor overgeslagen en aangepaste activiteiten
 - energiemeter met lopend totaal ten opzichte van het dagbudget
 - niet-blokkerende waarschuwing bij budgetoverschrijding in planning en dashboard
 - eerste unit tests voor budget- en meterlogica via `Vitest`
@@ -103,13 +105,12 @@ tokens voor rustige, niet-medische feedback.
 
 De app gebruikt nu een gedeelde topnavigatie:
 
-- links: `About`, `Planning`, `Instellingen`
+- links: `About`, `Dashboard`, `Planning`, `Check-in`
 - rechts: `Account` en `Theme`
 
 `/` is de publieke `About`-pagina met informatie over de maker en de scope van
-de app. In het `Account`-menu komen ingelogde gebruikers bij `Dashboard`,
-`Check-in` en `Uitloggen`; uitgelogde gebruikers zien daar `Inloggen` en
-`Account aanmaken`.
+de app. In het `Account`-menu komen ingelogde gebruikers bij `Instellingen` en
+`Uitloggen`; uitgelogde gebruikers zien daar `Inloggen` en `Account aanmaken`.
 
 ## Interne wizard-test
 
@@ -132,7 +133,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-303` Autocomplete op eerdere activiteiten toevoegen
-2. `ST-401` Evaluatie- en dagoverzichtslus bouwen
-3. `ST-404` Dagoverzicht bouwen
+1. `ST-403` Ongeplande activiteiten ondersteunen
+2. `ST-404` Dagoverzicht bouwen
+3. `ST-405` Dagaggregaties server-side implementeren
 4. `ST-105` RLS-policy tests en hardening afronden
