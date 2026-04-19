@@ -1,8 +1,10 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import type {
   ActivityCategory,
+  CreateActivitySubmission,
   ActivityImpactLevel,
   ActivityPriorityLevel,
+  PlanningPageData,
   ActivityRecord,
   ActivitySource,
   ActivitiesForDateStatus,
@@ -143,6 +145,26 @@ async function readActivitiesByDate(
   return (data ?? []).map(mapActivityRow);
 }
 
+async function assertCategoryExists(
+  supabase: SupabaseServerClient,
+  categoryId: string,
+): Promise<void> {
+  const { data, error } = await supabase
+    .from("activity_categories")
+    .select("id")
+    .eq("id", categoryId)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Activiteitcategorie kon niet worden gevalideerd: ${error.message}`);
+  }
+
+  if (!data) {
+    throw new Error("Ongeldige activiteitcategorie.");
+  }
+}
+
 export async function listActivityCategories(): Promise<ActivityCategory[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -208,4 +230,76 @@ export async function getTodayActivitiesForCurrentUser(): Promise<ActivitiesForD
     activityDate,
     activities,
   };
+}
+
+export async function getPlanningPageDataForCurrentUser(): Promise<PlanningPageData | null> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    return null;
+  }
+
+  const [categories, activitiesStatus] = await Promise.all([
+    listActivityCategories(),
+    getTodayActivitiesForCurrentUser(),
+  ]);
+
+  return {
+    timezone: profileBundle.profile.timezone,
+    activityDate:
+      activitiesStatus?.activityDate ?? getLocalDateForTimezone(profileBundle.profile.timezone),
+    categories,
+    activities: activitiesStatus?.activities ?? [],
+  };
+}
+
+export async function createActivityForTodayForCurrentUser(
+  submission: CreateActivitySubmission,
+): Promise<ActivityRecord> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    throw new Error("Profielbundle ontbreekt voor de huidige gebruiker.");
+  }
+
+  const activityDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const supabase = await createClient();
+
+  await assertCategoryExists(supabase, submission.categoryId);
+
+  const { data, error } = await supabase
+    .from("activities")
+    .insert({
+      user_id: user.id,
+      activity_date: activityDate,
+      source: "planned",
+      status: "planned",
+      name: submission.name,
+      category_id: submission.categoryId,
+      duration_minutes: submission.durationMinutes,
+      impact_level: submission.impactLevel,
+      priority_level: submission.priorityLevel,
+      skip_reason_id: null,
+      notes: null,
+    })
+    .select(ACTIVITY_COLUMNS)
+    .single();
+
+  if (error) {
+    throw new Error(`Activiteit kon niet worden opgeslagen: ${error.message}`);
+  }
+
+  return mapActivityRow(data);
 }

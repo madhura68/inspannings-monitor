@@ -21,6 +21,7 @@ product, niet als medisch hulpmiddel. Release 1 blijft smal:
 - eenvoudig dagbudget en energieniveau op basis van de ochtendscore
 - dashboardweergave van check-instatus, energieniveau en dagbudget
 - planningsfundering met activiteitenmodel, categorieën en skip-redenen in Supabase
+- planningpagina voor vandaag met activiteit toevoegen en directe lijstweergave
 - eerste unit tests voor budgetmapping via `Vitest`
 - korte onboardingflow voor eerste voorkeuren
 - instellingen voor taal, timezone, reminders en zichtbaarheid van energiepunten
@@ -111,7 +112,7 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-302` Planningformulier bouwen
+1. `ST-303` Autocomplete op eerdere activiteiten toevoegen
 2. `ST-304` EnergyMeter en lopend totaal implementeren
 3. `ST-401` Evaluatie- en dagoverzichtslus bouwen
 4. `ST-105` RLS-policy tests en hardening afronden

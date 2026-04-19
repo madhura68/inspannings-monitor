@@ -16,6 +16,7 @@ import { getAuthState } from "@/lib/auth/session";
 import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { isTestWizardEnabled } from "@/lib/config/feature-flags";
 import { getDashboardStatusToast } from "@/lib/feedback/status-messages";
+import { getTodayActivitiesForCurrentUser } from "@/lib/planning/service";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   const { profile, settings } = profileBundle;
-  const checkInStatus = await getTodayCheckInForCurrentUser();
+  const [checkInStatus, planningStatus] = await Promise.all([
+    getTodayCheckInForCurrentUser(),
+    getTodayActivitiesForCurrentUser(),
+  ]);
   const statusToast = getDashboardStatusToast(getParamValue(resolvedSearchParams, "status"));
 
   if (!profile.onboardingSeen) {
@@ -96,6 +100,15 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 )}
               >
                 Instellingen
+              </Link>
+              <Link
+                href="/planning"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "h-11 rounded-full px-5",
+                )}
+              >
+                Dagplanning
               </Link>
               {isTestWizardEnabled() ? (
                 <Link
@@ -178,6 +191,35 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </Card>
 
           <CheckInCard todayCheckIn={checkInStatus?.todayCheckIn ?? null} />
+
+          <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
+            <CardHeader className="pb-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                Dagplanning
+              </p>
+              <CardTitle className="text-lg text-slate-900">
+                {planningStatus?.activities.length
+                  ? `${planningStatus.activities.length} activiteiten voor vandaag`
+                  : "Nog niets gepland voor vandaag"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pb-6">
+              <CardDescription className="text-sm leading-7 text-muted-foreground">
+                Plan kleine, concrete activiteiten voor vandaag en bouw daarna verder op budgetfeedback en evaluatie.
+              </CardDescription>
+              <div className="mt-4">
+                <Link
+                  href="/planning"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "lg" }),
+                    "h-11 rounded-full px-5",
+                  )}
+                >
+                  Open dagplanning
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
 
           {isTestWizardEnabled() ? (
             <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">

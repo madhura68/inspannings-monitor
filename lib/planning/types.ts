@@ -45,8 +45,23 @@ export type ActivityRecord = {
   updatedAt: string;
 };
 
+export type CreateActivitySubmission = {
+  name: string;
+  categoryId: string;
+  durationMinutes: number;
+  impactLevel: ActivityImpactLevel;
+  priorityLevel: ActivityPriorityLevel;
+};
+
 export type ActivitiesForDateStatus = {
   timezone: string;
   activityDate: string;
+  activities: ActivityRecord[];
+};
+
+export type PlanningPageData = {
+  timezone: string;
+  activityDate: string;
+  categories: ActivityCategory[];
   activities: ActivityRecord[];
 };

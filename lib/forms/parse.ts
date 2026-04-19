@@ -1,6 +1,8 @@
 const TIME_VALUE_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 const EMAIL_VALUE_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INTEGER_VALUE_PATTERN = /^-?\d+$/;
+const UUID_VALUE_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export class FormDataValidationError extends Error {
   code: string;
@@ -117,6 +119,18 @@ export function assertMinLength(
   return value;
 }
 
+export function assertMaxLength(
+  value: string,
+  maximumLength: number,
+  errorCode: string,
+): string {
+  if (value.length > maximumLength) {
+    fail(errorCode);
+  }
+
+  return value;
+}
+
 export function getIntegerValue(
   formData: FormData,
   key: string,
@@ -140,4 +154,18 @@ export function getIntegerValue(
   }
 
   return parsedValue;
+}
+
+export function getUuidValue(
+  formData: FormData,
+  key: string,
+  errorCode: string,
+): string {
+  const value = getRequiredString(formData, key, errorCode);
+
+  if (!UUID_VALUE_PATTERN.test(value)) {
+    fail(errorCode);
+  }
+
+  return value;
 }

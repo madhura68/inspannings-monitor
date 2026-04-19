@@ -63,6 +63,23 @@ const checkInErrorToasts: Record<string, StatusToast> = {
   },
 };
 
+const planningStatusToasts: Record<string, StatusToast> = {
+  "activity-saved": {
+    variant: "success",
+    title: "Activiteit gepland",
+    message: "Je activiteit staat nu in je dagplanning van vandaag.",
+  },
+};
+
+const planningErrorToasts: Record<string, StatusToast> = {
+  "invalid-activity-input": {
+    variant: "error",
+    title: "Activiteit niet opgeslagen",
+    message:
+      "Controleer naam, categorie, duur, impact en prioriteit en probeer het opnieuw.",
+  },
+};
+
 export function getDashboardStatusToast(status: string | null): StatusToast | null {
   if (!status) {
     return null;
@@ -114,6 +131,21 @@ export function getCheckInStatusToast(
   }
 
   return null;
+}
+
+export function getPlanningStatusToast(
+  error: string | null,
+  status: string | null,
+): StatusToast | null {
+  if (error && planningErrorToasts[error]) {
+    return planningErrorToasts[error];
+  }
+
+  if (!status) {
+    return null;
+  }
+
+  return planningStatusToasts[status] ?? null;
 }
 
 export function getAuthStatusToast(
