@@ -92,8 +92,7 @@ Status: `ST-301`, `ST-302`, `ST-304` en `ST-305` zijn inmiddels gerealiseerd in 
 
 Doel: de kernloop afronden door geplande activiteiten te evalueren en terug te zien.
 
-Status: `ST-401`, `ST-402`, `ST-403` en `ST-404` zijn inmiddels gerealiseerd in de app. De volgende
-logische stap ligt nu in `ST-405`.
+Status: `ST-401`, `ST-402`, `ST-403`, `ST-404` en `ST-405` zijn inmiddels gerealiseerd in de app. De evaluatielus voor release 1 is daarmee functioneel rond; de volgende logische stap ligt nu weer in `ST-303` en `EPIC-06`.
 
 | Story ID | Titel | Type | Definition of done |
 | --- | --- | --- | --- |
@@ -101,7 +100,7 @@ logische stap ligt nu in `ST-405`.
 | ST-402 | Evaluatievelden toevoegen | UI | Afgerond: skip-reden en toelichting verschijnen passend per status en worden opgeslagen |
 | ST-403 | Ongeplande activiteiten ondersteunen | Build | Afgerond: ongeplande activiteit kan als ad-hoc item worden opgeslagen en telt mee in het dagtotaal |
 | ST-404 | Dagoverzicht bouwen | UI | Afgerond: planning toont nu gepland versus werkelijk en een directe statusverdeling van de dag |
-| ST-405 | Dagaggregaties server-side implementeren | Logic | Dagtotalen blijven consistent met individuele records |
+| ST-405 | Dagaggregaties server-side implementeren | Logic | Afgerond: dagoverzichttotalen worden nu server-side voorbereid via de planningservice en blijven consistent met individuele records |
 
 ## EPIC-06 Weekoverzicht en inzichten
 

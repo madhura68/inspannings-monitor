@@ -134,6 +134,6 @@ zichtbaar als `NEXT_PUBLIC_ENABLE_TEST_WIZARD=true` staat.
 
 ## Eerstvolgende bouwstappen
 
-1. `ST-405` Dagaggregaties server-side implementeren
+1. `ST-303` Autocomplete op eerdere activiteiten toevoegen
 2. `ST-105` RLS-policy tests en hardening afronden
 3. `npm run test` toevoegen aan CI

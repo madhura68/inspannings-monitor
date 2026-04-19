@@ -1,4 +1,5 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
+import { calculateDayOverviewSnapshot } from "@/lib/planning/day-overview";
 import type {
   ActivityCategory,
   CreateAdHocActivitySubmission,
@@ -281,6 +282,7 @@ export async function getPlanningPageDataForCurrentUser(): Promise<PlanningPageD
     categories,
     skipReasons,
     activities: activitiesStatus?.activities ?? [],
+    dayOverview: calculateDayOverviewSnapshot(activitiesStatus?.activities ?? []),
   };
 }
 

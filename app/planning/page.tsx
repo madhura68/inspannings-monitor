@@ -19,7 +19,6 @@ import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
 import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { getPlanningStatusToast } from "@/lib/feedback/status-messages";
-import { calculateDayOverviewSnapshot } from "@/lib/planning/day-overview";
 import { getPlanningPageDataForCurrentUser } from "@/lib/planning/service";
 import { calculatePlanningMeterSnapshot } from "@/lib/planning/meter";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
@@ -70,7 +69,6 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
     planningPageData.activities,
     checkInStatus?.todayCheckIn?.dailyBudget ?? null,
   );
-  const dayOverview = calculateDayOverviewSnapshot(planningPageData.activities);
 
   return (
     <AppShell contentClassName="space-y-8">
@@ -154,7 +152,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
           </aside>
         </section>
 
-        <DayOverviewCard overview={dayOverview} />
+        <DayOverviewCard overview={planningPageData.dayOverview} />
 
         <TodayActivitiesList
           activities={planningPageData.activities}

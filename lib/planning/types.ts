@@ -4,6 +4,7 @@ import {
   ACTIVITY_SOURCE_VALUES,
   ACTIVITY_STATUS_VALUES,
 } from "@/lib/planning/options";
+import type { DayOverviewSnapshot } from "@/lib/planning/day-overview";
 
 export type ActivitySource = (typeof ACTIVITY_SOURCE_VALUES)[number];
 export type ActivityStatus = (typeof ACTIVITY_STATUS_VALUES)[number];
@@ -83,4 +84,5 @@ export type PlanningPageData = {
   categories: ActivityCategory[];
   skipReasons: SkipReason[];
   activities: ActivityRecord[];
+  dayOverview: DayOverviewSnapshot;
 };
