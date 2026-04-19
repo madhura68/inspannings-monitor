@@ -1,6 +1,7 @@
 import { getAuthenticatedUser } from "@/lib/auth/session";
 import type {
   ActivityCategory,
+  CreateAdHocActivitySubmission,
   CreateActivitySubmission,
   ActivityImpactLevel,
   ActivityPriorityLevel,
@@ -323,6 +324,51 @@ export async function createActivityForTodayForCurrentUser(
 
   if (error) {
     throw new Error(`Activiteit kon niet worden opgeslagen: ${error.message}`);
+  }
+
+  return mapActivityRow(data);
+}
+
+export async function createAdHocActivityForTodayForCurrentUser(
+  submission: CreateAdHocActivitySubmission,
+): Promise<ActivityRecord> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    throw new Error("Profielbundle ontbreekt voor de huidige gebruiker.");
+  }
+
+  const activityDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const supabase = await createClient();
+
+  await assertCategoryExists(supabase, submission.categoryId);
+
+  const { data, error } = await supabase
+    .from("activities")
+    .insert({
+      user_id: user.id,
+      activity_date: activityDate,
+      source: "ad_hoc",
+      status: "completed",
+      name: submission.name,
+      category_id: submission.categoryId,
+      duration_minutes: submission.durationMinutes,
+      impact_level: submission.impactLevel,
+      priority_level: "normaal",
+      skip_reason_id: null,
+      notes: null,
+    })
+    .select(ACTIVITY_COLUMNS)
+    .single();
+
+  if (error) {
+    throw new Error(`Ongeplande activiteit kon niet worden opgeslagen: ${error.message}`);
   }
 
   return mapActivityRow(data);

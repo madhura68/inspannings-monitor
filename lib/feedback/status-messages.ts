@@ -69,6 +69,11 @@ const planningStatusToasts: Record<string, StatusToast> = {
     title: "Activiteit gepland",
     message: "Je activiteit staat nu in je dagplanning van vandaag.",
   },
+  "ad-hoc-activity-saved": {
+    variant: "success",
+    title: "Ongeplande activiteit toegevoegd",
+    message: "Deze activiteit staat nu ook in je daglijst van vandaag.",
+  },
   "activity-status-saved": {
     variant: "success",
     title: "Activiteit bijgewerkt",
@@ -87,6 +92,12 @@ const planningErrorToasts: Record<string, StatusToast> = {
     title: "Activiteit niet opgeslagen",
     message:
       "Controleer naam, categorie, duur, impact en prioriteit en probeer het opnieuw.",
+  },
+  "invalid-ad-hoc-activity-input": {
+    variant: "error",
+    title: "Ongeplande activiteit niet opgeslagen",
+    message:
+      "Controleer naam, categorie, duur en impact en probeer het opnieuw.",
   },
   "invalid-activity-status": {
     variant: "error",
@@ -108,6 +119,11 @@ const planningErrorToasts: Record<string, StatusToast> = {
     variant: "error",
     title: "Evaluatie niet opgeslagen",
     message: "De extra context bij deze activiteit kon niet worden opgeslagen.",
+  },
+  "ad-hoc-activity-failed": {
+    variant: "error",
+    title: "Ongeplande activiteit niet opgeslagen",
+    message: "De ongeplande activiteit kon niet worden toegevoegd. Probeer het opnieuw.",
   },
 };
 

@@ -168,12 +168,12 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <CardTitle className="text-lg text-foreground">
                 {planningStatus?.activities.length
                   ? `${planningStatus.activities.length} activiteiten voor vandaag`
-                  : "Nog niets gepland voor vandaag"}
+                  : "Nog niets toegevoegd voor vandaag"}
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-6">
               <CardDescription className="text-sm leading-7 text-muted-foreground">
-                Plan kleine, concrete activiteiten voor vandaag en bouw daarna verder op budgetfeedback en evaluatie.
+                Plan kleine, concrete activiteiten voor vandaag en leg ook onverwachte activiteiten vast als je dag anders loopt dan gedacht.
               </CardDescription>
               <div className="mt-4">
                 <Link href="/planning" className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary">

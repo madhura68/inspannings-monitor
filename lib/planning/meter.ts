@@ -5,7 +5,7 @@ import type {
 } from "@/lib/planning/types";
 
 export type PlanningMeterSnapshot = {
-  plannedPoints: number;
+  totalPoints: number;
   activityCount: number;
   dailyBudget: number | null;
   remainingBudget: number | null;
@@ -59,7 +59,7 @@ export function deriveActivityEnergyPoints(input: ActivityMeterInput): number {
   );
 }
 
-export function calculatePlannedPointsTotal(
+export function calculateActivityPointsTotal(
   activities: Pick<ActivityRecord, "durationMinutes" | "impactLevel" | "status">[],
 ): number {
   return activities.reduce(
@@ -72,11 +72,11 @@ export function calculatePlanningMeterSnapshot(
   activities: Pick<ActivityRecord, "durationMinutes" | "impactLevel" | "status">[],
   dailyBudget: number | null,
 ): PlanningMeterSnapshot {
-  const plannedPoints = calculatePlannedPointsTotal(activities);
+  const totalPoints = calculateActivityPointsTotal(activities);
 
   if (dailyBudget === null) {
     return {
-      plannedPoints,
+      totalPoints,
       activityCount: activities.length,
       dailyBudget: null,
       remainingBudget: null,
@@ -86,11 +86,11 @@ export function calculatePlanningMeterSnapshot(
     };
   }
 
-  const remainingBudget = dailyBudget - plannedPoints;
-  const progressRatio = dailyBudget > 0 ? plannedPoints / dailyBudget : 0;
+  const remainingBudget = dailyBudget - totalPoints;
+  const progressRatio = dailyBudget > 0 ? totalPoints / dailyBudget : 0;
 
   return {
-    plannedPoints,
+    totalPoints,
     activityCount: activities.length,
     dailyBudget,
     remainingBudget,

@@ -36,10 +36,10 @@ function getMeterDescription(meter: PlanningMeterSnapshot) {
   }
 
   if (meter.isOverBudget) {
-    return "Je planning zit boven je dagbudget. Dat is een signaal om eventueel iets te verschuiven of lichter te maken, niet om te blokkeren.";
+    return "Je dagtotaal zit boven je dagbudget. Dat is een signaal om eventueel iets te verschuiven of lichter te maken, niet om te blokkeren.";
   }
 
-  return "De meter blijft bewust eenvoudig: punten volgen uit duur en impact van je activiteiten.";
+  return "De meter blijft bewust eenvoudig: punten volgen uit duur en impact van alle activiteiten die vandaag in beeld zijn.";
 }
 
 export function EnergyMeterCard({
@@ -57,8 +57,8 @@ export function EnergyMeterCard({
         </p>
         <CardTitle className="text-lg text-foreground">
           {meter.dailyBudget === null
-            ? `${meter.plannedPoints} geplande punten`
-            : `${meter.plannedPoints} van ${meter.dailyBudget} punten gepland`}
+            ? `${meter.totalPoints} punten in beeld`
+            : `${meter.totalPoints} van ${meter.dailyBudget} punten in beeld`}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pb-6">
@@ -77,7 +77,7 @@ export function EnergyMeterCard({
             aria-valuetext={
               meter.dailyBudget === null
                 ? "Nog geen dagbudget beschikbaar"
-                : `${meter.plannedPoints} van ${meter.dailyBudget} punten gepland`
+                : `${meter.totalPoints} van ${meter.dailyBudget} punten in beeld`
             }
           >
             <div
@@ -105,10 +105,10 @@ export function EnergyMeterCard({
         </div>
 
         {meter.dailyBudget !== null && meter.isOverBudget ? (
-          <Alert variant="warning">
-            <AlertTitle className="text-sm">Je zit boven je dagbudget</AlertTitle>
-            <AlertDescription className="leading-7 text-current">
-              Je planning komt nu <strong>{Math.abs(meter.remainingBudget ?? 0)} punten</strong> boven het dagbudget uit.
+            <Alert variant="warning">
+              <AlertTitle className="text-sm">Je zit boven je dagbudget</AlertTitle>
+              <AlertDescription className="leading-7 text-current">
+              Je dagtotaal komt nu <strong>{Math.abs(meter.remainingBudget ?? 0)} punten</strong> boven het dagbudget uit.
               Je kunt nog steeds doorgaan, maar dit is een goed moment om iets te schrappen, te verkorten of later te doen.
             </AlertDescription>
           </Alert>

@@ -8,11 +8,13 @@ import {
   ACTIVITY_STATUS_VALUES,
 } from "@/lib/planning/options";
 import {
+  createAdHocActivityForTodayForCurrentUser,
   createActivityForTodayForCurrentUser,
   updateActivityEvaluationForTodayForCurrentUser,
   updateActivityStatusForTodayForCurrentUser,
 } from "@/lib/planning/service";
 import type {
+  CreateAdHocActivitySubmission,
   CreateActivitySubmission,
   UpdateActivityEvaluationSubmission,
   UpdateActivityStatusSubmission,
@@ -55,6 +57,33 @@ function buildCreateActivitySubmission(formData: FormData): CreateActivitySubmis
       "priorityLevel",
       ACTIVITY_PRIORITY_LEVEL_VALUES,
       "invalid-activity-input",
+    ),
+  };
+}
+
+function buildCreateAdHocActivitySubmission(
+  formData: FormData,
+): CreateAdHocActivitySubmission {
+  const name = assertMaxLength(
+    getRequiredString(formData, "name", "invalid-ad-hoc-activity-input"),
+    120,
+    "invalid-ad-hoc-activity-input",
+  );
+
+  return {
+    name,
+    categoryId: getUuidValue(formData, "categoryId", "invalid-ad-hoc-activity-input"),
+    durationMinutes: getIntegerValue(
+      formData,
+      "durationMinutes",
+      { min: 1, max: 720 },
+      "invalid-ad-hoc-activity-input",
+    ),
+    impactLevel: getEnumValue(
+      formData,
+      "impactLevel",
+      ACTIVITY_IMPACT_LEVEL_VALUES,
+      "invalid-ad-hoc-activity-input",
     ),
   };
 }
@@ -110,6 +139,30 @@ export async function createActivityAction(
   }
 
   redirect(buildPathWithQuery("/planning", { status: "activity-saved" }));
+  return null;
+}
+
+export async function createAdHocActivityAction(
+  _previousState: null,
+  formData: FormData,
+): Promise<null> {
+  try {
+    await createAdHocActivityForTodayForCurrentUser(
+      buildCreateAdHocActivitySubmission(formData),
+    );
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      redirect(buildPathWithQuery("/planning", { error: error.code }));
+    }
+
+    if (error instanceof Error && error.message === "Ongeldige activiteitcategorie.") {
+      redirect(buildPathWithQuery("/planning", { error: "invalid-ad-hoc-activity-input" }));
+    }
+
+    redirect(buildPathWithQuery("/planning", { error: "ad-hoc-activity-failed" }));
+  }
+
+  redirect(buildPathWithQuery("/planning", { status: "ad-hoc-activity-saved" }));
   return null;
 }
 

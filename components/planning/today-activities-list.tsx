@@ -81,6 +81,22 @@ function getStatusBadgeClassName(value: ActivityRecord["status"]) {
   return "bg-secondary text-secondary-foreground";
 }
 
+function formatSourceLabel(value: ActivityRecord["source"]) {
+  if (value === "ad_hoc") {
+    return "Ongepland";
+  }
+
+  return "Gepland";
+}
+
+function getSourceBadgeClassName(value: ActivityRecord["source"]) {
+  if (value === "ad_hoc") {
+    return "bg-primary text-primary-foreground";
+  }
+
+  return "bg-muted text-muted-foreground";
+}
+
 export function TodayActivitiesList({
   activities,
   categories,
@@ -90,18 +106,18 @@ export function TodayActivitiesList({
     <Card className="py-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-          Vandaag gepland
+          Vandaag in beeld
         </p>
         <CardTitle className="text-lg text-foreground">
           {activities.length === 0
-            ? "Nog geen activiteiten gepland"
+            ? "Nog geen activiteiten toegevoegd"
             : `${activities.length} ${activities.length === 1 ? "activiteit" : "activiteiten"}`}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pb-6">
         {activities.length === 0 ? (
           <CardDescription className="text-sm leading-7 text-muted-foreground">
-            Je dag is nog leeg. Plan eerst een kleine concrete activiteit om de flow op gang te brengen.
+            Je dag is nog leeg. Plan eerst iets kleins of voeg later een ongeplande activiteit toe als je dag anders liep dan verwacht.
           </CardDescription>
         ) : (
           activities.map((activity) => (
@@ -116,14 +132,24 @@ export function TodayActivitiesList({
                     {getCategoryLabel(categories, activity.categoryId)}
                   </p>
                 </div>
-                <span
-                  className={cn(
-                    "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
-                    getStatusBadgeClassName(activity.status),
-                  )}
-                >
-                  {formatStatusLabel(activity.status)}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={cn(
+                      "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
+                      getSourceBadgeClassName(activity.source),
+                    )}
+                  >
+                    {formatSourceLabel(activity.source)}
+                  </span>
+                  <span
+                    className={cn(
+                      "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
+                      getStatusBadgeClassName(activity.status),
+                    )}
+                  >
+                    {formatStatusLabel(activity.status)}
+                  </span>
+                </div>
               </div>
 
               <div className="mt-4 grid gap-3 text-sm leading-7 text-foreground/80 sm:grid-cols-3">

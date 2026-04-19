@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AdHocActivityForm } from "@/components/planning/ad-hoc-activity-form";
 import { AppShell } from "@/components/navigation/app-shell";
 import { PageIntro } from "@/components/navigation/page-intro";
 import { ActivityForm } from "@/components/planning/activity-form";
@@ -88,11 +89,18 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
         />
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <ActivityForm
-            categories={planningPageData.categories}
-            activities={planningPageData.activities}
-            dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
-          />
+          <div className="space-y-5">
+            <ActivityForm
+              categories={planningPageData.categories}
+              activities={planningPageData.activities}
+              dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
+            />
+            <AdHocActivityForm
+              categories={planningPageData.categories}
+              activities={planningPageData.activities}
+              dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
+            />
+          </div>
 
           <aside className="space-y-5">
             <Card className="py-0">
@@ -103,7 +111,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
                 <CardTitle className="text-lg text-foreground">
                   {planningPageData.activities.length === 0
                     ? "Start met een eerste activiteit"
-                    : `${planningPageData.activities.length} activiteiten ingepland`}
+                    : `${planningPageData.activities.length} activiteiten in beeld`}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-6">
@@ -113,12 +121,14 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
                 {checkInStatus?.todayCheckIn ? (
                   <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
                     Je check-in van vandaag staat klaar met een dagbudget van{" "}
-                    {checkInStatus.todayCheckIn.dailyBudget} punten.
+                    {checkInStatus.todayCheckIn.dailyBudget} punten. Zowel geplande als
+                    ongeplande activiteiten lopen mee in je dagtotaal.
                   </CardDescription>
                 ) : (
                   <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
-                    Er is nog geen ochtendcheck-in van vandaag. Je kunt wel alvast plannen,
-                    maar je budgetmeter volgt in de volgende stories.
+                    Er is nog geen ochtendcheck-in van vandaag. Je kunt wel alvast
+                    activiteiten vastleggen, maar je budgetmeter blijft pas echt
+                    betekenisvol zodra je check-in er staat.
                   </CardDescription>
                 )}
               </CardContent>
@@ -133,9 +143,9 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
                 </p>
               </CardHeader>
               <CardContent className="space-y-3 pb-6 text-sm leading-7 text-primary-foreground/90">
-                <p>Deze planning blokkeert je niet en geeft nog geen harde waarschuwingen.</p>
-                <p>Je meter gebruikt een eenvoudige, uitlegbare afleiding uit duur en impact.</p>
-                <p>Bij overschrijding krijg je nu een warme, niet-blokkerende waarschuwing in plaats van een harde blokkade.</p>
+                <p>Deze dagweergave blokkeert je niet en geeft bewust geen harde limieten.</p>
+                <p>De meter gebruikt een eenvoudige, uitlegbare afleiding uit duur en impact.</p>
+                <p>Ook ongeplande activiteiten tellen nu mee, zodat je dagbeeld dichter bij de werkelijkheid blijft.</p>
               </CardContent>
             </Card>
           </aside>

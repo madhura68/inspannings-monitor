@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  calculatePlannedPointsTotal,
+  calculateActivityPointsTotal,
   calculatePlanningMeterSnapshot,
   deriveActivityEnergyPoints,
 } from "./meter";
@@ -38,7 +38,7 @@ describe("deriveActivityEnergyPoints", () => {
 describe("calculatePlanningMeterSnapshot", () => {
   it("somt punten van activiteiten op", () => {
     expect(
-      calculatePlannedPointsTotal([
+      calculateActivityPointsTotal([
         { durationMinutes: 30, impactLevel: "midden", status: "planned" },
         { durationMinutes: 90, impactLevel: "laag", status: "planned" },
       ]),
@@ -54,7 +54,7 @@ describe("calculatePlanningMeterSnapshot", () => {
       8,
     );
 
-    expect(snapshot.plannedPoints).toBe(6);
+    expect(snapshot.totalPoints).toBe(6);
     expect(snapshot.remainingBudget).toBe(2);
     expect(snapshot.progressPercent).toBe(75);
     expect(snapshot.isOverBudget).toBe(false);
@@ -66,7 +66,7 @@ describe("calculatePlanningMeterSnapshot", () => {
       null,
     );
 
-    expect(snapshot.plannedPoints).toBe(2);
+    expect(snapshot.totalPoints).toBe(2);
     expect(snapshot.dailyBudget).toBeNull();
     expect(snapshot.remainingBudget).toBeNull();
     expect(snapshot.progressPercent).toBeNull();
@@ -81,7 +81,7 @@ describe("calculatePlanningMeterSnapshot", () => {
       6,
     );
 
-    expect(snapshot.plannedPoints).toBe(9);
+    expect(snapshot.totalPoints).toBe(9);
     expect(snapshot.remainingBudget).toBe(-3);
     expect(snapshot.isOverBudget).toBe(true);
     expect(snapshot.progressPercent).toBe(100);

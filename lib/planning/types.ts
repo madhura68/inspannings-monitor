@@ -53,6 +53,13 @@ export type CreateActivitySubmission = {
   priorityLevel: ActivityPriorityLevel;
 };
 
+export type CreateAdHocActivitySubmission = {
+  name: string;
+  categoryId: string;
+  durationMinutes: number;
+  impactLevel: ActivityImpactLevel;
+};
+
 export type UpdateActivityStatusSubmission = {
   activityId: string;
   status: ActivityStatus;
