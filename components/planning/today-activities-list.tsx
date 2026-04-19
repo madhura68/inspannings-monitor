@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { deriveActivityEnergyPoints } from "@/lib/planning/meter";
 import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
 
 type TodayActivitiesListProps = {
@@ -88,6 +89,10 @@ export function TodayActivitiesList({
                 </p>
                 <p>
                   <strong>Prioriteit:</strong> {formatPriorityLabel(activity.priorityLevel)}
+                </p>
+                <p>
+                  <strong>Punten:</strong>{" "}
+                  {deriveActivityEnergyPoints(activity)}
                 </p>
               </div>
             </div>

@@ -25,14 +25,17 @@ import {
   ACTIVITY_IMPACT_OPTIONS,
   ACTIVITY_PRIORITY_OPTIONS,
 } from "@/lib/planning/form-options";
-import type { ActivityCategory } from "@/lib/planning/types";
+import { calculatePlanningMeterSnapshot, deriveActivityEnergyPoints } from "@/lib/planning/meter";
+import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
 import { cn } from "@/lib/utils";
 
 type ActivityFormProps = {
   categories: ActivityCategory[];
+  activities: ActivityRecord[];
+  dailyBudget: number | null;
 };
 
-export function ActivityForm({ categories }: ActivityFormProps) {
+export function ActivityForm({ categories, activities, dailyBudget }: ActivityFormProps) {
   const [, formAction, isPending] = useActionState(createActivityAction, null);
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState<string>(categories[0]?.id ?? "");
@@ -44,6 +47,40 @@ export function ActivityForm({ categories }: ActivityFormProps) {
     () => categories.find((category) => category.id === categoryId) ?? null,
     [categories, categoryId],
   );
+  const currentMeter = useMemo(
+    () => calculatePlanningMeterSnapshot(activities, dailyBudget),
+    [activities, dailyBudget],
+  );
+  const previewPoints = useMemo(() => {
+    const parsedDuration = Number.parseInt(durationMinutes, 10);
+
+    if (!Number.isFinite(parsedDuration) || parsedDuration <= 0) {
+      return null;
+    }
+
+    return deriveActivityEnergyPoints({
+      durationMinutes: parsedDuration,
+      impactLevel,
+      status: "planned",
+    });
+  }, [durationMinutes, impactLevel]);
+  const previewMeter = useMemo(() => {
+    if (previewPoints === null) {
+      return null;
+    }
+
+    return calculatePlanningMeterSnapshot(
+      [
+        ...activities,
+        {
+          durationMinutes: Number.parseInt(durationMinutes, 10),
+          impactLevel,
+          status: "planned",
+        } as ActivityRecord,
+      ],
+      dailyBudget,
+    );
+  }, [activities, dailyBudget, durationMinutes, impactLevel, previewPoints]);
 
   return (
     <form action={formAction} className="space-y-6" aria-busy={isPending}>
@@ -148,6 +185,23 @@ export function ActivityForm({ categories }: ActivityFormProps) {
 
           <Separator />
 
+          <Card className="rounded-[1.5rem] border border-border/60 bg-background/80 py-0 shadow-none">
+            <CardContent className="space-y-2 py-5">
+              <p className="text-sm font-semibold text-slate-900">Vooruitblik op de meter</p>
+              <p className="text-sm leading-7 text-muted-foreground">
+                {previewPoints === null
+                  ? "Kies een geldige duur en impact om te zien hoeveel punten deze activiteit ongeveer toevoegt."
+                  : `Deze activiteit telt voorlopig voor ${previewPoints} punten. Je totaal zou dan uitkomen op ${previewMeter?.plannedPoints ?? currentMeter.plannedPoints} geplande punten.`}
+              </p>
+              {dailyBudget !== null && previewMeter ? (
+                <p className="text-sm leading-7 text-slate-700">
+                  Dat is {previewMeter.dailyBudget} punten budget, met daarna nog{" "}
+                  <strong>{previewMeter.remainingBudget} punten ruimte</strong>.
+                </p>
+              ) : null}
+            </CardContent>
+          </Card>
+
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-3">
               <div className="space-y-1">
@@ -244,7 +298,7 @@ export function ActivityForm({ categories }: ActivityFormProps) {
         <p className="text-sm leading-7 text-muted-foreground">
           {isPending
             ? "Je activiteit wordt opgeslagen..."
-            : "Je activiteit wordt vandaag toegevoegd met status `gepland`."}
+            : "Je activiteit wordt vandaag toegevoegd met status `gepland`, waarna de meter direct opnieuw wordt berekend."}
         </p>
 
         <Button

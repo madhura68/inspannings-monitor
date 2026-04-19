@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/auth-actions";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
 import { ActivityForm } from "@/components/planning/activity-form";
+import { EnergyMeterCard } from "@/components/planning/energy-meter-card";
 import { TodayActivitiesList } from "@/components/planning/today-activities-list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import { getAuthState } from "@/lib/auth/session";
 import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { getPlanningStatusToast } from "@/lib/feedback/status-messages";
 import { getPlanningPageDataForCurrentUser } from "@/lib/planning/service";
+import { calculatePlanningMeterSnapshot } from "@/lib/planning/meter";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { getParamValue, type PageSearchParams } from "@/lib/search-params";
 import { cn } from "@/lib/utils";
@@ -62,6 +64,10 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
     getParamValue(resolvedSearchParams, "error"),
     getParamValue(resolvedSearchParams, "status"),
   );
+  const planningMeter = calculatePlanningMeterSnapshot(
+    planningPageData.activities,
+    checkInStatus?.todayCheckIn?.dailyBudget ?? null,
+  );
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(167,201,87,0.22),_transparent_32%),linear-gradient(180deg,_#f5f4ee_0%,_#eef2e6_100%)] px-6 py-10 text-slate-900 sm:px-8">
@@ -105,7 +111,11 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
         </header>
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <ActivityForm categories={planningPageData.categories} />
+          <ActivityForm
+            categories={planningPageData.categories}
+            activities={planningPageData.activities}
+            dailyBudget={checkInStatus?.todayCheckIn?.dailyBudget ?? null}
+          />
 
           <aside className="space-y-5">
             <Card className="rounded-[1.75rem] border border-border/60 bg-card/90 py-0 shadow-[0_12px_40px_rgba(71,85,105,0.08)]">
@@ -137,6 +147,8 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
               </CardContent>
             </Card>
 
+            <EnergyMeterCard meter={planningMeter} />
+
             <Card className="rounded-[1.75rem] border border-primary/15 bg-primary py-0 text-primary-foreground shadow-[0_12px_40px_rgba(22,58,43,0.18)]">
               <CardHeader className="pb-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
@@ -145,8 +157,8 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
               </CardHeader>
               <CardContent className="space-y-3 pb-6 text-sm leading-7 text-primary-foreground/90">
                 <p>Deze planning blokkeert je niet en geeft nog geen harde waarschuwingen.</p>
-                <p>Je legt nu alleen vast wat je wilt doen, hoe lang het duurt en hoe zwaar het voelt.</p>
-                <p>De meter en budgetfeedback volgen in `ST-304`.</p>
+                <p>Je meter gebruikt een eenvoudige, uitlegbare afleiding uit duur en impact.</p>
+                <p>Niet-blokkerende overschrijdingsfeedback volgt in `ST-305`.</p>
               </CardContent>
             </Card>
           </aside>
