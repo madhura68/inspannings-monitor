@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ActivityIcon, InfoIcon, Settings2Icon } from "lucide-react";
+import {
+  ActivityIcon,
+  ClipboardCheckIcon,
+  InfoIcon,
+  LayoutDashboardIcon,
+} from "lucide-react";
 import type { AuthState } from "@/lib/auth/session";
 import { AccountMenu } from "@/components/navigation/account-menu";
 import { ThemeMenu } from "@/components/navigation/theme-menu";
@@ -15,14 +20,19 @@ const primaryNavItems = [
     icon: InfoIcon,
   },
   {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboardIcon,
+  },
+  {
     href: "/planning",
     label: "Planning",
     icon: ActivityIcon,
   },
   {
-    href: "/settings",
-    label: "Instellingen",
-    icon: Settings2Icon,
+    href: "/check-in",
+    label: "Check-in",
+    icon: ClipboardCheckIcon,
   },
 ] as const;
 
@@ -69,7 +79,7 @@ export function TopNav({ authState }: TopNavProps) {
                 className={cn(
                   "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-[var(--shadow-1)]"
+                    ? "bg-primary !text-white shadow-[var(--shadow-1)] [&_svg]:!text-white"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )}
               >

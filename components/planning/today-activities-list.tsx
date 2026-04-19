@@ -91,7 +91,7 @@ function formatSourceLabel(value: ActivityRecord["source"]) {
 
 function getSourceBadgeClassName(value: ActivityRecord["source"]) {
   if (value === "ad_hoc") {
-    return "bg-primary text-primary-foreground";
+    return "bg-primary !text-white";
   }
 
   return "bg-muted text-muted-foreground";

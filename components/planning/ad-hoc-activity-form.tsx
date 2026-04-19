@@ -212,7 +212,7 @@ export function AdHocActivityForm({
                     className={cn(
                       "rounded-[1.25rem] border px-4 py-4 text-left transition",
                       isSelected
-                        ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-2)]"
+                        ? "border-primary bg-primary !text-white shadow-[var(--shadow-2)]"
                         : "border-border/60 bg-background/80 text-foreground hover:border-primary/35",
                       isPending && "pointer-events-none opacity-70",
                     )}
@@ -221,7 +221,7 @@ export function AdHocActivityForm({
                     <span
                       className={cn(
                         "mt-2 block text-sm leading-6",
-                        isSelected ? "text-primary-foreground/85" : "text-muted-foreground",
+                        isSelected ? "!text-white/85" : "text-muted-foreground",
                       )}
                     >
                       {option.description}

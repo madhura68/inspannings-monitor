@@ -9,19 +9,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[var(--shadow-1)] hover:bg-primary/90 hover:shadow-[var(--shadow-2)] [a]:hover:bg-primary/90",
+          "bg-primary !text-white shadow-[var(--shadow-1)] hover:bg-primary/90 hover:shadow-[var(--shadow-2)] [a]:hover:bg-primary/90 [&_svg]:!text-white",
         outline:
           "border-border bg-background/88 hover:bg-muted hover:text-foreground hover:shadow-[var(--shadow-1)] aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground shadow-[var(--shadow-1)] hover:bg-secondary/85 hover:shadow-[var(--shadow-2)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         success:
-          "bg-success text-primary-foreground shadow-[var(--shadow-1)] hover:brightness-[0.98] hover:shadow-[var(--shadow-2)]",
+          "bg-success !text-white shadow-[var(--shadow-1)] hover:brightness-[0.98] hover:shadow-[var(--shadow-2)] [&_svg]:!text-white",
         warning:
           "bg-warning text-foreground shadow-[var(--shadow-1)] hover:brightness-[0.98] hover:shadow-[var(--shadow-2)]",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
         destructive:
-          "bg-destructive text-primary-foreground shadow-[var(--shadow-1)] hover:brightness-[0.98] hover:shadow-[var(--shadow-2)] focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "bg-destructive !text-white shadow-[var(--shadow-1)] hover:brightness-[0.98] hover:shadow-[var(--shadow-2)] focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 [&_svg]:!text-white",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

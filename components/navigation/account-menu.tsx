@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { CircleUserRoundIcon, LayoutDashboardIcon, LogInIcon, LogOutIcon, UserPlusIcon } from "lucide-react";
+import {
+  CircleUserRoundIcon,
+  LogInIcon,
+  LogOutIcon,
+  Settings2Icon,
+  UserPlusIcon,
+} from "lucide-react";
 import { signOutAction } from "@/app/auth-actions";
 import type { AuthState } from "@/lib/auth/session";
 import {
@@ -33,16 +39,10 @@ export function AccountMenu({ authState }: AccountMenuProps) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                render={<Link href="/dashboard" />}
+                render={<Link href="/settings" />}
               >
-                <LayoutDashboardIcon className="size-4" />
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                render={<Link href="/check-in" />}
-              >
-                <LogInIcon className="size-4" />
-                Check-in
+                <Settings2Icon className="size-4" />
+                Instellingen
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <form action={signOutAction}>
