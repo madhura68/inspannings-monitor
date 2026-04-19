@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
@@ -41,11 +42,11 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   );
 
   return (
-    <main className="app-page">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
         <OnboardingFlow profileBundle={profileBundle} />
       </div>
-    </main>
+    </AppShell>
   );
 }

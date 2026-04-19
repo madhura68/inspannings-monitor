@@ -99,6 +99,18 @@ De actuele visuele richting is `Dusk`: warme paper-achtergronden, gedempte indig
 als primaire kleur, dark mode als standaard en semantische `success`/`warning`
 tokens voor rustige, niet-medische feedback.
 
+## Navigatie
+
+De app gebruikt nu een gedeelde topnavigatie:
+
+- links: `About`, `Planning`, `Instellingen`
+- rechts: `Account` en `Theme`
+
+`/` is de publieke `About`-pagina met informatie over de maker en de scope van
+de app. In het `Account`-menu komen ingelogde gebruikers bij `Dashboard`,
+`Check-in` en `Uitloggen`; uitgelogde gebruikers zien daar `Inloggen` en
+`Account aanmaken`.
+
 ## Interne wizard-test
 
 Er is een interne testwizard beschikbaar op `/wizard-test` om een toekomstige

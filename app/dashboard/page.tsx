@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOutAction } from "@/app/auth-actions";
 import { CheckInCard } from "@/components/check-in/check-in-card";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
+import { PageIntro } from "@/components/navigation/page-intro";
 import { EnergyMeterCard } from "@/components/planning/energy-meter-card";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,7 +21,6 @@ import { getTodayActivitiesForCurrentUser } from "@/lib/planning/service";
 import { calculatePlanningMeterSnapshot } from "@/lib/planning/meter";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { getParamValue, type PageSearchParams } from "@/lib/search-params";
-import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -77,62 +76,25 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   );
 
   return (
-    <main className="app-page">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
         <StatusToastBridge toast={statusToast} />
 
-        <header className="app-page-header">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              Protected route
-            </p>
-            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
-              Dashboard placeholder voor release 1
-            </h1>
-            <p className="app-page-copy">
-              Je sessie is server-side gevalideerd en het minimale profielbundle is
-              nu beschikbaar. Daarmee staat de fundering voor onboarding, settings
-              en de eerste energieflows klaar.
-            </p>
-          </div>
-
-          <form action={signOutAction}>
-            <div className="flex flex-wrap items-center gap-3">
+        <PageIntro
+          eyebrow="Dashboard"
+          title="Je huidige dagstatus"
+          description="Hier zie je in één overzicht je profielbasis, ochtendcheck-in, planningstatus en huidige energiemeter voor vandaag."
+          aside={
+            isTestWizardEnabled() ? (
               <Link
-                href="/settings"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "h-11 rounded-full px-5",
-                )}
+                href="/wizard-test"
+                className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
               >
-                Instellingen
+                Test wizard
               </Link>
-              <Link
-                href="/planning"
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "h-11 rounded-full px-5",
-                )}
-              >
-                Dagplanning
-              </Link>
-              {isTestWizardEnabled() ? (
-                <Link
-                  href="/wizard-test"
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "lg" }),
-                    "h-11 rounded-full px-5",
-                  )}
-                >
-                  Test wizard
-                </Link>
-              ) : null}
-              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-                Uitloggen
-              </Button>
-            </div>
-          </form>
-        </header>
+            ) : null
+          }
+        />
 
         <section className="grid gap-5 md:grid-cols-3">
           <Card className="py-0">
@@ -214,13 +176,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 Plan kleine, concrete activiteiten voor vandaag en bouw daarna verder op budgetfeedback en evaluatie.
               </CardDescription>
               <div className="mt-4">
-                <Link
-                  href="/planning"
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "lg" }),
-                    "h-11 rounded-full px-5",
-                  )}
-                >
+                <Link href="/planning" className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary">
                   Open dagplanning
                 </Link>
               </div>
@@ -256,15 +212,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                   en eerste voorkeuren vast te leggen.
                 </p>
               </div>
-              <Link
-                href="/onboarding"
-                className={cn(
-                  buttonVariants({ variant: "warning", size: "lg" }),
-                  "h-11 shrink-0 rounded-full px-5",
-                )}
-              >
-                Rond onboarding af
-              </Link>
+                <Link href="/onboarding" className="inline-flex items-center rounded-full bg-warning px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:brightness-[0.98]">
+                  Rond onboarding af
+                </Link>
             </CardContent>
           </Card>
         ) : (
@@ -277,19 +227,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                   timezone en zichtbaarheid van punten later zelfstandig kunt aanpassen.
                 </p>
               </div>
-              <Link
-                href="/settings"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "lg" }),
-                  "h-11 shrink-0 rounded-full px-5",
-                )}
-              >
-                Open instellingen
-              </Link>
-            </CardContent>
-          </Card>
-        )}
+                <Link href="/settings" className="inline-flex items-center rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground shadow-[var(--shadow-1)] transition-colors hover:brightness-[0.98]">
+                  Open instellingen
+                </Link>
+              </CardContent>
+            </Card>
+          )}
       </div>
-    </main>
+    </AppShell>
   );
 }

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOutAction } from "@/app/auth-actions";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
+import { PageIntro } from "@/components/navigation/page-intro";
 import { ActivityForm } from "@/components/planning/activity-form";
 import { EnergyMeterCard } from "@/components/planning/energy-meter-card";
 import { TodayActivitiesList } from "@/components/planning/today-activities-list";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,7 +21,6 @@ import { getPlanningPageDataForCurrentUser } from "@/lib/planning/service";
 import { calculatePlanningMeterSnapshot } from "@/lib/planning/meter";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { getParamValue, type PageSearchParams } from "@/lib/search-params";
-import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -70,45 +69,23 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
   );
 
   return (
-    <main className="app-page">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
-        <header className="app-page-header">
-          <div>
-            <div className="app-page-breadcrumb">
-              <Link href="/dashboard" className="app-page-link">
-                Dashboard
-              </Link>
-              <span>/</span>
-              <span>Dagplanning</span>
-            </div>
-            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
-              Plan vandaag bewust klein
-            </h1>
-            <p className="app-page-copy">
-              Voeg alleen activiteiten toe die vandaag echt relevant zijn. Houd de lijst licht,
-              zodat je later goed kunt bijsturen zonder druk op te bouwen.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
+        <PageIntro
+          eyebrow="Planning"
+          title="Plan vandaag bewust klein"
+          description="Voeg alleen activiteiten toe die vandaag echt relevant zijn. Houd de lijst licht, zodat je later goed kunt bijsturen zonder druk op te bouwen."
+          aside={
             <Link
               href="/dashboard"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "h-11 rounded-full px-5",
-              )}
+              className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
             >
               Terug naar dashboard
             </Link>
-            <form action={signOutAction}>
-              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-                Uitloggen
-              </Button>
-            </form>
-          </div>
-        </header>
+          }
+        />
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <ActivityForm
@@ -158,7 +135,7 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
               <CardContent className="space-y-3 pb-6 text-sm leading-7 text-primary-foreground/90">
                 <p>Deze planning blokkeert je niet en geeft nog geen harde waarschuwingen.</p>
                 <p>Je meter gebruikt een eenvoudige, uitlegbare afleiding uit duur en impact.</p>
-                <p>Niet-blokkerende overschrijdingsfeedback volgt in `ST-305`.</p>
+                <p>Bij overschrijding krijg je nu een warme, niet-blokkerende waarschuwing in plaats van een harde blokkade.</p>
               </CardContent>
             </Card>
           </aside>
@@ -169,6 +146,6 @@ export default async function PlanningPage({ searchParams }: PlanningPageProps) 
           categories={planningPageData.categories}
         />
       </div>
-    </main>
+    </AppShell>
   );
 }

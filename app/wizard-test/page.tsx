@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { AppShell } from "@/components/navigation/app-shell";
 import { TestWizardFlow } from "@/components/wizard/test-wizard-flow";
 import { sanitizeNextPath } from "@/lib/auth/navigation";
 import { getAuthState } from "@/lib/auth/session";
@@ -22,10 +23,10 @@ export default async function WizardTestPage() {
   }
 
   return (
-    <main className="app-page">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
         <TestWizardFlow />
       </div>
-    </main>
+    </AppShell>
   );
 }

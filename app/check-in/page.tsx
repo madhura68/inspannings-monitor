@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { signOutAction } from "@/app/auth-actions";
 import { StatusToastBridge } from "@/components/feedback/status-toast-bridge";
+import { AppShell } from "@/components/navigation/app-shell";
+import { PageIntro } from "@/components/navigation/page-intro";
 import { CheckInForm } from "@/components/check-in/check-in-form";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,7 +18,6 @@ import { getTodayCheckInForCurrentUser } from "@/lib/check-in/service";
 import { getCheckInStatusToast } from "@/lib/feedback/status-messages";
 import { getProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { getParamValue, type PageSearchParams } from "@/lib/search-params";
-import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -55,45 +54,23 @@ export default async function CheckInPage({ searchParams }: CheckInPageProps) {
   );
 
   return (
-    <main className="app-page">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+    <AppShell contentClassName="space-y-8">
+      <div className="space-y-8">
         <StatusToastBridge toast={statusToast} paramKeys={["error", "status"]} />
 
-        <header className="app-page-header">
-          <div>
-            <div className="app-page-breadcrumb">
-              <Link href="/dashboard" className="app-page-link">
-                Dashboard
-              </Link>
-              <span>/</span>
-              <span>Ochtendcheck-in</span>
-            </div>
-            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight">
-              Ochtendcheck-in van vandaag
-            </h1>
-            <p className="app-page-copy">
-              Houd je start rustig en klein. Je legt alleen een energiescore en een
-              globale slaapindruk vast voor vandaag.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
+        <PageIntro
+          eyebrow="Check-in"
+          title="Ochtendcheck-in van vandaag"
+          description="Houd je start rustig en klein. Je legt alleen een energiescore en een globale slaapindruk vast voor vandaag."
+          aside={
             <Link
               href="/dashboard"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "h-11 rounded-full px-5",
-              )}
+              className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
             >
               Terug naar dashboard
             </Link>
-            <form action={signOutAction}>
-              <Button type="submit" size="lg" className="h-11 rounded-full px-5">
-                Uitloggen
-              </Button>
-            </form>
-          </div>
-        </header>
+          }
+        />
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <CheckInForm todayCheckIn={checkInStatus?.todayCheckIn ?? null} />
@@ -138,6 +115,6 @@ export default async function CheckInPage({ searchParams }: CheckInPageProps) {
           </aside>
         </section>
       </div>
-    </main>
+    </AppShell>
   );
 }
