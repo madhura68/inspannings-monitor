@@ -5,8 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ActivityStatusActions } from "@/components/planning/activity-status-actions";
 import { deriveActivityEnergyPoints } from "@/lib/planning/meter";
 import type { ActivityCategory, ActivityRecord } from "@/lib/planning/types";
+import { cn } from "@/lib/utils";
 
 type TodayActivitiesListProps = {
   activities: ActivityRecord[];
@@ -39,6 +41,38 @@ function formatPriorityLabel(value: ActivityRecord["priorityLevel"]) {
   }
 
   return "Normaal";
+}
+
+function formatStatusLabel(value: ActivityRecord["status"]) {
+  if (value === "completed") {
+    return "Uitgevoerd";
+  }
+
+  if (value === "skipped") {
+    return "Overgeslagen";
+  }
+
+  if (value === "adjusted") {
+    return "Aangepast";
+  }
+
+  return "Gepland";
+}
+
+function getStatusBadgeClassName(value: ActivityRecord["status"]) {
+  if (value === "completed") {
+    return "bg-success text-primary-foreground";
+  }
+
+  if (value === "skipped") {
+    return "bg-warning text-foreground";
+  }
+
+  if (value === "adjusted") {
+    return "bg-secondary text-secondary-foreground";
+  }
+
+  return "bg-secondary text-secondary-foreground";
 }
 
 export function TodayActivitiesList({
@@ -75,8 +109,13 @@ export function TodayActivitiesList({
                     {getCategoryLabel(categories, activity.categoryId)}
                   </p>
                 </div>
-                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-secondary-foreground">
-                  Gepland
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em]",
+                    getStatusBadgeClassName(activity.status),
+                  )}
+                >
+                  {formatStatusLabel(activity.status)}
                 </span>
               </div>
 
@@ -94,6 +133,13 @@ export function TodayActivitiesList({
                   <strong>Punten:</strong>{" "}
                   {deriveActivityEnergyPoints(activity)}
                 </p>
+              </div>
+
+              <div className="mt-5 border-t border-border/60 pt-4">
+                <ActivityStatusActions
+                  activityId={activity.id}
+                  status={activity.status}
+                />
               </div>
             </div>
           ))

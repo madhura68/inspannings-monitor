@@ -5,9 +5,16 @@ import { buildPathWithQuery } from "@/lib/auth/navigation";
 import {
   ACTIVITY_IMPACT_LEVEL_VALUES,
   ACTIVITY_PRIORITY_LEVEL_VALUES,
+  ACTIVITY_STATUS_VALUES,
 } from "@/lib/planning/options";
-import { createActivityForTodayForCurrentUser } from "@/lib/planning/service";
-import type { CreateActivitySubmission } from "@/lib/planning/types";
+import {
+  createActivityForTodayForCurrentUser,
+  updateActivityStatusForTodayForCurrentUser,
+} from "@/lib/planning/service";
+import type {
+  CreateActivitySubmission,
+  UpdateActivityStatusSubmission,
+} from "@/lib/planning/types";
 import {
   assertMaxLength,
   FormDataValidationError,
@@ -48,6 +55,20 @@ function buildCreateActivitySubmission(formData: FormData): CreateActivitySubmis
   };
 }
 
+function buildUpdateActivityStatusSubmission(
+  formData: FormData,
+): UpdateActivityStatusSubmission {
+  return {
+    activityId: getUuidValue(formData, "activityId", "invalid-activity-status"),
+    status: getEnumValue(
+      formData,
+      "status",
+      ACTIVITY_STATUS_VALUES,
+      "invalid-activity-status",
+    ),
+  };
+}
+
 export async function createActivityAction(
   _previousState: null,
   formData: FormData,
@@ -67,5 +88,29 @@ export async function createActivityAction(
   }
 
   redirect(buildPathWithQuery("/planning", { status: "activity-saved" }));
+  return null;
+}
+
+export async function updateActivityStatusAction(
+  _previousState: null,
+  formData: FormData,
+): Promise<null> {
+  try {
+    await updateActivityStatusForTodayForCurrentUser(
+      buildUpdateActivityStatusSubmission(formData),
+    );
+  } catch (error) {
+    if (error instanceof FormDataValidationError) {
+      redirect(buildPathWithQuery("/planning", { error: error.code }));
+    }
+
+    if (error instanceof Error && error.message === "Ongeldige of niet-beschikbare activiteit.") {
+      redirect(buildPathWithQuery("/planning", { error: "invalid-activity-status" }));
+    }
+
+    redirect(buildPathWithQuery("/planning", { error: "activity-status-failed" }));
+  }
+
+  redirect(buildPathWithQuery("/planning", { status: "activity-status-saved" }));
   return null;
 }

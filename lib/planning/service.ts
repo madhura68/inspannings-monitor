@@ -10,6 +10,7 @@ import type {
   ActivitiesForDateStatus,
   ActivityStatus,
   SkipReason,
+  UpdateActivityStatusSubmission,
 } from "@/lib/planning/types";
 import { ensureProfileBundleForCurrentUser } from "@/lib/profile/service";
 import { createClient } from "@/lib/supabase/server";
@@ -299,6 +300,46 @@ export async function createActivityForTodayForCurrentUser(
 
   if (error) {
     throw new Error(`Activiteit kon niet worden opgeslagen: ${error.message}`);
+  }
+
+  return mapActivityRow(data);
+}
+
+export async function updateActivityStatusForTodayForCurrentUser(
+  submission: UpdateActivityStatusSubmission,
+): Promise<ActivityRecord> {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
+    throw new Error("Er is geen ingelogde gebruiker beschikbaar.");
+  }
+
+  const profileBundle = await ensureProfileBundleForCurrentUser();
+
+  if (!profileBundle) {
+    throw new Error("Profielbundle ontbreekt voor de huidige gebruiker.");
+  }
+
+  const activityDate = getLocalDateForTimezone(profileBundle.profile.timezone);
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("activities")
+    .update({
+      status: submission.status,
+    })
+    .eq("id", submission.activityId)
+    .eq("user_id", user.id)
+    .eq("activity_date", activityDate)
+    .select(ACTIVITY_COLUMNS)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Activiteitstatus kon niet worden opgeslagen: ${error.message}`);
+  }
+
+  if (!data) {
+    throw new Error("Ongeldige of niet-beschikbare activiteit.");
   }
 
   return mapActivityRow(data);

@@ -53,6 +53,11 @@ export type CreateActivitySubmission = {
   priorityLevel: ActivityPriorityLevel;
 };
 
+export type UpdateActivityStatusSubmission = {
+  activityId: string;
+  status: ActivityStatus;
+};
+
 export type ActivitiesForDateStatus = {
   timezone: string;
   activityDate: string;

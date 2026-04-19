@@ -69,6 +69,11 @@ const planningStatusToasts: Record<string, StatusToast> = {
     title: "Activiteit gepland",
     message: "Je activiteit staat nu in je dagplanning van vandaag.",
   },
+  "activity-status-saved": {
+    variant: "success",
+    title: "Activiteit bijgewerkt",
+    message: "De status van je activiteit is opgeslagen.",
+  },
 };
 
 const planningErrorToasts: Record<string, StatusToast> = {
@@ -77,6 +82,16 @@ const planningErrorToasts: Record<string, StatusToast> = {
     title: "Activiteit niet opgeslagen",
     message:
       "Controleer naam, categorie, duur, impact en prioriteit en probeer het opnieuw.",
+  },
+  "invalid-activity-status": {
+    variant: "error",
+    title: "Status niet opgeslagen",
+    message: "De gekozen activiteit of status is ongeldig voor vandaag.",
+  },
+  "activity-status-failed": {
+    variant: "error",
+    title: "Status niet opgeslagen",
+    message: "De activiteitstatus kon niet worden bijgewerkt. Probeer het opnieuw.",
   },
 };
 
