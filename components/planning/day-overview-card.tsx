@@ -50,7 +50,7 @@ function getStatusAccentClassName(key: "planned" | "completed" | "adjusted" | "s
 
 export function DayOverviewCard({ overview }: DayOverviewCardProps) {
   return (
-    <Card className="py-0">
+    <Card className="pb-0">
       <CardHeader className="pb-0">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
           Dagoverzicht
@@ -62,7 +62,7 @@ export function DayOverviewCard({ overview }: DayOverviewCardProps) {
       </CardHeader>
       <CardContent className="space-y-5 pb-6">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <Card tone="subtle" size="sm" className="py-0">
+          <Card tone="subtle" size="sm" className="pb-0">
             <CardContent className="space-y-1 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Vooraf gepland
@@ -76,7 +76,7 @@ export function DayOverviewCard({ overview }: DayOverviewCardProps) {
             </CardContent>
           </Card>
 
-          <Card tone="subtle" size="sm" className="py-0">
+          <Card tone="subtle" size="sm" className="pb-0">
             <CardContent className="space-y-1 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Werkelijk gedaan
@@ -90,7 +90,7 @@ export function DayOverviewCard({ overview }: DayOverviewCardProps) {
             </CardContent>
           </Card>
 
-          <Card tone="subtle" size="sm" className="py-0">
+          <Card tone="subtle" size="sm" className="pb-0">
             <CardContent className="space-y-1 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Ongepland erbij
@@ -104,7 +104,7 @@ export function DayOverviewCard({ overview }: DayOverviewCardProps) {
             </CardContent>
           </Card>
 
-          <Card tone="subtle" size="sm" className="py-0">
+          <Card tone="subtle" size="sm" className="pb-0">
             <CardContent className="space-y-1 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Nog open
@@ -151,7 +151,7 @@ export function DayOverviewCard({ overview }: DayOverviewCardProps) {
                 )}
               >
                 {item.label}
-                <span className="rounded-full bg-black/12 px-1.5 py-0.5 text-[0.7rem] font-semibold text-current">
+                <span className="rounded-full bg-black/12 px-1.5 pb-0.5 text-[0.7rem] font-semibold text-current">
                   {item.value}
                 </span>
               </span>

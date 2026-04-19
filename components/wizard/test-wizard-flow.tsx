@@ -129,7 +129,7 @@ export function TestWizardFlow() {
       backAction={backAction}
       nextAction={nextAction}
     >
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardHeader className="pb-0">
           <CardTitle className="font-[family-name:var(--font-display)] text-2xl">
             {wizard.currentStep.title}

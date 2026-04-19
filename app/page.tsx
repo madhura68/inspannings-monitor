@@ -74,7 +74,7 @@ export default async function Home({ searchParams }: HomePageProps) {
         />
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <Card elevation="raised" className="py-0">
+          <Card elevation="raised" className="pb-0">
             <CardContent className="p-6 sm:p-8">
               <p className="mb-5 max-w-2xl text-lg leading-8 text-muted-foreground">
                 Deze app wordt ontwikkeld door Jan Peter Visser als compacte dagtool
@@ -84,7 +84,7 @@ export default async function Home({ searchParams }: HomePageProps) {
               </p>
               <div className="grid gap-4">
                 {makerNotes.map((note) => (
-                  <Card key={note} tone="subtle" className="py-0 shadow-none">
+                  <Card key={note} tone="subtle" className="pb-0 shadow-none">
                     <CardContent className="px-5 py-4 text-sm leading-7 text-muted-foreground">
                       {note}
                     </CardContent>
@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: HomePageProps) {
             </CardContent>
           </Card>
 
-          <Card tone="primary" elevation="raised" className="py-0">
+          <Card tone="primary" elevation="raised" className="pb-0">
             <CardHeader className="px-6 pt-7 sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
                 Specificaties van de app
@@ -104,7 +104,7 @@ export default async function Home({ searchParams }: HomePageProps) {
               {appSpecs.map((item) => (
                 <Card
                   key={item}
-                  className="rounded-[var(--radius-2xl)] border-white/10 bg-white/8 py-0 text-primary-foreground shadow-none"
+                  className="rounded-[var(--radius-2xl)] border-white/10 bg-white/8 pb-0 text-primary-foreground shadow-none"
                 >
                   <CardContent className="px-4 py-3 text-sm leading-7">{item}</CardContent>
                 </Card>
@@ -117,7 +117,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           </Card>
         </section>
 
-        <Card elevation="raised" className="py-0">
+        <Card elevation="raised" className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Dagflow
@@ -126,7 +126,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           </CardHeader>
           <CardContent className="grid gap-5 p-6 md:grid-cols-3">
             {productLoop.map((step, index) => (
-              <Card key={step.title} tone="subtle" className="py-0 shadow-none">
+              <Card key={step.title} tone="subtle" className="pb-0 shadow-none">
                 <CardHeader className="pb-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
                     Stap {index + 1}
@@ -145,7 +145,7 @@ export default async function Home({ searchParams }: HomePageProps) {
           </CardContent>
         </Card>
 
-        <Card tone="subtle" className="py-0 backdrop-blur">
+        <Card tone="subtle" className="pb-0 backdrop-blur">
           <CardContent className="grid gap-5 p-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">

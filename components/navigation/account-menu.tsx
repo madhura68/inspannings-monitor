@@ -28,7 +28,7 @@ export function AccountMenu({ authState }: AccountMenuProps) {
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Account menu">
         <CircleUserRoundIcon className="size-4" />
-        Account
+        <span className="hidden sm:inline">Account</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {authState.isConfigured ? (

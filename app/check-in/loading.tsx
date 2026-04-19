@@ -21,7 +21,7 @@ export default function CheckInLoading() {
           </div>
 
           <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <Card className="py-0">
+            <Card className="pb-0">
               <CardContent className="space-y-5 pb-6 pt-4">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-8 w-full" />
@@ -36,7 +36,7 @@ export default function CheckInLoading() {
             </Card>
 
             <div className="space-y-5">
-              <Card className="py-0">
+              <Card className="pb-0">
                 <CardHeader className="pb-0">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="mt-1 h-5 w-48" />
@@ -46,7 +46,7 @@ export default function CheckInLoading() {
                   <Skeleton className="mt-1.5 h-4 w-3/4" />
                 </CardContent>
               </Card>
-              <Card className="py-0">
+              <Card className="pb-0">
                 <CardHeader className="pb-0">
                   <Skeleton className="h-3 w-24" />
                 </CardHeader>

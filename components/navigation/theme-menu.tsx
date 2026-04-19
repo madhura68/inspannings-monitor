@@ -24,7 +24,7 @@ export function ThemeMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Thema kiezen">
         <MonitorCogIcon className="size-4" />
-        Theme
+        <span className="hidden sm:inline">Theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Weergave</DropdownMenuLabel>

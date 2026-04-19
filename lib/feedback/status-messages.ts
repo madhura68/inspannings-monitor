@@ -37,6 +37,11 @@ const settingsStatusToasts: Record<string, StatusToast> = {
     title: "Instellingen opgeslagen",
     message: "Je voorkeuren zijn bijgewerkt.",
   },
+  "avatar-saved": {
+    variant: "success",
+    title: "Profielfoto opgeslagen",
+    message: "Je profiel gebruikt nu direct de nieuwe, verkleinde afbeelding.",
+  },
 };
 
 const settingsErrorToasts: Record<string, StatusToast> = {
@@ -48,7 +53,8 @@ const settingsErrorToasts: Record<string, StatusToast> = {
   "invalid-avatar-file": {
     variant: "error",
     title: "Profielfoto niet opgeslagen",
-    message: "Gebruik een JPG, PNG of WebP-bestand tot 2 MB en probeer het opnieuw.",
+    message:
+      "Gebruik een JPG, PNG of WebP-bestand. Grote foto's worden automatisch verkleind voordat ze worden opgeslagen.",
   },
 };
 

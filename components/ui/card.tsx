@@ -4,12 +4,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const cardVariants = cva(
-  "group/card flex flex-col gap-4 overflow-hidden rounded-[var(--radius-xl)] py-4 text-sm text-card-foreground ring-1 ring-border/75 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-[var(--radius-xl)] *:[img:last-child]:rounded-b-[var(--radius-xl)]",
+  "group/card flex flex-col gap-4 overflow-hidden rounded-[var(--radius-xl)] py-4 text-sm text-card-foreground ring-1 ring-outline-variant/70 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-[var(--radius-xl)] *:[img:last-child]:rounded-b-[var(--radius-xl)]",
   {
     variants: {
       tone: {
-        default: "bg-card/92",
-        subtle: "bg-background/78",
+        default: "bg-surface-container text-card-foreground",
+        subtle: "bg-surface-container-low text-card-foreground",
         primary: "bg-primary text-primary-foreground ring-primary/10",
       },
       elevation: {
@@ -64,7 +64,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "font-heading text-base leading-snug font-semibold tracking-[-0.02em] group-data-[size=sm]/card:text-sm",
+        "type-title-large font-heading group-data-[size=sm]/card:text-sm",
         className
       )}
       {...props}
@@ -76,7 +76,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("type-body-medium text-muted-foreground", className)}
       {...props}
     />
   )
@@ -110,7 +110,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center rounded-b-[var(--radius-xl)] border-t border-border/65 bg-muted/60 p-4 group-data-[size=sm]/card:p-3",
+        "flex items-center rounded-b-[var(--radius-xl)] border-t border-outline-variant/60 bg-surface-container-high p-4 group-data-[size=sm]/card:p-3",
         className
       )}
       {...props}

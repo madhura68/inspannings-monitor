@@ -21,7 +21,7 @@ export function OnboardingStepPreferences({
 }: OnboardingStepPreferencesProps) {
   return (
     <div className="space-y-4">
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardContent className="flex items-start justify-between gap-4 py-5">
           <div className="space-y-1">
             <Label className="text-sm font-semibold text-foreground">
@@ -39,7 +39,7 @@ export function OnboardingStepPreferences({
         </CardContent>
       </Card>
 
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardContent className="space-y-4 py-5">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
@@ -82,7 +82,7 @@ export function OnboardingStepPreferences({
         </CardContent>
       </Card>
 
-      <Card tone="subtle" className="py-0 shadow-none">
+      <Card tone="subtle" className="pb-0 shadow-none">
         <CardContent className="flex items-start justify-between gap-4 py-5">
           <div className="space-y-1">
             <Label className="text-sm font-semibold text-foreground">

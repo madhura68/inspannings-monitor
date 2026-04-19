@@ -50,3 +50,8 @@ export type SettingsSubmission = {
   reflectionReminderEnabled: boolean;
   showEnergyPoints: boolean;
 };
+
+export type AvatarUploadActionState = {
+  status: "idle" | "success" | "error";
+  code?: string;
+};

@@ -1,7 +1,14 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { saveSettingsAction } from "@/app/settings/actions";
+import type { ChangeEvent } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  saveSettingsAction,
+  uploadAvatarAction,
+} from "@/app/settings/actions";
+import { showStatusToast } from "@/lib/feedback/toast";
+import { getSettingsStatusToast } from "@/lib/feedback/status-messages";
 import { PreferenceHiddenFields } from "@/components/preferences/preference-hidden-fields";
 import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -26,9 +33,15 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ONBOARDING_TIMEZONE_OPTIONS } from "@/lib/onboarding/options";
-import { PROFILE_AVATAR_MAX_BYTES } from "@/lib/profile/avatar";
+import {
+  PROFILE_AVATAR_MAX_DIMENSION,
+  PROFILE_AVATAR_UPLOAD_MAX_BYTES,
+} from "@/lib/profile/avatar";
 import { usePreferenceDraft } from "@/lib/preferences/use-preferences-draft";
-import type { ProfileBundle } from "@/lib/profile/types";
+import type {
+  AvatarUploadActionState,
+  ProfileBundle,
+} from "@/lib/profile/types";
 
 type SettingsFormProps = {
   profileBundle: ProfileBundle;
@@ -41,29 +54,192 @@ const LOCALE_OPTIONS = [
   },
 ] as const;
 
+const INITIAL_AVATAR_UPLOAD_STATE: AvatarUploadActionState = {
+  status: "idle",
+};
+
 export function SettingsForm({ profileBundle }: SettingsFormProps) {
   const [, formAction, isPending] = useActionState(saveSettingsAction, null);
+  const [avatarState, avatarFormAction, isAvatarPending] = useActionState(
+    uploadAvatarAction,
+    INITIAL_AVATAR_UPLOAD_STATE,
+  );
   const [locale, setLocale] = useState(profileBundle.profile.locale);
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
+  const [hasPendingAvatar, setHasPendingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
   const { draft, updateDraft } = usePreferenceDraft(profileBundle);
-  const avatarLimitInMb = PROFILE_AVATAR_MAX_BYTES / (1024 * 1024);
+  const avatarLimitInMb = PROFILE_AVATAR_UPLOAD_MAX_BYTES / (1024 * 1024);
   const profileTitle =
     profileBundle.profile.displayName ??
     profileBundle.profile.email ??
     "Ingelogde gebruiker";
 
-  return (
-    <form
-      action={formAction}
-      className="space-y-6"
-      aria-busy={isPending}
-    >
-      <input type="hidden" name="locale" value={locale} />
-      <PreferenceHiddenFields draft={draft} />
+  useEffect(() => {
+    return () => {
+      if (avatarPreviewUrl) {
+        URL.revokeObjectURL(avatarPreviewUrl);
+      }
+    };
+  }, [avatarPreviewUrl]);
 
-      <Card elevation="raised" className="py-0">
-        <CardHeader className="pb-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            Account
+  useEffect(() => {
+    if (avatarState.status === "idle" || !avatarState.code) {
+      return;
+    }
+
+    const toast = getSettingsStatusToast(
+      avatarState.status === "error" ? avatarState.code : null,
+      avatarState.status === "success" ? avatarState.code : null,
+    );
+
+    if (toast) {
+      showStatusToast(toast);
+    }
+
+    if (avatarState.status === "success") {
+      router.refresh();
+    }
+  }, [avatarState, router]);
+
+  function handleAvatarChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0] ?? null;
+
+    setAvatarPreviewUrl((currentValue) => {
+      if (currentValue) {
+        URL.revokeObjectURL(currentValue);
+      }
+
+      return file ? URL.createObjectURL(file) : null;
+    });
+    setHasPendingAvatar(Boolean(file));
+
+    if (file) {
+      event.currentTarget.form?.requestSubmit();
+    }
+  }
+
+  function clearAvatarSelection() {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.value = "";
+    }
+
+    setAvatarPreviewUrl((currentValue) => {
+      if (currentValue) {
+        URL.revokeObjectURL(currentValue);
+      }
+
+      return null;
+    });
+    setHasPendingAvatar(false);
+  }
+
+  return (
+    <div className="space-y-6">
+      <form action={avatarFormAction} className="space-y-6" aria-busy={isAvatarPending}>
+        <Card className="pb-0">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Profielfoto
+            </p>
+            <CardTitle className="text-2xl text-foreground">
+              Werk je foto direct bij
+            </CardTitle>
+            <CardDescription className="max-w-2xl text-sm leading-7 text-muted-foreground">
+              Kies een afbeelding en sla die meteen apart op. Grote foto&apos;s worden
+              server-side verkleind voordat ze in storage terechtkomen.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-6 pb-6 lg:grid-cols-[16rem_1fr]">
+            <Card tone="subtle" className="pb-0 shadow-none">
+              <CardContent className="flex h-full flex-col items-center gap-4 px-5 py-5 text-center">
+                <ProfileAvatar
+                  avatarUrl={avatarPreviewUrl ?? profileBundle.profile.avatarUrl}
+                  displayName={profileBundle.profile.displayName}
+                  email={profileBundle.profile.email}
+                  size="lg"
+                />
+                <div className="space-y-1">
+                  <p className="font-semibold text-foreground">{profileTitle}</p>
+                  <p className="text-sm leading-7 text-muted-foreground">
+                    {profileBundle.profile.tagline ?? "Nog geen 1-regelige introductie toegevoegd."}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-3">
+              <input
+                id="avatar"
+                ref={avatarInputRef}
+                name="avatar"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                disabled={isPending || isAvatarPending}
+                className="sr-only"
+                onChange={handleAvatarChange}
+              />
+
+              <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isPending || isAvatarPending}
+                    onClick={() => {
+                      if (avatarInputRef.current) {
+                        avatarInputRef.current.value = "";
+                        avatarInputRef.current.click();
+                      }
+                    }}
+                  >
+                    {isAvatarPending ? "Foto uploaden..." : "Kies nieuwe foto"}
+                  </Button>
+                {avatarPreviewUrl ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={isPending || isAvatarPending}
+                    onClick={clearAvatarSelection}
+                  >
+                    Wis selectie
+                  </Button>
+                ) : null}
+              </div>
+
+              <p className="text-xs leading-6 text-muted-foreground">
+                JPG, PNG of WebP tot {avatarLimitInMb} MB als bronbestand. Voor opslag
+                wordt de foto automatisch teruggebracht naar maximaal{" "}
+                {PROFILE_AVATAR_MAX_DIMENSION} × {PROFILE_AVATAR_MAX_DIMENSION} px.
+              </p>
+              <p className="text-xs leading-6 text-muted-foreground" aria-live="polite">
+                {isAvatarPending
+                  ? "Nieuwe profielfoto wordt verwerkt en opgeslagen..."
+                  : avatarState.status === "success"
+                    ? "Nieuwe profielfoto is opgeslagen en wordt nu overal ververst."
+                    : avatarState.status === "error" && avatarPreviewUrl
+                      ? "Deze foto kon niet worden opgeslagen. Kies een andere afbeelding of probeer het opnieuw."
+                      : hasPendingAvatar
+                        ? "Nieuwe profielfoto staat klaar om direct te uploaden."
+                    : "Je huidige foto blijft actief totdat je een nieuwe versie kiest."}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </form>
+
+      <form
+        action={formAction}
+        className="space-y-6"
+        aria-busy={isPending}
+      >
+        <input type="hidden" name="locale" value={locale} />
+        <PreferenceHiddenFields draft={draft} />
+
+        <Card elevation="raised" className="pb-0">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Account
           </p>
           <CardTitle className="font-[family-name:var(--font-display)] text-3xl text-foreground">
             Basisinstellingen voor jouw account
@@ -83,10 +259,10 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="py-0">
-        <CardHeader className="pb-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            Profiel
+        <Card className="pb-0">
+          <CardHeader className="pb-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+              Profiel
           </p>
           <CardTitle className="text-2xl text-foreground">
             Laat in een paar regels zien wie je bent
@@ -96,43 +272,8 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
             Dit helpt straks ook bij demo-accounts en voorbeeldgebruik.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-6 pb-6 lg:grid-cols-[16rem_1fr]">
-          <Card tone="subtle" className="py-0 shadow-none">
-            <CardContent className="flex h-full flex-col items-center gap-4 px-5 py-5 text-center">
-              <ProfileAvatar
-                avatarUrl={profileBundle.profile.avatarUrl}
-                displayName={profileBundle.profile.displayName}
-                email={profileBundle.profile.email}
-                size="lg"
-              />
-              <div className="space-y-1">
-                <p className="font-semibold text-foreground">{profileTitle}</p>
-                <p className="text-sm leading-7 text-muted-foreground">
-                  {profileBundle.profile.tagline ?? "Nog geen 1-regelige introductie toegevoegd."}
-                </p>
-              </div>
-
-              <div className="w-full space-y-2 text-left">
-                <Label htmlFor="avatar" className="text-foreground">
-                  Profielfoto
-                </Label>
-                <Input
-                  id="avatar"
-                  name="avatar"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={isPending}
-                  className="h-auto rounded-[1.25rem] bg-background/80 px-4 py-3 file:mr-3 file:rounded-full file:bg-secondary file:px-3 file:py-1.5 file:text-secondary-foreground"
-                />
-                <p className="text-xs leading-6 text-muted-foreground">
-                  JPG, PNG of WebP tot {avatarLimitInMb} MB. Een nieuw bestand vervangt je
-                  huidige foto.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid gap-5">
+          <CardContent className="pb-6">
+            <div className="grid gap-5">
             <div className="space-y-2">
               <Label htmlFor="display-name" className="text-foreground">
                 Weergavenaam
@@ -178,11 +319,11 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Taal en tijd
@@ -235,14 +376,14 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Interface
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
                   <Label htmlFor="show-energy-points" className="text-sm font-semibold text-foreground">
@@ -267,14 +408,14 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
       </section>
 
       <section className="grid gap-5 lg:grid-cols-2">
-        <Card className="py-0">
+        <Card className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
               Reminders
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pb-6">
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="space-y-4 py-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
@@ -318,7 +459,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
               </CardContent>
             </Card>
 
-            <Card tone="subtle" className="py-0 shadow-none">
+            <Card tone="subtle" className="pb-0 shadow-none">
               <CardContent className="flex items-start justify-between gap-4 py-5">
                 <div className="space-y-1">
                   <Label htmlFor="reflection-reminder-enabled" className="text-sm font-semibold text-foreground">
@@ -341,7 +482,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           </CardContent>
         </Card>
 
-        <Card tone="primary" elevation="raised" className="py-0">
+        <Card tone="primary" elevation="raised" className="pb-0">
           <CardHeader className="pb-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/75">
               Bewuste grenzen
@@ -368,6 +509,7 @@ export function SettingsForm({ profileBundle }: SettingsFormProps) {
           {isPending ? "Instellingen opslaan..." : "Instellingen opslaan"}
         </Button>
       </div>
-    </form>
+      </form>
+    </div>
   );
 }

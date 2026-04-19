@@ -47,7 +47,7 @@ export function AuthPanel({
         </section>
 
         <section className="flex items-center">
-          <Card elevation="raised" className="w-full rounded-[var(--radius-4xl)] py-0 backdrop-blur">
+          <Card elevation="raised" className="w-full rounded-[var(--radius-4xl)] pb-0 backdrop-blur">
             <CardContent className="p-6 sm:p-8">
               <div className="mb-6 flex items-center justify-between gap-3">
               <Link
