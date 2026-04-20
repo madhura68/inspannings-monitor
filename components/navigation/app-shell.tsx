@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { getAuthState } from "@/lib/auth/session";
+import { getNavProfileForCurrentUser } from "@/lib/profile/service";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { TopNav } from "@/components/navigation/top-nav";
 import { cn } from "@/lib/utils";
@@ -14,11 +15,14 @@ export async function AppShell({
   contentClassName,
 }: AppShellProps) {
   const authState = await getAuthState();
+  const navProfile = authState.userId
+    ? await getNavProfileForCurrentUser(authState.userId)
+    : null;
 
   return (
     <main className="app-page">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-8">
-        <TopNav authState={authState} />
+        <TopNav authState={authState} navProfile={navProfile} />
         <div className={cn("flex-1", contentClassName)}>{children}</div>
         <BottomNav />
       </div>

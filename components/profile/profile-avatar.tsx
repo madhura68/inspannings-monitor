@@ -4,11 +4,12 @@ type ProfileAvatarProps = {
   avatarUrl: string | null;
   displayName: string | null;
   email?: string | null;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 };
 
 const avatarSizeClasses = {
+  xs: "size-6 text-[10px]",
   sm: "size-12 text-sm",
   md: "size-16 text-base",
   lg: "size-20 text-xl",
@@ -51,7 +52,7 @@ export function ProfileAvatar({
     <div
       aria-label={label}
       className={cn(
-        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-muted/70 font-semibold tracking-[0.08em] text-foreground shadow-[var(--shadow-1)]",
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-primary/50 bg-muted/70 font-semibold tracking-[0.08em] text-foreground shadow-[var(--shadow-1)]",
         avatarSizeClasses[size],
         className,
       )}

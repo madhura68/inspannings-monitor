@@ -64,12 +64,22 @@ export default async function Home({ searchParams }: HomePageProps) {
           title="Over de maker en de app"
           description="Inspannings Monitor is een rustige wellness-first webapp voor volwassenen die hun energie willen plannen, uitvoeren en evalueren zonder medische claims of overmatige frictie."
           aside={
-            <Link
-              href="/planning"
-              className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
-            >
-              Bekijk planning
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="https://jp-visser.nl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
+              >
+                Curriculum vitae
+              </Link>
+              <Link
+                href="/specificatie"
+                className="inline-flex items-center rounded-full border border-border/80 bg-card/84 px-4 py-2 text-sm font-medium text-foreground shadow-[var(--shadow-1)] transition-colors hover:bg-secondary"
+              >
+                Specificatie
+              </Link>
+            </div>
           }
         />
 
