@@ -171,6 +171,19 @@ export default async function Home({ searchParams }: HomePageProps) {
               </p>
               <p className="mt-2 font-semibold text-foreground">Next.js op Vercel</p>
             </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                Versie
+              </p>
+              <p className="mt-2 font-mono text-sm font-semibold text-foreground">
+                v{process.env.NEXT_PUBLIC_APP_VERSION}
+                {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA && (
+                  <span className="ml-1.5 text-muted-foreground">
+                    · {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA.slice(0, 7)}
+                  </span>
+                )}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
