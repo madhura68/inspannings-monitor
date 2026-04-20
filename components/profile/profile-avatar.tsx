@@ -4,11 +4,12 @@ type ProfileAvatarProps = {
   avatarUrl: string | null;
   displayName: string | null;
   email?: string | null;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 };
 
 const avatarSizeClasses = {
+  xs: "size-6 text-[10px]",
   sm: "size-12 text-sm",
   md: "size-16 text-base",
   lg: "size-20 text-xl",

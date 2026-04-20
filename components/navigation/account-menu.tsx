@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { signOutAction } from "@/app/auth-actions";
 import type { AuthState } from "@/lib/auth/session";
+import { ProfileAvatar } from "@/components/profile/profile-avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +22,25 @@ import {
 
 type AccountMenuProps = {
   authState: AuthState;
+  navAvatarUrl: string | null;
 };
 
-export function AccountMenu({ authState }: AccountMenuProps) {
+export function AccountMenu({ authState, navAvatarUrl }: AccountMenuProps) {
+  const showAvatar = authState.isAuthenticated && navAvatarUrl;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Account menu">
-        <CircleUserRoundIcon className="size-4" />
+        {showAvatar ? (
+          <ProfileAvatar
+            avatarUrl={navAvatarUrl}
+            displayName={null}
+            email={authState.email}
+            size="xs"
+          />
+        ) : (
+          <CircleUserRoundIcon className="size-4" />
+        )}
         <span className="hidden sm:inline">Account</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -500,3 +500,14 @@ export async function ensureProfileBundleForCurrentUser(): Promise<ProfileBundle
 export async function getProfileBundleForCurrentUser(): Promise<ProfileBundle | null> {
   return ensureProfileBundleForCurrentUser();
 }
+
+export async function getNavAvatarUrlForCurrentUser(userId: string): Promise<string | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("avatar_path")
+    .eq("id", userId)
+    .maybeSingle();
+
+  return getProfileAvatarUrl(data?.avatar_path ?? null);
+}

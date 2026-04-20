@@ -14,9 +14,10 @@ import { cn } from "@/lib/utils";
 
 type TopNavProps = {
   authState: AuthState;
+  navAvatarUrl: string | null;
 };
 
-export function TopNav({ authState }: TopNavProps) {
+export function TopNav({ authState, navAvatarUrl }: TopNavProps) {
   const pathname = usePathname();
   const useCompactBottomNav = shouldUseBottomNav(pathname);
 
@@ -64,7 +65,7 @@ export function TopNav({ authState }: TopNavProps) {
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <ThemeMenu />
-          <AccountMenu authState={authState} />
+          <AccountMenu authState={authState} navAvatarUrl={navAvatarUrl} />
         </div>
       </div>
     </header>
