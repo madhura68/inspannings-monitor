@@ -11,6 +11,14 @@ import {
 import { signOutAction } from "@/app/auth-actions";
 import type { AuthState } from "@/lib/auth/session";
 import { ProfileAvatar } from "@/components/profile/profile-avatar";
+import type { NavProfile } from "@/lib/profile/service";
+
+function formatNavDisplayName(displayName: string | null): string | null {
+  if (!displayName) return null;
+  const parts = displayName.trim().split(/\s+/);
+  if (parts.length < 2) return displayName;
+  return `${parts[0][0]}. ${parts[parts.length - 1]}`;
+}
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,26 +30,27 @@ import {
 
 type AccountMenuProps = {
   authState: AuthState;
-  navAvatarUrl: string | null;
+  navProfile: NavProfile | null;
 };
 
-export function AccountMenu({ authState, navAvatarUrl }: AccountMenuProps) {
-  const showAvatar = authState.isAuthenticated && navAvatarUrl;
+export function AccountMenu({ authState, navProfile }: AccountMenuProps) {
+  const showAvatar = authState.isAuthenticated && navProfile?.avatarUrl;
+  const navLabel = formatNavDisplayName(navProfile?.displayName ?? null) ?? "Account";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger aria-label="Account menu">
         {showAvatar ? (
           <ProfileAvatar
-            avatarUrl={navAvatarUrl}
-            displayName={null}
+            avatarUrl={navProfile!.avatarUrl}
+            displayName={navProfile!.displayName}
             email={authState.email}
             size="xs"
           />
         ) : (
           <CircleUserRoundIcon className="size-4" />
         )}
-        <span className="hidden sm:inline">Account</span>
+        <span className="hidden sm:inline">{navLabel}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {authState.isConfigured ? (

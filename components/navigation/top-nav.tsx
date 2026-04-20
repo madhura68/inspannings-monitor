@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { AuthState } from "@/lib/auth/session";
+import type { NavProfile } from "@/lib/profile/service";
 import { AccountMenu } from "@/components/navigation/account-menu";
 import {
   isActivePath,
@@ -14,23 +16,32 @@ import { cn } from "@/lib/utils";
 
 type TopNavProps = {
   authState: AuthState;
-  navAvatarUrl: string | null;
+  navProfile: NavProfile | null;
 };
 
-export function TopNav({ authState, navAvatarUrl }: TopNavProps) {
+export function TopNav({ authState, navProfile }: TopNavProps) {
   const pathname = usePathname();
   const useCompactBottomNav = shouldUseBottomNav(pathname);
 
   return (
     <header className="sticky top-4 z-40">
       <div className="flex flex-wrap items-center gap-4 rounded-[var(--radius-4xl)] border border-border/70 bg-card/86 px-5 py-4 shadow-[var(--shadow-2)] backdrop-blur">
-        <Link href="/" className="shrink-0">
-          <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            Inspannings Monitor
-          </span>
-          <span className="mt-1 block text-base font-semibold tracking-[-0.02em] text-foreground">
-            Wellness-first dagflow
-          </span>
+        <Link href="/" className="flex shrink-0 items-center gap-3">
+          <Image
+            src="/icon.svg"
+            alt="Inspannings Monitor icoon"
+            width={36}
+            height={36}
+            className="shrink-0 rounded-xl"
+          />
+          <div>
+            <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              Inspannings Monitor
+            </span>
+            <span className="mt-1 block text-base font-semibold tracking-[-0.02em] text-foreground">
+              Wellness-first dagflow
+            </span>
+          </div>
         </Link>
 
         <nav
@@ -65,7 +76,7 @@ export function TopNav({ authState, navAvatarUrl }: TopNavProps) {
 
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <ThemeMenu />
-          <AccountMenu authState={authState} navAvatarUrl={navAvatarUrl} />
+          <AccountMenu authState={authState} navProfile={navProfile} />
         </div>
       </div>
     </header>
